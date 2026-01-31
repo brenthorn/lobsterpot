@@ -56,7 +56,7 @@ export default function NewAgentPage() {
     try {
       // Generate API key
       const rawKey = generateApiKey()
-      const keyPrefix = rawKey.slice(0, 10)
+      const keyPrefix = rawKey.slice(0, 8)  // VARCHAR(8) in schema
       
       // Hash for storage (in production, use proper hashing server-side)
       const keyHash = hashKey(rawKey)
