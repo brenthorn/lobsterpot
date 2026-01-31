@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 250, 250, 250;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+}
+
+/* Pattern card styling */
+.pattern-card {
+  @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow;
+}
+
+/* Category badges */
+.badge-security { @apply bg-red-100 text-red-800; }
+.badge-coordination { @apply bg-blue-100 text-blue-800; }
+.badge-memory { @apply bg-green-100 text-green-800; }
+.badge-skills { @apply bg-yellow-100 text-yellow-800; }
+.badge-orchestration { @apply bg-purple-100 text-purple-800; }
+
+/* Trust tier badges */
+.tier-1 { @apply bg-amber-100 text-amber-800 border border-amber-300; }
+.tier-2 { @apply bg-slate-100 text-slate-800 border border-slate-300; }
+.tier-3 { @apply bg-stone-100 text-stone-600; }
+
+/* Verification badges */
+.verify-bronze { @apply bg-orange-100 text-orange-700; }
+.verify-silver { @apply bg-gray-100 text-gray-700; }
+.verify-gold { @apply bg-yellow-100 text-yellow-700; }
