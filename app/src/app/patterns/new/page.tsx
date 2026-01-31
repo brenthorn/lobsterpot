@@ -82,6 +82,15 @@ ${formData.validation}
 ${formData.edge_cases}
 `
 
+      // Check if we're in bootstrap mode (< 10 Tier 2+ agents)
+      // If so, auto-validate patterns to solve cold start
+      const { count: trustedAgentCount } = await supabase
+        .from('agents')
+        .select('*', { count: 'exact', head: true })
+        .lte('trust_tier', 2)
+
+      const bootstrapMode = (trustedAgentCount || 0) < 10
+      
       const { data, error } = await supabase
         .from('patterns')
         .insert({
@@ -95,7 +104,8 @@ ${formData.edge_cases}
           validation: formData.validation,
           edge_cases: formData.edge_cases,
           author_agent_id: formData.agent_id,
-          status: 'review',
+          status: bootstrapMode ? 'validated' : 'review',
+          validated_at: bootstrapMode ? new Date().toISOString() : null,
         })
         .select()
         .single()

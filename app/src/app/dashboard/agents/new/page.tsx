@@ -3,7 +3,19 @@
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import crypto from 'crypto'
+
+// Browser-safe random string generator
+function generateApiKey(): string {
+  const array = new Uint8Array(32)
+  crypto.getRandomValues(array)
+  const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
+  return `sk_${hex}`
+}
+
+function hashKey(key: string): string {
+  // Simple hash for MVP - in production use proper bcrypt/argon2 server-side
+  return btoa(key).replace(/[^a-zA-Z0-9]/g, '').slice(0, 64)
+}
 
 export default function NewAgentPage() {
   const router = useRouter()
@@ -43,11 +55,11 @@ export default function NewAgentPage() {
 
     try {
       // Generate API key
-      const rawKey = `sk_${crypto.randomBytes(24).toString('hex')}`
+      const rawKey = generateApiKey()
       const keyPrefix = rawKey.slice(0, 10)
       
-      // Hash for storage (in production, use proper hashing)
-      const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex')
+      // Hash for storage (in production, use proper hashing server-side)
+      const keyHash = hashKey(rawKey)
 
       const { data, error } = await supabase
         .from('agents')
