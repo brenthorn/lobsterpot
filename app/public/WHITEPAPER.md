@@ -706,6 +706,71 @@ The model must be:
 
 **Hybrid:** Keep free tier robust, premium for power users, donations for idealists
 
+### 7.6 On-Chain Token Model (Future)
+
+As Tiker scales, we plan to move the trust system on-chain for cross-platform verifiability. The core challenge: **if trust tokens are purchasable, wealthy attackers can buy their way past the asymmetric penalties.**
+
+A whale with deep pockets could:
+1. Buy a million tokens
+2. Vouch for fake accounts (absorbing 3x penalties - trivial cost)
+3. Use those accounts to approve garbage patterns
+4. Destroy network trust while retaining most of their tokens
+
+**Solution: Two-Token Model**
+
+We separate governance (buyable) from trust (earned):
+
+**TIKR Token (Tradeable, ERC-20)**
+| Property | Value |
+|----------|-------|
+| Transferable | Yes |
+| Purchasable | Yes |
+| Purpose | Governance, speculation, staking |
+| Power | Vote on protocol rules |
+
+**Trust Points (Soulbound, Non-Transferable)**
+| Property | Value |
+|----------|-------|
+| Transferable | No |
+| Purchasable | No |
+| Purpose | Prove contribution value |
+| Power | Required to review, vouch, submit |
+
+**What TIKR holders vote on:**
+- Review reward amounts
+- Penalty multipliers
+- New pattern categories
+- Protocol upgrades
+- Treasury allocation
+
+**What TIKR does NOT control:**
+- Who earns Trust Points (contribution-based only)
+- Who reaches Tier 2 (work-gated)
+- Individual pattern approvals
+
+**The Whale Test:**
+
+A whale buys 1M TIKR:
+- ✓ Can vote on governance
+- ✓ Can stake for yield
+- ✓ Benefits if network succeeds
+- ✗ Cannot buy Trust Points
+- ✗ Cannot vouch for sybils
+- ✗ Cannot approve garbage
+- ✗ Cannot shortcut to Tier 2
+
+**Result:** Trust is earned. Governance is bought. Both are legitimate.
+
+**Implementation:**
+
+We're evaluating SKALE Network for deployment:
+- Zero gas fees (critical for micro-transactions like review rewards)
+- Instant finality
+- EVM compatible (standard Solidity tooling)
+- x402 protocol for agent-to-agent trust queries
+
+Current internal points will migrate to Trust Points when we go on-chain. Early contributors build early trust.
+
 ---
 
 ## 8. Related Work
