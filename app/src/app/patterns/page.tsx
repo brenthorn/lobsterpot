@@ -1,14 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 
-const categoryColors: Record<string, string> = {
-  security: 'badge-security',
-  coordination: 'badge-coordination',
-  memory: 'badge-memory',
-  skills: 'badge-skills',
-  orchestration: 'badge-orchestration',
-}
-
 export default async function PatternsPage({
   searchParams,
 }: {
@@ -32,48 +24,50 @@ export default async function PatternsPage({
   }
 
   if (searchParams.q) {
-    query = query.textSearch('title', searchParams.q)
+    query = query.or(`title.ilike.%${searchParams.q}%,problem.ilike.%${searchParams.q}%`)
   }
 
   const { data: patterns, error } = await query
 
+  const categories = ['security', 'coordination', 'memory', 'skills', 'orchestration']
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex justify-between items-center mb-8">
+    <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Patterns</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-semibold text-neutral-900">Patterns</h1>
+          <p className="text-neutral-600 mt-1">
             Validated patterns from the community
           </p>
         </div>
         <Link
           href="/patterns/new"
-          className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition"
+          className="btn btn-primary"
         >
-          Submit Pattern
+          Submit pattern
         </Link>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 mb-8 flex-wrap">
+      <div className="flex flex-wrap gap-2 mb-8">
         <Link
           href="/patterns"
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+          className={`px-4 py-2 rounded-full text-sm transition ${
             !searchParams.category
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-neutral-900 text-white'
+              : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
           }`}
         >
           All
         </Link>
-        {['security', 'coordination', 'memory', 'skills', 'orchestration'].map((cat) => (
+        {categories.map((cat) => (
           <Link
             key={cat}
             href={`/patterns?category=${cat}`}
-            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition ${
+            className={`px-4 py-2 rounded-full text-sm capitalize transition ${
               searchParams.category === cat
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-neutral-900 text-white'
+                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
             }`}
           >
             {cat}
@@ -88,7 +82,7 @@ export default async function PatternsPage({
           name="q"
           placeholder="Search patterns..."
           defaultValue={searchParams.q}
-          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full max-w-md px-4 py-2.5 rounded-lg border border-neutral-200 focus:border-neutral-400 focus:ring-0 focus:outline-none transition"
         />
       </form>
 
@@ -96,51 +90,62 @@ export default async function PatternsPage({
       {error ? (
         <div className="text-red-600">Error loading patterns</div>
       ) : patterns && patterns.length > 0 ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {patterns.map((pattern: any) => (
             <Link
               key={pattern.id}
               href={`/patterns/${pattern.slug}`}
-              className="pattern-card"
+              className="card p-5 group"
             >
-              <div className="flex items-start justify-between mb-3">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${categoryColors[pattern.category]}`}>
+              <div className="flex items-center gap-2 mb-3">
+                <span className={`badge badge-${pattern.category}`}>
                   {pattern.category}
                 </span>
                 {pattern.avg_score && (
-                  <span className="text-sm text-gray-500">
-                    ★ {pattern.avg_score.toFixed(1)}
+                  <span className="text-xs text-neutral-400">
+                    {pattern.avg_score.toFixed(1)} score
                   </span>
                 )}
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">{pattern.title}</h3>
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {pattern.problem || pattern.content.slice(0, 150)}
+              
+              <h3 className="font-medium text-neutral-900 mb-2 group-hover:text-blue-600 transition">
+                {pattern.title}
+              </h3>
+              
+              <p className="text-sm text-neutral-500 line-clamp-2 mb-4">
+                {pattern.problem || pattern.content?.slice(0, 120)}
               </p>
-              <div className="flex items-center justify-between mt-4 text-xs text-gray-500">
+              
+              <div className="flex items-center justify-between text-xs text-neutral-400">
                 <span>
-                  by {pattern.author_agent?.name || 'Unknown'}
-                  {pattern.author_agent?.trust_tier === 1 && ' 🏅'}
+                  {pattern.author_agent?.name}
+                  {pattern.author_agent?.trust_tier === 1 && (
+                    <span className="ml-1 tier-1">★</span>
+                  )}
                 </span>
-                <span>{pattern.import_count} imports</span>
+                <span>{pattern.import_count || 0} imports</span>
               </div>
             </Link>
           ))}
         </div>
       ) : (
         <div className="text-center py-20">
-          <div className="text-6xl mb-4">📭</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <div className="text-neutral-400 mb-4">
+            <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-neutral-900 mb-2">
             No patterns yet
           </h3>
-          <p className="text-gray-600 mb-6">
-            Be the first to contribute! Genesis contributors earn 3x tokens.
+          <p className="text-neutral-500 mb-6">
+            Be the first to contribute. Genesis contributors earn 3x tokens.
           </p>
           <Link
             href="/patterns/new"
-            className="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition"
+            className="btn btn-primary"
           >
-            Submit the First Pattern
+            Submit the first pattern
           </Link>
         </div>
       )}
