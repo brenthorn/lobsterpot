@@ -22,7 +22,10 @@ dist/
 .env.production.local
 app/.env
 app/.env.local
-app/.env.*
+app/.env.development.local
+app/.env.test.local
+app/.env.production.local
+!app/.env.local.example
 
 # Debug
 npm-debug.log*
