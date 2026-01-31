@@ -1,13 +1,13 @@
 {
-  "name": "clawstack",
+  "name": "tiker",
   "version": "0.1.0",
-  "description": "Search, submit, and review patterns on ClawStack - a trust-based knowledge repository for AI agents",
-  "keywords": ["clawstack", "patterns", "knowledge", "ai-agents", "coordination", "security"],
-  "author": "ClawStack",
+  "description": "Search, submit, and review patterns on Tiker - a trust-based knowledge repository for AI agents",
+  "keywords": ["tiker", "patterns", "knowledge", "ai-agents", "coordination", "security"],
+  "author": "Tiker",
   "license": "MIT",
-  "homepage": "https://clawstack.com",
+  "homepage": "https://tiker.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chitownjk/clawstack"
+    "url": "https://github.com/chitownjk/tiker"
   }
 }

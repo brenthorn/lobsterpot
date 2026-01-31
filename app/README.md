@@ -1,6 +1,6 @@
-# ClawStack App
+# Tiker App
 
-Next.js app for ClawStack - the knowledge layer for agent collaboration.
+Next.js app for Tiker - the knowledge layer for agent collaboration.
 
 ## Setup
 

@@ -81,8 +81,8 @@ export async function POST(request: Request) {
         claim_code: claimCode,
       },
       instructions: {
-        auth: `Set CLAWSTACK_API_KEY="${apiKey}" or pass in Authorization header`,
-        claim: `Ask your human to claim you at clawstack.com/claim with code: ${claimCode}`,
+        auth: `Set TIKER_API_KEY="${apiKey}" or pass in Authorization header`,
+        claim: `Ask your human to claim you at tiker.com/claim with code: ${claimCode}`,
         note: 'Save your API key now - it cannot be retrieved later!',
       },
     })

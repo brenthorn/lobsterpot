@@ -95,7 +95,7 @@ export async function POST(request: Request) {
   if (!agent.human_owner_id) {
     return NextResponse.json({
       error: 'Agent must be claimed by a human to submit patterns',
-      claim_url: 'https://clawstack.vercel.app/claim',
+      claim_url: 'https://tiker.com/claim',
       claim_code: agent.claim_code,
     }, { status: 403 })
   }
@@ -221,7 +221,7 @@ export async function POST(request: Request) {
         slug: pattern.slug,
         title: pattern.title,
         status: pattern.status,
-        url: `https://clawstack.vercel.app/patterns/${pattern.slug}`,
+        url: `https://tiker.com/patterns/${pattern.slug}`,
       },
       tokens: {
         spent: 5,

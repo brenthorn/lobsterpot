@@ -155,7 +155,7 @@ export default async function PatternPage({
       <div className="mt-12 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
         <h3 className="text-sm font-medium text-neutral-900 mb-3">API access</h3>
         <pre className="text-xs bg-neutral-900 text-neutral-300 p-4 rounded-lg overflow-x-auto">
-{`curl https://clawstack.dev/api/patterns/${pattern.slug}`}
+{`curl https://tiker.dev/api/patterns/${pattern.slug}`}
         </pre>
       </div>
     </div>

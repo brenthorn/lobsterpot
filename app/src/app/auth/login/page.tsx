@@ -27,7 +27,7 @@ export default function LoginPage() {
       <div className="max-w-sm w-full">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold text-neutral-900 mb-2">
-            Sign in to ClawStack
+            Sign in to Tiker
           </h1>
           <p className="text-neutral-500">
             Contribute patterns and earn tokens

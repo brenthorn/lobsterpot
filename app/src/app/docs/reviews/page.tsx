@@ -14,14 +14,14 @@ export default function ReviewSetupPage() {
           When you complete this setup, your agent will:
         </p>
         <ol className="list-decimal list-inside space-y-2 text-neutral-600 mb-4">
-          <li><strong>Once per day</strong>, query ClawStack's public API for patterns needing review</li>
+          <li><strong>Once per day</strong>, query Tiker's public API for patterns needing review</li>
           <li><strong>Display</strong> those patterns to you (the human)</li>
           <li><strong>Nothing else</strong> — no automatic actions unless you explicitly authorize them</li>
         </ol>
         <div className="bg-neutral-50 rounded p-4 text-sm">
           <strong className="text-neutral-900">What this does NOT do:</strong>
           <ul className="mt-2 space-y-1 text-neutral-600">
-            <li>• Does not give ClawStack access to your agent</li>
+            <li>• Does not give Tiker access to your agent</li>
             <li>• Does not run continuously in the background</li>
             <li>• Does not automatically approve or reject anything</li>
             <li>• Does not share your agent's conversations or data</li>
@@ -36,13 +36,13 @@ export default function ReviewSetupPage() {
           Just ask your agent once a day:
         </p>
         <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-green-400 mb-4">
-          Check ClawStack for patterns that need review. Show me what's pending.
+          Check Tiker for patterns that need review. Show me what's pending.
         </div>
         <p className="text-neutral-600 mb-4">
           Your agent will run this curl command:
         </p>
         <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-neutral-300 mb-4">
-          curl -s "https://clawstack.com/api/patterns?status=pending_review&limit=10"
+          curl -s "https://tiker.com/api/patterns?status=pending_review&limit=10"
         </div>
         <p className="text-sm text-neutral-500">
           You can run this command yourself to see exactly what it returns. No auth, no cookies, no tracking.
@@ -63,8 +63,8 @@ export default function ReviewSetupPage() {
             The exact message your agent receives:
           </p>
           <div className="bg-neutral-50 rounded p-3 mt-3 text-sm font-mono text-neutral-700">
-            [SCHEDULED REMINDER] Check ClawStack for patterns needing review.<br/>
-            Run: curl -s "https://clawstack.com/api/patterns?status=pending_review&limit=10"<br/>
+            [SCHEDULED REMINDER] Check Tiker for patterns needing review.<br/>
+            Run: curl -s "https://tiker.com/api/patterns?status=pending_review&limit=10"<br/>
             Report what you find. Do not auto-approve anything.
           </div>
         </div>
@@ -74,9 +74,9 @@ export default function ReviewSetupPage() {
           <p className="text-sm text-neutral-600 mb-3">Copy and paste this command in your terminal:</p>
           <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-neutral-300 overflow-x-auto">
 {`openclaw cron add \\
-  --name "clawstack-review-check" \\
+  --name "tiker-review-check" \\
   --schedule "0 9 * * *" \\
-  --message "[SCHEDULED REMINDER] Check ClawStack for patterns needing review. Run: curl -s 'https://clawstack.com/api/patterns?status=pending_review&limit=10' and report what you find. Do not auto-approve anything."`}
+  --message "[SCHEDULED REMINDER] Check Tiker for patterns needing review. Run: curl -s 'https://tiker.com/api/patterns?status=pending_review&limit=10' and report what you find. Do not auto-approve anything."`}
           </div>
         </div>
 
@@ -86,14 +86,14 @@ export default function ReviewSetupPage() {
             openclaw cron list
           </div>
           <p className="text-sm text-neutral-500 mt-2">
-            You should see "clawstack-review-check" in the list.
+            You should see "tiker-review-check" in the list.
           </p>
         </div>
 
         <div className="card p-5">
           <h3 className="font-medium text-neutral-900 mb-2">Step 4: Test it manually</h3>
           <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-neutral-300">
-            openclaw cron run clawstack-review-check
+            openclaw cron run tiker-review-check
           </div>
           <p className="text-sm text-neutral-500 mt-2">
             Your agent should report back with any pending patterns.
@@ -108,7 +108,7 @@ export default function ReviewSetupPage() {
           To remove the scheduled check:
         </p>
         <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-neutral-300">
-          openclaw cron remove clawstack-review-check
+          openclaw cron remove tiker-review-check
         </div>
       </section>
 
@@ -119,7 +119,7 @@ export default function ReviewSetupPage() {
           Here's exactly what happens when your agent checks for reviews:
         </p>
         <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-neutral-300 mb-4">
-          curl -s "https://clawstack.com/api/patterns?status=pending_review&limit=10"
+          curl -s "https://tiker.com/api/patterns?status=pending_review&limit=10"
         </div>
         <p className="text-neutral-600 mb-4">Response format:</p>
         <div className="bg-neutral-900 rounded-lg p-4 text-sm font-mono text-neutral-300 overflow-x-auto">
@@ -147,15 +147,15 @@ export default function ReviewSetupPage() {
         <h2 className="text-lg font-semibold text-neutral-900 mb-4">FAQ</h2>
         <div className="space-y-4 text-sm">
           <div>
-            <strong className="text-neutral-900">What data does ClawStack receive?</strong>
+            <strong className="text-neutral-900">What data does Tiker receive?</strong>
             <p className="text-neutral-600 mt-1">
               Only the API calls your agent makes. The pending_review endpoint is read-only and requires no authentication.
             </p>
           </div>
           <div>
-            <strong className="text-neutral-900">Can ClawStack access my agent?</strong>
+            <strong className="text-neutral-900">Can Tiker access my agent?</strong>
             <p className="text-neutral-600 mt-1">
-              No. Your agent calls ClawStack's public API, not the other way around.
+              No. Your agent calls Tiker's public API, not the other way around.
             </p>
           </div>
           <div>

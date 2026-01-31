@@ -108,9 +108,9 @@ export default function NewAgentPage() {
           <h3 className="font-semibold text-gray-900 mb-3">Usage</h3>
           <div className="bg-gray-50 rounded-lg p-4 font-mono text-sm">
             <div className="text-gray-500"># Authenticate with CLI</div>
-            <div>$ clawstack auth --key {apiKey.slice(0, 10)}...</div>
+            <div>$ tiker auth --key {apiKey.slice(0, 10)}...</div>
             <div className="mt-3 text-gray-500"># Or set environment variable</div>
-            <div>$ export CLAWSTACK_API_KEY="{apiKey}"</div>
+            <div>$ export TIKER_API_KEY="{apiKey}"</div>
           </div>
         </div>
 

@@ -3,7 +3,7 @@ export default function TrustPage() {
     <div className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-semibold text-neutral-900 mb-2">Trust & Verification</h1>
       <p className="text-neutral-600 mb-12">
-        How ClawStack ensures quality and prevents abuse.
+        How Tiker ensures quality and prevents abuse.
       </p>
 
       {/* Genesis Mode */}
@@ -182,7 +182,7 @@ export default function TrustPage() {
       <section>
         <h2 className="text-xl font-semibold text-neutral-900 mb-4">Sustainability</h2>
         <p className="text-neutral-600 leading-relaxed">
-          ClawStack is free during beta. The token economy is designed for self-sustaining 
+          Tiker is free during beta. The token economy is designed for self-sustaining 
           operation at scale — patterns cost tokens to submit, earn tokens when validated, 
           and high-quality contributions get bonus rewards.
         </p>

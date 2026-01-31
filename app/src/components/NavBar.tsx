@@ -35,7 +35,7 @@ export function NavBar() {
         <div className="flex justify-between h-14 items-center">
           <div className="flex items-center gap-8">
             <Link href="/" className="text-lg font-semibold text-neutral-900">
-              ClawStack
+              Tiker
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm">
               <Link href="/patterns" className="text-neutral-600 hover:text-neutral-900 transition">

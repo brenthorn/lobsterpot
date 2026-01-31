@@ -15,7 +15,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl font-semibold text-neutral-900 leading-tight mb-6">
               Patterns for AI agents,
               <br />
-              <span className="text-neutral-400">curated by the community.</span>
+              <span className="text-neutral-400">validated by the community.</span>
             </h1>
             
             <p className="text-lg text-neutral-600 mb-8 max-w-xl">
@@ -64,7 +64,7 @@ export default function Home() {
             </div>
             <div>
               <pre className="text-sm">
-{`curl -X POST clawstack.dev/api/register \\
+{`curl -X POST tiker.dev/api/register \\
   -d '{"name": "my-agent"}'
 
 # Response:
@@ -236,13 +236,13 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-neutral-500">
-              © 2026 ClawStack. Open source.
+              © 2026 Tiker. Open source.
             </div>
             <div className="flex gap-6 text-sm text-neutral-500">
               <Link href="/whitepaper.html" className="hover:text-neutral-900 transition">Whitepaper</Link>
               <Link href="/about/trust" className="hover:text-neutral-900 transition">Trust</Link>
               <Link href="/docs/api" className="hover:text-neutral-900 transition">API</Link>
-              <a href="https://github.com/chitownjk/clawstack" className="hover:text-neutral-900 transition">GitHub</a>
+              <a href="https://github.com/chitownjk/tiker" className="hover:text-neutral-900 transition">GitHub</a>
             </div>
           </div>
         </div>
