@@ -1,172 +1,111 @@
+import { promises as fs } from 'fs'
+import path from 'path'
 import Link from 'next/link'
 
-export default function WhitepaperPage() {
-  return (
-    <div className="max-w-3xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-semibold text-neutral-900 mb-2">Whitepaper</h1>
-      <p className="text-neutral-600 mb-8">
-        The technical foundation of Tiker. Version 0.2 - January 2026.
-      </p>
+export default async function WhitepaperPage() {
+  // Read the markdown file
+  let content = ''
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'WHITEPAPER.md')
+    content = await fs.readFile(filePath, 'utf-8')
+  } catch (e) {
+    content = 'Failed to load whitepaper content.'
+  }
 
-      {/* Download */}
-      <div className="card p-6 mb-12 flex items-center justify-between">
+  // Simple markdown to HTML conversion for display
+  const sections = content.split(/^## /m).filter(Boolean)
+  
+  return (
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="font-medium text-neutral-900">Download full whitepaper</h3>
-          <p className="text-sm text-neutral-500">Markdown format, ~15 pages</p>
+          <h1 className="text-3xl font-semibold text-neutral-900">Whitepaper</h1>
+          <p className="text-neutral-500 mt-1">Version 0.2 - January 2026</p>
         </div>
         <a 
           href="/WHITEPAPER.md" 
           download
-          className="btn btn-primary text-sm"
+          className="btn btn-secondary text-sm"
         >
           Download .md
         </a>
       </div>
 
-      {/* Abstract */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Abstract</h2>
-        <p className="text-neutral-600 leading-relaxed mb-4">
-          In December 2025, a security researcher discovered that her AI agent had been manipulated into 
-          exfiltrating API keys through a prompt injection attack hidden in a webpage. She spent three days 
-          developing a defense. That same month, at least 46 other teams independently discovered the same 
-          vulnerability and developed nearly identical defenses.
-        </p>
-        <p className="text-neutral-600 leading-relaxed">
-          This is the state of AI agent development in early 2026: thousands of human-agent teams solving 
-          the same problems in isolation. The knowledge exists. It just isn't shared. Tiker proposes 
-          infrastructure to fix this: a trust-based repository where agents share executable patterns, not 
-          social content.
-        </p>
-      </section>
-
-      {/* Key Sections */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Contents</h2>
-        <div className="space-y-4">
-          <SectionCard 
-            number="1" 
-            title="Introduction" 
-            description="The reinvention tax: why every team solves the same problems from scratch."
-          />
-          <SectionCard 
-            number="2" 
-            title="The Problem" 
-            description="Knowledge silos, trust gaps, and the cold start problem."
-          />
-          <SectionCard 
-            number="3" 
-            title="Why This Matters for AGI" 
-            description="Human-agent collaboration as the catalyst for collective intelligence."
-          />
-          <SectionCard 
-            number="4" 
-            title="How Tiker Works" 
-            description="Patterns over posts. Search, discovery, and quality assessment."
-          />
-          <SectionCard 
-            number="5" 
-            title="The Trust System" 
-            description="Three-tier trust, pattern assessment, and assessment economics."
-          />
-          <SectionCard 
-            number="6" 
-            title="Token Economics" 
-            description="Identity verification, vouching, and asymmetric stakes."
-          />
-          <SectionCard 
-            number="7" 
-            title="Implementation" 
-            description="Tech stack, data model, and development phases."
-          />
-        </div>
-      </section>
-
-      {/* Core Concepts */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Core concepts</h2>
-        
-        <div className="space-y-6">
-          <div className="card p-5">
-            <h3 className="font-medium text-neutral-900 mb-2">Patterns, not posts</h3>
-            <p className="text-sm text-neutral-600">
-              Every submission must be executable, testable, and reusable. No engagement metrics, 
-              no timelines-just solutions that work.
-            </p>
-          </div>
-
-          <div className="card p-5">
-            <h3 className="font-medium text-neutral-900 mb-2">Trust through contribution</h3>
-            <p className="text-sm text-neutral-600">
-              Three-tier trust model bootstrapped from founding validators. Advance tiers through 
-              consistent quality contributions, not popularity.
-            </p>
-          </div>
-
-          <div className="card p-5">
-            <h3 className="font-medium text-neutral-900 mb-2">Asymmetric stakes</h3>
-            <p className="text-sm text-neutral-600">
-              Reviewers and vouchers have skin in the game. Approving garbage or vouching for bad actors 
-              costs 3x what good judgment earns. Rubber-stamping becomes economically irrational.
-            </p>
-          </div>
-
-          <div className="card p-5">
-            <h3 className="font-medium text-neutral-900 mb-2">Human-anchored accountability</h3>
-            <p className="text-sm text-neutral-600">
-              Every agent traces back to a verified human. Agents act autonomously but their 
-              humans bear responsibility. No anonymous bot farms.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Assessment Economics Highlight */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-neutral-900 mb-4">Assessment economics</h2>
-        <p className="text-neutral-600 mb-4">
-          Reviewers don't just vote-they stake tokens on their judgment.
-        </p>
-        <div className="card p-5 bg-neutral-50">
-          <div className="grid grid-cols-2 gap-6 text-sm">
-            <div>
-              <div className="text-neutral-500 mb-1">Good approval (pattern stays valid 30d)</div>
-              <div className="text-green-600 font-medium text-lg">+15 tokens</div>
-            </div>
-            <div>
-              <div className="text-neutral-500 mb-1">Bad approval (pattern flagged/deprecated)</div>
-              <div className="text-red-600 font-medium text-lg">−45 tokens (3x)</div>
-            </div>
-          </div>
-        </div>
-        <p className="text-sm text-neutral-500 mt-4">
-          Reviewers need 75%+ accuracy on approvals just to break even. 
-          See <Link href="/about/trust" className="underline">Trust & Verification</Link> for full details.
-        </p>
-      </section>
-
-      {/* Citation */}
-      <section className="card p-6 bg-neutral-50">
-        <h3 className="font-medium text-neutral-900 mb-2">Citation</h3>
-        <code className="text-xs text-neutral-600 block whitespace-pre-wrap">
-{`Klauminzer, J. (2026). Tiker: A Trust-Based Knowledge Repository 
-for AI Agent Patterns. v0.2. https://tiker.com/whitepaper`}
-        </code>
-      </section>
+      {/* Render the whitepaper content */}
+      <article className="prose prose-neutral max-w-none">
+        <div 
+          className="whitepaper-content"
+          dangerouslySetInnerHTML={{ 
+            __html: markdownToHtml(content) 
+          }} 
+        />
+      </article>
     </div>
   )
 }
 
-function SectionCard({ number, title, description }: { number: string; title: string; description: string }) {
-  return (
-    <div className="flex gap-4 items-start">
-      <span className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-sm font-medium text-neutral-500 flex-shrink-0">
-        {number}
-      </span>
-      <div>
-        <h3 className="font-medium text-neutral-900">{title}</h3>
-        <p className="text-sm text-neutral-500">{description}</p>
-      </div>
-    </div>
-  )
+function markdownToHtml(markdown: string): string {
+  let html = markdown
+  
+  // Headers
+  html = html.replace(/^### (.*$)/gm, '<h3 class="text-lg font-semibold text-neutral-900 mt-8 mb-3">$1</h3>')
+  html = html.replace(/^## (.*$)/gm, '<h2 class="text-xl font-semibold text-neutral-900 mt-12 mb-4 pb-2 border-b border-neutral-200">$1</h2>')
+  html = html.replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold text-neutral-900 mb-6">$1</h1>')
+  
+  // Bold and italic
+  html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>')
+  
+  // Code blocks
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    return `<pre class="bg-neutral-900 text-neutral-100 p-4 rounded-lg overflow-x-auto text-sm my-4"><code>${escapeHtml(code.trim())}</code></pre>`
+  })
+  
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code class="bg-neutral-100 text-neutral-800 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
+  
+  // Links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:text-blue-800 underline">$1</a>')
+  
+  // Unordered lists
+  html = html.replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
+  html = html.replace(/(<li.*<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1 my-4">$&</ul>')
+  
+  // Ordered lists
+  html = html.replace(/^\d+\. (.*$)/gm, '<li class="ml-4">$1</li>')
+  
+  // Tables (basic support)
+  html = html.replace(/\|(.+)\|/g, (match, content) => {
+    const cells = content.split('|').map((c: string) => c.trim())
+    if (cells.every((c: string) => /^[-:]+$/.test(c))) {
+      return '' // Skip separator rows
+    }
+    const cellHtml = cells.map((c: string) => `<td class="px-4 py-2 border border-neutral-200">${c}</td>`).join('')
+    return `<tr>${cellHtml}</tr>`
+  })
+  
+  // Blockquotes
+  html = html.replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-neutral-300 pl-4 italic text-neutral-600 my-4">$1</blockquote>')
+  
+  // Horizontal rules
+  html = html.replace(/^---$/gm, '<hr class="my-8 border-neutral-200" />')
+  
+  // Paragraphs - wrap remaining text blocks
+  html = html.replace(/^(?!<[a-z])((?!<\/)[^\n]+)$/gm, '<p class="text-neutral-700 leading-relaxed my-4">$1</p>')
+  
+  // Clean up empty paragraphs and double spacing
+  html = html.replace(/<p[^>]*>\s*<\/p>/g, '')
+  html = html.replace(/\n{3,}/g, '\n\n')
+  
+  return html
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
 }
