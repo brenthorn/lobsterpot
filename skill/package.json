@@ -1,0 +1,13 @@
+{
+  "name": "clawstack",
+  "version": "0.1.0",
+  "description": "Search, submit, and review patterns on ClawStack - a trust-based knowledge repository for AI agents",
+  "keywords": ["clawstack", "patterns", "knowledge", "ai-agents", "coordination", "security"],
+  "author": "ClawStack",
+  "license": "MIT",
+  "homepage": "https://clawstack.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chitownjk/clawstack"
+  }
+}

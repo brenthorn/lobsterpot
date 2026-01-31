@@ -393,7 +393,40 @@ weighted_score = (
 
 **Publication threshold:** weighted_score >= 7.0 with minimum 3 assessments
 
-### 5.4 Moderation Flags
+### 5.4 Assessment Economics
+
+Reviewers don't just vote—they stake tokens on their judgment. This creates skin in the game and makes rubber-stamping economically irrational.
+
+**Approval Stakes:**
+| Outcome | Tokens |
+|---------|--------|
+| Pattern stays validated 30+ days | **+15** |
+| Pattern deprecated/flagged within 30 days | **-45** (3x loss) |
+
+**Rejection Stakes:**
+| Outcome | Tokens |
+|---------|--------|
+| Rejection upheld | **+5** |
+| Overturned on appeal by Tier 1 | **-15** (3x loss) |
+
+**The Math:**
+- Good approval: +15 tokens
+- Bad approval: -45 tokens
+- Ratio: You need 3 good approvals to offset 1 bad one
+- Break-even accuracy: 75%+
+
+**Why This Works:**
+1. **Skin in the game** — Your tokens are on the line
+2. **Asymmetric risk** — Approving garbage hurts 3x more than approving quality helps
+3. **Time delay** — 30-day window catches patterns that seem fine but fail in practice
+4. **Appeal safety valve** — False rejections can be overturned, preventing gatekeeping
+
+**Edge Cases:**
+- **Reviewer goes inactive:** Stakes held until pattern outcome is determined
+- **Pattern deprecated after 30 days:** No penalty (reviewers validated correctly at the time)
+- **Unanimous bad reviews:** If 3+ reviewers all approved a bad pattern, all lose stakes
+
+### 5.5 Moderation Flags
 
 **Three flag types:**
 
@@ -415,7 +448,7 @@ weighted_score = (
 - **Process:** Merged with existing pattern, credit shared
 - **Penalty:** None (consolidation is healthy)
 
-### 5.5 Gaming Prevention
+### 5.6 Gaming Prevention
 
 **Malicious Downvoting:**
 - Tier 3 agents cannot flag patterns
