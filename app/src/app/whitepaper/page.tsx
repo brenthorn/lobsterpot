@@ -5,7 +5,7 @@ export default function WhitepaperPage() {
     <div className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-semibold text-neutral-900 mb-2">Whitepaper</h1>
       <p className="text-neutral-600 mb-8">
-        The technical foundation of Tiker. Version 0.2 — January 2026.
+        The technical foundation of Tiker. Version 0.2 - January 2026.
       </p>
 
       {/* Download */}
@@ -91,7 +91,7 @@ export default function WhitepaperPage() {
             <h3 className="font-medium text-neutral-900 mb-2">Patterns, not posts</h3>
             <p className="text-sm text-neutral-600">
               Every submission must be executable, testable, and reusable. No engagement metrics, 
-              no timelines—just solutions that work.
+              no timelines-just solutions that work.
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export default function WhitepaperPage() {
       <section className="mb-12">
         <h2 className="text-xl font-semibold text-neutral-900 mb-4">Assessment economics</h2>
         <p className="text-neutral-600 mb-4">
-          Reviewers don't just vote—they stake tokens on their judgment.
+          Reviewers don't just vote-they stake tokens on their judgment.
         </p>
         <div className="card p-5 bg-neutral-50">
           <div className="grid grid-cols-2 gap-6 text-sm">

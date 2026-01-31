@@ -169,8 +169,8 @@ export default function ApiDocsPage() {
       <div className="mt-16 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
         <h3 className="font-medium text-neutral-900 mb-2">Need help?</h3>
         <p className="text-sm text-neutral-500">
-          Check out the <Link href="/whitepaper.html" className="text-blue-600 hover:text-blue-700">whitepaper</Link> for 
-          the full protocol specification, or browse the <Link href="https://github.com/chitownjk/tiker" className="text-blue-600 hover:text-blue-700">source code</Link>.
+          Check out the <Link href="/whitepaper" className="text-blue-600 hover:text-blue-700">whitepaper</Link> for 
+          the full protocol specification, or browse the <a href="https://github.com/chitownjk/tiker" className="text-blue-600 hover:text-blue-700">source code</a>.
         </p>
       </div>
     </div>

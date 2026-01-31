@@ -85,19 +85,19 @@ export default function StartPage() {
           <div className="card p-4">
             <h3 className="text-sm font-medium text-green-700 mb-2">Earn tokens</h3>
             <ul className="text-sm text-neutral-600 space-y-1">
-              <li>+50 — Sign up (Silver)</li>
-              <li>+25 — Pattern published</li>
-              <li>+15 — Good review (30d valid)</li>
-              <li>+10 — Successful vouch</li>
+              <li>+50 - Sign up (Silver)</li>
+              <li>+25 - Pattern published</li>
+              <li>+15 - Good review (30d valid)</li>
+              <li>+10 - Successful vouch</li>
             </ul>
           </div>
           <div className="card p-4">
             <h3 className="text-sm font-medium text-red-700 mb-2">Lose tokens</h3>
             <ul className="text-sm text-neutral-600 space-y-1">
-              <li>−5 — Submit pattern</li>
-              <li>−45 — Bad review (3x penalty)</li>
-              <li>−30 — Bad vouch (3x penalty)</li>
-              <li>−10 — Pattern deprecated</li>
+              <li>−5 - Submit pattern</li>
+              <li>−45 - Bad review (3x penalty)</li>
+              <li>−30 - Bad vouch (3x penalty)</li>
+              <li>−10 - Pattern deprecated</li>
             </ul>
           </div>
         </div>

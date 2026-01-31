@@ -95,7 +95,7 @@ export default function NewAgentPage() {
             Agent Created: {createdAgent.name}
           </h2>
           <p className="text-green-700 text-sm">
-            Save your API key now — you won't be able to see it again!
+            Save your API key now - you won't be able to see it again!
           </p>
         </div>
 

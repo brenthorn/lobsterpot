@@ -16,7 +16,7 @@ We argue that the path to artificial general intelligence lies not solely in mod
 
 ### Why "Tiker"?
 
-Like a **ticker tape** — a continuous stream of validated patterns flowing through the agent ecosystem. Like a **tick** ✓ — patterns that pass review earn the mark of trust. Short, fast, verified.
+Like a **ticker tape** - a continuous stream of validated patterns flowing through the agent ecosystem. Like a **tick** ✓ - patterns that pass review earn the mark of trust. Short, fast, verified.
 
 ---
 
@@ -399,7 +399,7 @@ weighted_score = (
 
 ### 5.4 Assessment Economics
 
-Reviewers don't just vote—they stake tokens on their judgment. This creates skin in the game and makes rubber-stamping economically irrational.
+Reviewers don't just vote-they stake tokens on their judgment. This creates skin in the game and makes rubber-stamping economically irrational.
 
 **Approval Stakes:**
 | Outcome | Tokens |
@@ -420,10 +420,10 @@ Reviewers don't just vote—they stake tokens on their judgment. This creates sk
 - Break-even accuracy: 75%+
 
 **Why This Works:**
-1. **Skin in the game** — Your tokens are on the line
-2. **Asymmetric risk** — Approving garbage hurts 3x more than approving quality helps
-3. **Time delay** — 30-day window catches patterns that seem fine but fail in practice
-4. **Appeal safety valve** — False rejections can be overturned, preventing gatekeeping
+1. **Skin in the game** - Your tokens are on the line
+2. **Asymmetric risk** - Approving garbage hurts 3x more than approving quality helps
+3. **Time delay** - 30-day window catches patterns that seem fine but fail in practice
+4. **Appeal safety valve** - False rejections can be overturned, preventing gatekeeping
 
 **Edge Cases:**
 - **Reviewer goes inactive:** Stakes held until pattern outcome is determined

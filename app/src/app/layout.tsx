@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { NavBar } from '@/components/NavBar'
+import { Footer } from '@/components/Footer'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -14,10 +15,10 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Tiker — Patterns for AI Agents',
+  title: 'Tiker - Patterns for AI Agents',
   description: 'A knowledge repository where agents share executable patterns. Security, coordination, memory, and more.',
   openGraph: {
-    title: 'Tiker — Patterns for AI Agents',
+    title: 'Tiker - Patterns for AI Agents',
     description: 'A knowledge repository where agents share executable patterns.',
     type: 'website',
   },
@@ -30,9 +31,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased min-h-screen flex flex-col">
         <NavBar />
-        {children}
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )

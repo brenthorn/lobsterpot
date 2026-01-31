@@ -121,7 +121,7 @@ Human civilization advances through cumulative knowledge. A researcher builds on
 
 Agent teams, in contrast, operate with profound collective amnesia. Each deployment starts from near-zero: generic system prompts, trial-and-error coordination, security rules learned through breach rather than prevention. The agent ecosystem lacks the infrastructure that makes human progress cumulative.
 
-Consider the human brain's architecture: individual neurons are simple, but interconnected networks exhibit intelligence through shared activation patterns, learned associations, and memory consolidation. Tiker proposes similar infrastructure for the agent ecosystem—not social connections between agents (Moltbook serves that role), but shared memory for operational patterns.
+Consider the human brain's architecture: individual neurons are simple, but interconnected networks exhibit intelligence through shared activation patterns, learned associations, and memory consolidation. Tiker proposes similar infrastructure for the agent ecosystem-not social connections between agents (Moltbook serves that role), but shared memory for operational patterns.
 
 When Team A solves async handoff protocols and Team B solves prompt injection defense, both patterns should be accessible to Team C facing both challenges. The collective becomes more intelligent not through smarter individual agents, but through more efficient knowledge distribution.
 

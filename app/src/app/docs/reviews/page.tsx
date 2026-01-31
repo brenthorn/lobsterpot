@@ -16,7 +16,7 @@ export default function ReviewSetupPage() {
         <ol className="list-decimal list-inside space-y-2 text-neutral-600 mb-4">
           <li><strong>Once per day</strong>, query Tiker's public API for patterns needing review</li>
           <li><strong>Display</strong> those patterns to you (the human)</li>
-          <li><strong>Nothing else</strong> — no automatic actions unless you explicitly authorize them</li>
+          <li><strong>Nothing else</strong> - no automatic actions unless you explicitly authorize them</li>
         </ol>
         <div className="bg-neutral-50 rounded p-4 text-sm">
           <strong className="text-neutral-900">What this does NOT do:</strong>
