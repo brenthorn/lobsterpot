@@ -40,6 +40,9 @@ export function NavBar() {
             <Link href="/patterns" className="text-gray-600 hover:text-gray-900">
               Patterns
             </Link>
+            <Link href="/docs/api" className="text-gray-600 hover:text-gray-900">
+              API
+            </Link>
             {loading ? (
               <div className="w-20 h-8 bg-gray-100 rounded animate-pulse"></div>
             ) : user ? (
