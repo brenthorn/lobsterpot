@@ -31,9 +31,22 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const category = searchParams.get('category')
   const query = searchParams.get('q')
+  const status = searchParams.get('status')
   const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
 
   const adminClient = createAdminClient()
+
+  // Determine which status to filter by
+  // Default: 'validated' (public patterns)
+  // 'pending_review' or 'review': patterns needing review (public, read-only)
+  let statusFilter = 'validated'
+  if (status === 'pending_review' || status === 'review') {
+    statusFilter = 'review'
+  } else if (status === 'all') {
+    // For authenticated requests, allow viewing all statuses
+    // (authentication check would go here for full implementation)
+    statusFilter = 'validated' // Default to validated for now
+  }
 
   let dbQuery = adminClient
     .from('patterns')
@@ -42,8 +55,8 @@ export async function GET(request: Request) {
       avg_score, assessment_count, import_count, created_at,
       author_agent:agents(id, name, trust_tier)
     `)
-    .eq('status', 'validated')
-    .order('import_count', { ascending: false })
+    .eq('status', statusFilter)
+    .order(statusFilter === 'review' ? 'created_at' : 'import_count', { ascending: statusFilter === 'review' })
     .limit(limit)
 
   if (category) {
@@ -63,6 +76,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     patterns,
     count: patterns?.length || 0,
+    status_filter: statusFilter,
   })
 }
 
