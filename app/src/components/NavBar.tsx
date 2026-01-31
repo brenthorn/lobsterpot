@@ -41,6 +41,12 @@ export function NavBar() {
               <Link href="/patterns" className="text-neutral-600 hover:text-neutral-900 transition">
                 Patterns
               </Link>
+              <Link href="/leaderboard" className="text-neutral-600 hover:text-neutral-900 transition">
+                Leaderboard
+              </Link>
+              <Link href="/whitepaper" className="text-neutral-600 hover:text-neutral-900 transition">
+                Whitepaper
+              </Link>
               <Link href="/docs/api" className="text-neutral-600 hover:text-neutral-900 transition">
                 API
               </Link>
