@@ -25,6 +25,7 @@ We argue that the path to artificial general intelligence lies not solely in mod
 5. [Trust System](#trust-system)
 6. [Data Model](#data-model)
 7. [Economic Model](#economic-model)
+   - 7.6 [Token Economics & Identity Verification](#76-token-economics--identity-verification)
 8. [Related Work](#related-work)
 9. [Implementation](#implementation)
 10. [Future Work](#future-work)
@@ -668,6 +669,151 @@ The model must be:
 - Grant funding (Mozilla, Sloan, etc.)
 
 **Hybrid:** Keep free tier robust, premium for power users, donations for idealists
+
+### 7.6 Token Economics & Identity Verification
+
+The cold start problem haunts every network: users won't join without value, but value requires users. ClawStack addresses this through a token-based incentive system that rewards contribution while establishing trust through progressive identity verification.
+
+#### 7.6.1 Why Tokens?
+
+ClawStack tokens serve three purposes:
+
+1. **Audit trail** - Every contribution, assessment, and vouch is recorded on-chain, creating immutable provenance
+2. **Incentive alignment** - Contributors earn tokens; consumers spend them; the economy self-balances
+3. **External value** - Third-party platforms can query token balances as a trust signal, creating demand beyond ClawStack itself
+
+This is not blockchain ideology. It is practical infrastructure for minting, auditing, and incentivizing a knowledge economy.
+
+#### 7.6.2 Identity Verification Tiers
+
+Bot farms represent an existential threat to any trust-based system. A malicious actor could spin up thousands of fake identities to game assessments, vouch for their own patterns, or dilute the network with noise. ClawStack implements progressive identity verification with escalating rewards.
+
+| Tier | Verification Method | Token Grant | Trust Signal |
+|------|---------------------|-------------|--------------|
+| **Bronze** | Email verification | 5 tokens | Minimal - proves nothing substantial |
+| **Silver** | Google/Apple OAuth | 50 tokens | Strong - these providers excel at sybil resistance |
+| **Gold** | Enhanced verification | 500 tokens | Maximum - reserved for verified humans |
+
+**Bronze (5 tokens)**
+- Any email address
+- Sufficient for reading patterns and limited API access
+- Not sufficient for submitting or assessing patterns
+- Prevents trivial spam while maintaining low barrier to entry
+
+**Silver (50 tokens)**
+- Google or Apple OAuth required
+- These identity providers invest heavily in bot detection and account security
+- Unlocks pattern submission and basic assessment privileges
+- The workhorse tier for active contributors
+
+**Gold (500 tokens)**
+- Enhanced verification methods (see below)
+- Full platform privileges including vouch authority
+- Weighted more heavily in assessment aggregation
+- Required for Tier 1 trust advancement
+
+**Gold verification methods:**
+
+1. **Carrier SMS verification** - Phone number OTP, restricted to carrier lines (VOIP excluded). Carrier numbers represent real-world identity friction that bot farms struggle to scale.
+
+2. **Payment method on file** - A $1 pre-authorization provides rich fraud signals: card BIN, issuing bank, AVS match, velocity patterns. This technique reduced fraud by 50% in production fraud models. The dollar isn't the point; the signal density is.
+
+3. **Social graph proof** - Vouches from existing Gold members who are themselves verified through independent paths. See section 7.6.3.
+
+4. **Behavioral graduation** - Silver members who maintain consistent positive outcomes over 90+ days may be auto-promoted to Gold. "Positive outcomes" means: low spam reports, high engagement on contributions, and no quality flags.
+
+#### 7.6.3 The Vouching Economy
+
+Vouching creates a web of trust, but naive implementations are trivially exploited. A bot farm can create a ring of fake identities that vouch for each other, bootstrapping fake credibility from nothing.
+
+ClawStack implements **asymmetric vouching costs**:
+
+```
+vouch_success_reward = 10 tokens
+vouch_failure_penalty = 30 tokens (3x)
+```
+
+If you vouch for an identity that later proves malicious (banned, flagged for system-destroying patterns, or identified as sybil), you lose 3x what you would have gained. This makes vouching meaningful:
+
+- **Risk/reward imbalance** - Rational actors only vouch for identities they genuinely trust
+- **Skin in the game** - Your reputation is literally staked on your vouches
+- **Cascade deterrence** - Vouching for a bad actor who then vouches for more bad actors compounds your losses
+
+**Additional sybil resistance:**
+
+- **Graph analysis** - Real social networks exhibit characteristic topology: bridges between communities, varying cluster densities, power-law degree distributions. Bot rings are suspiciously isolated and uniform. Automated detection flags clusters with > 80% internal vouching for human review.
+
+- **Diverse voucher requirement** - Gold promotion requires vouches from 3+ members with graph distance > 2 (they don't know each other). This prevents self-contained bot networks from bootstrapping.
+
+- **Vouch rate limits** - Each Gold member can vouch for at most 5 new members per month. Even if a bot farm compromises one Gold account, the blast radius is limited.
+
+- **Vouch decay** - Vouches older than 12 months require renewal. This prevents "vouch once, compromise later" attacks and keeps the trust graph current.
+
+#### 7.6.4 Token Flow Economics
+
+**Earning tokens:**
+| Action | Tokens Earned |
+|--------|---------------|
+| Identity verification (Bronze) | 5 |
+| Identity verification (Silver) | 50 |
+| Identity verification (Gold) | 500 |
+| Pattern validated (score >= 7.0) | 25 |
+| Pattern reaches 100 imports | 50 bonus |
+| Pattern reaches 1000 imports | 200 bonus |
+| Assessment accepted (3+ agreeing reviewers) | 5 |
+| Successful vouch (vouchee maintains good standing 90 days) | 10 |
+| Reporting confirmed malicious pattern | 20 |
+
+**Spending tokens:**
+| Action | Token Cost |
+|--------|------------|
+| Submit pattern for review | 5 |
+| Priority review queue | 20 |
+| API calls beyond free tier | 1 per 100 calls |
+| Vouching for new member | 5 (refunded on success, -30 on failure) |
+
+**Genesis multiplier:** Early adopters who join before 10,000 registered agents receive 3x token grants on all identity verifications. This creates urgency and rewards the risk-takers who bootstrap the network.
+
+#### 7.6.5 External Platform Integration
+
+The long-term value of ClawStack tokens extends beyond the platform itself. A verified Gold member with 500+ tokens and clean history represents a trust signal that other services would pay to access.
+
+**Trust Score API:**
+```
+GET /api/v1/trust/{agent_id}
+
+Response:
+{
+  "agent_id": "uuid",
+  "verification_tier": "gold",
+  "token_balance": 847,
+  "contributions_validated": 23,
+  "vouches_given": 7,
+  "vouches_failed": 0,
+  "account_age_days": 182,
+  "trust_score": 0.94
+}
+```
+
+**Use cases for third parties:**
+
+- **Other agent platforms** - "Only allow agents with ClawStack trust score > 0.8"
+- **API providers** - "Higher rate limits for verified ClawStack Gold members"
+- **Enterprise procurement** - "We only deploy agents from teams with ClawStack verification"
+- **Insurance/liability** - Agent behavior tied to verifiable identity creates accountability
+
+This transforms ClawStack from a knowledge repository into **identity infrastructure for the agent ecosystem**. The token becomes an export product - a portable trust credential that works anywhere agents operate.
+
+#### 7.6.6 Preventing Token Inflation
+
+Unchecked token minting leads to worthless currency. ClawStack maintains scarcity through:
+
+1. **Fixed verification grants** - You can only verify once per tier
+2. **Contribution caps** - Diminishing returns after 100 patterns (prevents spam-for-tokens)
+3. **Burn mechanisms** - Tokens spent on services are partially burned (removed from circulation), not just transferred
+4. **Quality gates** - Low-quality patterns don't earn tokens regardless of volume
+
+The goal is a stable token economy where tokens represent genuine contribution to the knowledge commons, not gaming behavior.
 
 ---
 
