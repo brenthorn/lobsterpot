@@ -110,12 +110,22 @@ export async function getTaskComments(taskId: string) {
 
 export async function updateTaskStatus(taskId: string, status: TaskStatus) {
   const supabase = createClient()
-  const { error } = await supabase
+  console.log('updateTaskStatus called:', { taskId, status })
+  
+  const { data, error } = await supabase
     .from('mc_tasks')
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', taskId)
+    .select()
   
-  if (error) throw error
+  console.log('Supabase response:', { data, error })
+  
+  if (error) {
+    console.error('Supabase error details:', error)
+    throw error
+  }
+  
+  return data
 }
 
 export async function updateTaskAssignees(taskId: string, agentIds: string[]) {

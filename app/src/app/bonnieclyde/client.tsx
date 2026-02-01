@@ -79,7 +79,8 @@ export default function MissionControlClient() {
     // Subscribe to agent updates
     const agentsSub = supabase
       .channel('mc_agents_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'mc_agents' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mc_agents' }, (payload) => {
+        console.log('Agent change:', payload)
         loadData()
       })
       .subscribe()
@@ -87,15 +88,18 @@ export default function MissionControlClient() {
     // Subscribe to task updates
     const tasksSub = supabase
       .channel('mc_tasks_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'mc_tasks' }, () => {
-        loadData()
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mc_tasks' }, (payload) => {
+        console.log('Task change via realtime:', payload)
+        // Small delay to avoid race condition with optimistic update
+        setTimeout(() => loadData(), 100)
       })
       .subscribe()
 
     // Subscribe to activity updates
     const activitiesSub = supabase
       .channel('mc_activities_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'mc_activities' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mc_activities' }, (payload) => {
+        console.log('Activity change:', payload)
         loadData()
       })
       .subscribe()
@@ -109,7 +113,7 @@ export default function MissionControlClient() {
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
-    console.log('Drag end:', { activeId: active.id, overId: over?.id })
+    console.log('Drag end:', { activeId: active.id, overId: over?.id, overData: over })
     setActiveId(null)
     
     if (!over) {
@@ -117,26 +121,36 @@ export default function MissionControlClient() {
       return
     }
     
-    if (active.id === over.id) {
-      console.log('Dropped on same item, ignoring')
+    // Check if over.id is a valid TaskStatus
+    const validStatuses: TaskStatus[] = ['inbox', 'assigned', 'in_progress', 'review', 'done', 'blocked']
+    if (!validStatuses.includes(over.id as TaskStatus)) {
+      console.log('Invalid drop target:', over.id)
       return
     }
 
     const taskId = active.id as string
+    const task = tasks.find(t => t.id === taskId)
     const newStatus = over.id as TaskStatus
     
-    console.log(`Updating task ${taskId} to status ${newStatus}`)
+    if (task?.status === newStatus) {
+      console.log('Dropped on same column, ignoring')
+      return
+    }
+    
+    console.log(`Updating task "${task?.title}" from ${task?.status} to ${newStatus}`)
+
+    // Optimistically update UI first
+    setTasks(prev => prev.map(t => 
+      t.id === taskId ? { ...t, status: newStatus } : t
+    ))
 
     try {
       await updateTaskStatus(taskId, newStatus)
-      // Optimistically update UI
-      setTasks(prev => prev.map(t => 
-        t.id === taskId ? { ...t, status: newStatus } : t
-      ))
-      console.log('Task updated successfully')
+      console.log('✓ Task updated successfully in database')
     } catch (error) {
-      console.error('Failed to update task:', error)
-      loadData() // Reload on error
+      console.error('✗ Failed to update task:', error)
+      alert(`Failed to update task: ${error}`)
+      loadData() // Reload on error to revert
     }
   }
 
