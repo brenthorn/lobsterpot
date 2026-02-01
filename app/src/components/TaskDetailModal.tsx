@@ -17,6 +17,7 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [descriptionExpanded, setDescriptionExpanded] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     loadComments()
@@ -63,6 +64,17 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
     }
   }
 
+  function copyForChat() {
+    const assignedAgents = agents.filter(a => task.assigned_agent_ids.includes(a.id))
+    const agentNames = assignedAgents.map(a => a.name).join(', ') || 'Unassigned'
+    const text = `Task: ${task.title}\nID: ${task.id}\nStatus: ${task.status}\nAssigned to: ${agentNames}\n\nLet's discuss this task.`
+    
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
   const assignedAgents = agents.filter(a => task.assigned_agent_ids.includes(a.id))
 
   return (
@@ -102,26 +114,49 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
             </button>
           </div>
 
-          <div className="flex items-center gap-4 mt-4 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-700">Status:</span>
-              <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                {task.status}
-              </span>
+          <div className="flex items-center justify-between mt-4 text-sm">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-gray-700">Status:</span>
+                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                  {task.status}
+                </span>
+              </div>
+
+              {assignedAgents.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-gray-700">Assigned:</span>
+                  <div className="flex gap-1">
+                    {assignedAgents.map(agent => (
+                      <span key={agent.id} title={agent.name}>
+                        {agent.emoji} {agent.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {assignedAgents.length > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-gray-700">Assigned:</span>
-                <div className="flex gap-1">
-                  {assignedAgents.map(agent => (
-                    <span key={agent.id} title={agent.name}>
-                      {agent.emoji} {agent.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+            <button
+              onClick={copyForChat}
+              className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-sm font-medium transition-colors flex items-center gap-2"
+            >
+              {copied ? (
+                <>
+                  <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-green-600">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span>Copy for Chat</span>
+                </>
+              )}
+            </button>
           </div>
 
           {task.tags.length > 0 && (

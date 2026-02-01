@@ -42,7 +42,12 @@ export default function TaskCard({ task, agents, onClick }: TaskCardProps) {
     >
       {/* Clickable card area */}
       <div onClick={onClick} className="cursor-pointer">
-        <h3 className="font-medium text-gray-900 mb-1 text-sm">{task.title}</h3>
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="font-medium text-gray-900 text-sm flex-1">{task.title}</h3>
+          <span className="text-xs text-gray-400 font-mono shrink-0" title="Task ID">
+            #{task.id.substring(0, 8)}
+          </span>
+        </div>
       
         {task.description && (
           <p className="text-xs text-gray-600 mb-2 line-clamp-2">{task.description}</p>
