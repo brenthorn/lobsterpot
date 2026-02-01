@@ -133,6 +133,88 @@ const commands = {
     console.log(`✓ Comment posted to task: ${task}`)
   },
 
+  async check({ agent = 'Bonnie' }) {
+    const fs = require('fs')
+    const STATE_FILE = '/home/umbrel/.openclaw/workspace/memory/heartbeat-state.json'
+    
+    // Load state
+    let state = { lastMCCommentsCheck: null }
+    try {
+      state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'))
+    } catch {}
+    
+    const lastCheck = state.lastMCCommentsCheck || new Date(0).toISOString()
+    const now = new Date().toISOString()
+    
+    // Get agent ID
+    const { data: agentData } = await supabase
+      .from('mc_agents')
+      .select('id')
+      .eq('name', agent)
+      .single()
+    
+    if (!agentData) {
+      console.error(`Agent not found: ${agent}`)
+      process.exit(1)
+    }
+    
+    // Get tasks assigned to agent
+    const { data: tasks } = await supabase
+      .from('mc_tasks')
+      .select('id, title, status, created_at')
+      .contains('assigned_agent_ids', [agentData.id])
+    
+    // Check for new inbox items
+    const newInbox = tasks?.filter(t => 
+      t.status === 'inbox' && 
+      new Date(t.created_at) > new Date(lastCheck)
+    ) || []
+    
+    // Check for new comments
+    const taskIds = tasks?.map(t => t.id) || []
+    let newComments = []
+    
+    if (taskIds.length > 0) {
+      const { data: comments } = await supabase
+        .from('mc_comments')
+        .select('*, tasks:task_id(title)')
+        .in('task_id', taskIds)
+        .gt('created_at', lastCheck)
+        .order('created_at', { ascending: false })
+      
+      newComments = comments || []
+    }
+    
+    // Output
+    console.log('\n📬 MISSION CONTROL CHECK\n')
+    
+    if (newInbox.length > 0) {
+      console.log(`🆕 NEW INBOX ITEMS (${newInbox.length}):`)
+      newInbox.forEach(t => console.log(`   • ${t.title}`))
+      console.log()
+    }
+    
+    if (newComments.length > 0) {
+      console.log(`💬 NEW COMMENTS (${newComments.length}):`)
+      newComments.forEach(c => {
+        const preview = c.content.substring(0, 60).replace(/\n/g, ' ')
+        console.log(`   • [${c.tasks?.title}] ${preview}${c.content.length > 60 ? '...' : ''}`)
+      })
+      console.log()
+    }
+    
+    if (newInbox.length === 0 && newComments.length === 0) {
+      console.log('✓ No new activity since last check')
+      console.log(`  ${tasks?.length || 0} tasks assigned`)
+      console.log()
+    }
+    
+    // Update state
+    state.lastMCCommentsCheck = now
+    state.lastMCCheck = now
+    fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2))
+  },
+
   async list({ type = 'tasks' }) {
     if (type === 'tasks') {
       const { data, error } = await supabase
@@ -206,6 +288,7 @@ Usage:
   mc status --agent <name> --status <idle|active|blocked> [--task <title>]
   mc task create --title <title> [--description <desc>] [--assign <agent>] [--tags <tag1,tag2>]
   mc comment --task <title|id> --agent <name> --message <text>
+  mc check [--agent <name>]
   mc list [--type <tasks|agents>]
 
 Examples:
@@ -213,6 +296,7 @@ Examples:
   mc status --agent Clyde --status active --task "Building Mission Control"
   mc task create --title "Fix Bonnie heartbeat" --assign Bonnie --tags bug,urgent
   mc comment --task "Fix Bonnie heartbeat" --agent Clyde --message "Looking into it"
+  mc check
   mc list --type tasks
 `)
   process.exit(1)
