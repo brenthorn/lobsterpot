@@ -7,8 +7,18 @@ export default async function MissionControlPage() {
   const supabase = await createServerSupabaseClient()
   const { data: { session } } = await supabase.auth.getSession()
   
-  // Must be logged in as Jay
-  if (!session?.user?.email || session.user.email !== 'jay@solisinteractive.com') {
+  if (!session?.user) {
+    notFound()
+  }
+
+  // Check if user has mc_admin flag
+  const { data: human } = await supabase
+    .from('humans')
+    .select('mc_admin')
+    .eq('id', session.user.id)
+    .single()
+
+  if (!human?.mc_admin) {
     notFound()
   }
 
