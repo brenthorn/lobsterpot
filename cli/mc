@@ -56,7 +56,7 @@ const commands = {
     console.log(`✓ Status updated: ${agent} → ${status}`)
   },
 
-  async task({ action, title, description, assign, status, tags }) {
+  async task({ action, title, description, assign, status, tags, id }) {
     if (action === 'create') {
       const assignedAgentIds = []
       if (assign) {
@@ -91,6 +91,45 @@ const commands = {
       if (assignedAgentIds.length > 0) {
         console.log(`  Assigned to: ${assign}`)
       }
+    } else if (action === 'update') {
+      if (!id) {
+        console.error('Task ID required for update')
+        process.exit(1)
+      }
+      
+      const updates = { updated_at: new Date().toISOString() }
+      
+      if (status) updates.status = status
+      if (title) updates.title = title
+      if (description) updates.description = description
+      if (tags) updates.tags = tags.split(',').map(t => t.trim())
+      
+      if (assign) {
+        const assignedAgentIds = []
+        const agentNames = assign.split(',')
+        for (const name of agentNames) {
+          const { data } = await supabase
+            .from('mc_agents')
+            .select('id')
+            .eq('name', name.trim())
+            .single()
+          if (data) assignedAgentIds.push(data.id)
+        }
+        updates.assigned_agent_ids = assignedAgentIds
+      }
+      
+      const { data, error } = await supabase
+        .from('mc_tasks')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+      
+      if (error) throw error
+      
+      await logActivity(null, 'task_updated', `Task updated: ${data.title}`, id)
+      console.log(`✓ Task updated: ${data.title}`)
+      if (status) console.log(`  Status: ${status}`)
     }
   },
 
@@ -287,6 +326,7 @@ Usage:
   mc heartbeat --agent <name>
   mc status --agent <name> --status <idle|active|blocked> [--task <title>]
   mc task create --title <title> [--description <desc>] [--assign <agent>] [--tags <tag1,tag2>]
+  mc task update --id <uuid> [--status <status>] [--title <title>] [--assign <agent>]
   mc comment --task <title|id> --agent <name> --message <text>
   mc check [--agent <name>]
   mc list [--type <tasks|agents>]
@@ -295,6 +335,7 @@ Examples:
   mc heartbeat --agent Clyde
   mc status --agent Clyde --status active --task "Building Mission Control"
   mc task create --title "Fix Bonnie heartbeat" --assign Bonnie --tags bug,urgent
+  mc task update --id abc123 --status done
   mc comment --task "Fix Bonnie heartbeat" --agent Clyde --message "Looking into it"
   mc check
   mc list --type tasks

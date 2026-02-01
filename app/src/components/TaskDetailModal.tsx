@@ -2,7 +2,8 @@
 
 import { Task, Agent, Comment } from '@/lib/mission-control'
 import { useEffect, useState } from 'react'
-import { getTaskComments } from '@/lib/mission-control'
+import { getTaskComments, createComment } from '@/lib/mission-control'
+import { createClient } from '@/lib/supabase'
 
 interface TaskDetailModalProps {
   task: Task
@@ -13,9 +14,24 @@ interface TaskDetailModalProps {
 export default function TaskDetailModal({ task, agents, onClose }: TaskDetailModalProps) {
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
+  const [newComment, setNewComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     loadComments()
+    // Set up realtime subscription for comments
+    const supabase = createClient()
+    const channel = supabase
+      .channel(`task_${task.id}_comments`)
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'mc_comments', filter: `task_id=eq.${task.id}` },
+        () => loadComments()
+      )
+      .subscribe()
+
+    return () => {
+      channel.unsubscribe()
+    }
   }, [task.id])
 
   async function loadComments() {
@@ -26,6 +42,23 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
       console.error('Failed to load comments:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleSubmitComment(e: React.FormEvent) {
+    e.preventDefault()
+    if (!newComment.trim() || submitting) return
+
+    setSubmitting(true)
+    try {
+      await createComment(task.id, newComment)
+      setNewComment('')
+      await loadComments()
+    } catch (error) {
+      console.error('Failed to create comment:', error)
+      alert('Failed to post comment')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -121,8 +154,31 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
           )}
         </div>
 
-        {/* Footer */}
+        {/* Comment Input */}
         <div className="p-6 border-t bg-gray-50">
+          <form onSubmit={handleSubmitComment} className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Add Comment
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Type your comment..."
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                disabled={submitting}
+              />
+              <button
+                type="submit"
+                disabled={!newComment.trim() || submitting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+              >
+                {submitting ? 'Posting...' : 'Post'}
+              </button>
+            </div>
+          </form>
+          
           <div className="text-xs text-gray-500">
             Created {new Date(task.created_at).toLocaleString()}
             {task.completed_at && ` • Completed ${new Date(task.completed_at).toLocaleString()}`}

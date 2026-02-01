@@ -7,7 +7,7 @@ import KanbanColumn from '@/components/KanbanColumn'
 import ActivityFeed from '@/components/ActivityFeed'
 import TaskDetailModal from '@/components/TaskDetailModal'
 import CreateTaskModal from '@/components/CreateTaskModal'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
@@ -25,6 +25,15 @@ export default function MissionControlClient() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [showCreateTask, setShowCreateTask] = useState(false)
   const [loading, setLoading] = useState(true)
+
+  // Configure drag sensors with proper activation constraints
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Require 8px of movement before activating drag
+      },
+    })
+  )
 
   useEffect(() => {
     loadData()
@@ -180,7 +189,7 @@ export default function MissionControlClient() {
               </button>
             </div>
 
-            <DndContext onDragEnd={handleDragEnd}>
+            <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
               <div className="flex gap-4 overflow-x-auto pb-4">
                 {COLUMNS.map(column => (
                   <KanbanColumn

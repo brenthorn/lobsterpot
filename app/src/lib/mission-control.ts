@@ -150,11 +150,32 @@ export async function createTask(task: {
   return data as Task
 }
 
-export async function createComment(taskId: string, agentId: string, content: string) {
+export async function createComment(taskId: string, content: string, agentId?: string) {
   const supabase = createClient()
+  
+  // If no agentId provided, try to get the current user's agent
+  let finalAgentId = agentId
+  if (!finalAgentId) {
+    const { data: userData } = await supabase.auth.getUser()
+    if (userData?.user?.email) {
+      // Look up agent by email match (for Jay)
+      const { data: agent } = await supabase
+        .from('mc_agents')
+        .select('id')
+        .eq('name', 'Jay')
+        .single()
+      
+      if (agent) finalAgentId = agent.id
+    }
+  }
+  
+  if (!finalAgentId) {
+    throw new Error('Unable to determine agent/user for comment')
+  }
+  
   const { data, error } = await supabase
     .from('mc_comments')
-    .insert({ task_id: taskId, agent_id: agentId, content })
+    .insert({ task_id: taskId, agent_id: finalAgentId, content })
     .select()
     .single()
   
