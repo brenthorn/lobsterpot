@@ -307,6 +307,20 @@ export default function MissionControlClient() {
             </DragOverlay>
           </DndContext>
         </div>
+
+        {/* Activity Feed - Below Kanban */}
+        <div className="mt-6">
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="font-semibold text-gray-900 mb-4 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                LIVE FEED
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              </span>
+              <span className="text-sm font-normal text-gray-500">{activities.length} recent</span>
+            </h2>
+            <ActivityFeed activities={activities} />
+          </div>
+        </div>
       </div>
 
       {/* Task Detail Modal */}
