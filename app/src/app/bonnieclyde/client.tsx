@@ -40,6 +40,16 @@ export default function MissionControlClient() {
     setupRealtimeSubscriptions()
   }, [])
 
+  // Update tab title when tasks need attention
+  useEffect(() => {
+    const reviewCount = tasks.filter(t => t.status === 'review').length
+    if (reviewCount > 0) {
+      document.title = `(${reviewCount}) Mission Control - Needs Review`
+    } else {
+      document.title = 'Mission Control - Bonnie & Clyde'
+    }
+  }, [tasks])
+
   async function loadData() {
     try {
       const [agentsData, tasksData, activitiesData] = await Promise.all([
@@ -113,6 +123,7 @@ export default function MissionControlClient() {
 
   const activeAgents = agents.filter(a => a.status === 'active').length
   const tasksInQueue = tasks.filter(t => t.status !== 'done').length
+  const reviewCount = tasks.filter(t => t.status === 'review').length
 
   if (loading) {
     return (
@@ -142,6 +153,15 @@ export default function MissionControlClient() {
                 <div className="text-3xl font-bold text-gray-900">{tasksInQueue}</div>
                 <div className="text-xs text-gray-500 uppercase tracking-wide">Tasks in Queue</div>
               </div>
+              {reviewCount > 0 && (
+                <div className="text-center">
+                  <div className="relative inline-block">
+                    <div className="text-3xl font-bold text-orange-600">{reviewCount}</div>
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="text-xs text-orange-600 uppercase tracking-wide font-semibold">Needs Review</div>
+                </div>
+              )}
               <div className="text-center">
                 <div className="text-lg font-mono text-gray-900">
                   {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
