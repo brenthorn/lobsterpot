@@ -6,6 +6,7 @@ import AgentCard from '@/components/AgentCard'
 import KanbanColumn from '@/components/KanbanColumn'
 import ActivityFeed from '@/components/ActivityFeed'
 import TaskDetailModal from '@/components/TaskDetailModal'
+import CreateTaskModal from '@/components/CreateTaskModal'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
 
@@ -22,6 +23,7 @@ export default function MissionControlClient() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const [showCreateTask, setShowCreateTask] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -168,8 +170,14 @@ export default function MissionControlClient() {
 
           {/* Center - Kanban Board */}
           <div className="col-span-7">
-            <div className="mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold text-gray-900 text-lg">MISSION QUEUE</h2>
+              <button
+                onClick={() => setShowCreateTask(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              >
+                + Create Task
+              </button>
             </div>
 
             <DndContext onDragEnd={handleDragEnd}>
@@ -209,6 +217,15 @@ export default function MissionControlClient() {
           task={selectedTask}
           agents={agents}
           onClose={() => setSelectedTask(null)}
+        />
+      )}
+
+      {/* Create Task Modal */}
+      {showCreateTask && (
+        <CreateTaskModal
+          agents={agents}
+          onClose={() => setShowCreateTask(false)}
+          onSuccess={() => loadData()}
         />
       )}
     </div>
