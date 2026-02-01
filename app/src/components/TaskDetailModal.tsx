@@ -16,6 +16,7 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
   const [loading, setLoading] = useState(true)
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false)
 
   useEffect(() => {
     loadComments()
@@ -71,17 +72,31 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-6 border-b">
+        <div className="p-6 border-b flex-shrink-0">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">{task.title}</h2>
               {task.description && (
-                <p className="text-gray-600">{task.description}</p>
+                <div>
+                  <div 
+                    className={`text-gray-600 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}
+                  >
+                    {task.description}
+                  </div>
+                  {task.description.length > 150 && (
+                    <button
+                      onClick={() => setDescriptionExpanded(!descriptionExpanded)}
+                      className="text-blue-600 hover:text-blue-700 text-sm mt-1"
+                    >
+                      {descriptionExpanded ? 'Show less' : 'Show more'}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
             <button 
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl leading-none ml-4"
+              className="text-gray-400 hover:text-gray-600 text-2xl leading-none ml-4 flex-shrink-0"
             >
               ×
             </button>
@@ -120,9 +135,9 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
           )}
         </div>
 
-        {/* Comments */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <h3 className="font-semibold text-gray-900 mb-4">Activity</h3>
+        {/* Comments - scrollable area */}
+        <div className="flex-1 overflow-y-auto p-6 min-h-0">
+          <h3 className="font-semibold text-gray-900 mb-4 sticky top-0 bg-white pb-2">Activity</h3>
           
           {loading ? (
             <div className="text-center text-gray-400 py-8">Loading...</div>
@@ -155,7 +170,7 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
         </div>
 
         {/* Comment Input */}
-        <div className="p-6 border-t bg-gray-50">
+        <div className="p-6 border-t bg-gray-50 flex-shrink-0">
           <form onSubmit={handleSubmitComment} className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Add Comment
