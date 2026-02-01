@@ -8,19 +8,28 @@ export default async function MissionControlPage() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (!session?.user) {
+    console.log('[MC] No session found')
     notFound()
   }
 
-  // Check if user has mc_admin flag
-  const { data: human } = await supabase
+  console.log('[MC] Session user ID:', session.user.id)
+  console.log('[MC] Session user email:', session.user.email)
+
+  // Check if user has mc_admin flag (query by email since humans.id != auth.users.id)
+  const { data: human, error } = await supabase
     .from('humans')
-    .select('mc_admin')
-    .eq('id', session.user.id)
+    .select('mc_admin, email')
+    .eq('email', session.user.email)
     .single()
 
+  console.log('[MC] Human lookup result:', human)
+  console.log('[MC] Human lookup error:', error)
+
   if (!human?.mc_admin) {
+    console.log('[MC] Access denied - mc_admin not true')
     notFound()
   }
 
+  console.log('[MC] Access granted!')
   return <MissionControlClient />
 }
