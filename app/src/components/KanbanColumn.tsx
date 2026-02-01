@@ -3,7 +3,6 @@
 import { Task, Agent, TaskStatus } from '@/lib/mission-control'
 import TaskCard from './TaskCard'
 import { useDroppable } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 interface KanbanColumnProps {
   status: TaskStatus
@@ -23,8 +22,7 @@ const columnColors: Record<TaskStatus, string> = {
 }
 
 export default function KanbanColumn({ status, title, tasks, agents, onTaskClick }: KanbanColumnProps) {
-  const { setNodeRef } = useDroppable({ id: status })
-  const taskIds = tasks.map(t => t.id)
+  const { setNodeRef, isOver } = useDroppable({ id: status })
   const needsAttention = status === 'review' && tasks.length > 0
 
   return (
@@ -40,21 +38,22 @@ export default function KanbanColumn({ status, title, tasks, agents, onTaskClick
           </span>
         </div>
 
-        <div ref={setNodeRef} className="min-h-[400px] space-y-3">
-          <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-            {tasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                agents={agents}
-                onClick={() => onTaskClick(task)}
-              />
-            ))}
-          </SortableContext>
+        <div 
+          ref={setNodeRef} 
+          className={`min-h-[400px] space-y-3 rounded-lg transition-colors ${isOver ? 'bg-blue-50 ring-2 ring-blue-400' : ''}`}
+        >
+          {tasks.map(task => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              agents={agents}
+              onClick={() => onTaskClick(task)}
+            />
+          ))}
           
           {tasks.length === 0 && (
             <div className="text-center text-gray-400 text-sm py-16">
-              No tasks
+              {isOver ? 'Drop here' : 'No tasks'}
             </div>
           )}
         </div>

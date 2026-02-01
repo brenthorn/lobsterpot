@@ -26,6 +26,7 @@ export default function MissionControlClient() {
   const [showCreateTask, setShowCreateTask] = useState(false)
   const [loading, setLoading] = useState(true)
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
 
   // Configure drag sensors with proper activation constraints
   const sensors = useSensors(
@@ -108,12 +109,23 @@ export default function MissionControlClient() {
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
+    console.log('Drag end:', { activeId: active.id, overId: over?.id })
     setActiveId(null)
     
-    if (!over || active.id === over.id) return
+    if (!over) {
+      console.log('No drop target detected')
+      return
+    }
+    
+    if (active.id === over.id) {
+      console.log('Dropped on same item, ignoring')
+      return
+    }
 
     const taskId = active.id as string
     const newStatus = over.id as TaskStatus
+    
+    console.log(`Updating task ${taskId} to status ${newStatus}`)
 
     try {
       await updateTaskStatus(taskId, newStatus)
@@ -121,6 +133,7 @@ export default function MissionControlClient() {
       setTasks(prev => prev.map(t => 
         t.id === taskId ? { ...t, status: newStatus } : t
       ))
+      console.log('Task updated successfully')
     } catch (error) {
       console.error('Failed to update task:', error)
       loadData() // Reload on error
@@ -134,6 +147,19 @@ export default function MissionControlClient() {
   const activeAgents = agents.filter(a => a.status === 'active').length
   const tasksInQueue = tasks.filter(t => t.status !== 'done').length
   const reviewCount = tasks.filter(t => t.status === 'review').length
+  
+  // Filter tasks by selected agent
+  const filteredTasks = selectedAgent 
+    ? tasks.filter(t => {
+        if (selectedAgent === 'Jay') {
+          // Jay's tasks are ones not assigned to agents, or assigned to Jay
+          const jayAgent = agents.find(a => a.name === 'Jay')
+          return t.assigned_agent_ids.length === 0 || (jayAgent && t.assigned_agent_ids.includes(jayAgent.id))
+        }
+        const agent = agents.find(a => a.name === selectedAgent)
+        return agent && t.assigned_agent_ids.includes(agent.id)
+      })
+    : tasks
 
   if (loading) {
     return (
@@ -190,78 +216,82 @@ export default function MissionControlClient() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1800px] mx-auto px-6 py-6">
-        <div className="grid grid-cols-12 gap-6">
-          {/* Left Sidebar - Agents */}
-          <div className="col-span-2">
-            <div className="bg-white rounded-lg p-4 sticky top-6">
-              <h2 className="font-semibold text-gray-900 mb-4 flex items-center justify-between">
-                AGENTS
-                <span className="text-sm font-normal text-gray-500">{agents.length}</span>
-              </h2>
-              <div className="space-y-2">
-                {agents.map(agent => (
-                  <AgentCard key={agent.id} agent={agent} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Center - Kanban Board */}
-          <div className="col-span-7">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900 text-lg">MISSION QUEUE</h2>
+      <div className="max-w-[2000px] mx-auto px-6 py-6">
+        {/* Filter and Controls Bar */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="font-semibold text-gray-900 text-lg">MISSION QUEUE</h2>
+            
+            {/* Agent Filter */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Filter:</span>
               <button
-                onClick={() => setShowCreateTask(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                onClick={() => setSelectedAgent(null)}
+                className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                  selectedAgent === null 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
-                + Create Task
+                All
               </button>
-            </div>
-
-            <DndContext 
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDragCancel={handleDragCancel}
-              sensors={sensors}
-              collisionDetection={closestCenter}
-            >
-              <div className="flex gap-4 overflow-x-auto pb-4">
-                {COLUMNS.map(column => (
-                  <KanbanColumn
-                    key={column.status}
-                    status={column.status}
-                    title={column.title}
-                    tasks={tasks.filter(t => t.status === column.status)}
-                    agents={agents}
-                    onTaskClick={setSelectedTask}
-                  />
-                ))}
-              </div>
-              <DragOverlay>
-                {activeId ? (
-                  <div className="bg-white border-l-4 border-l-blue-400 rounded-lg p-3 shadow-xl opacity-90">
-                    <h3 className="font-medium text-gray-900 text-sm">
-                      {tasks.find(t => t.id === activeId)?.title}
-                    </h3>
-                  </div>
-                ) : null}
-              </DragOverlay>
-            </DndContext>
-          </div>
-
-          {/* Right Sidebar - Activity Feed */}
-          <div className="col-span-3">
-            <div className="bg-white rounded-lg p-4 sticky top-6 max-h-[calc(100vh-8rem)] overflow-hidden flex flex-col">
-              <h2 className="font-semibold text-gray-900 mb-4 flex items-center justify-between">
-                LIVE FEED
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              </h2>
-              <div className="overflow-y-auto flex-1">
-                <ActivityFeed activities={activities} />
-              </div>
+              {agents.map(agent => (
+                <button
+                  key={agent.id}
+                  onClick={() => setSelectedAgent(agent.name)}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+                    selectedAgent === agent.name
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <span>{agent.emoji}</span>
+                  <span>{agent.name}</span>
+                </button>
+              ))}
             </div>
           </div>
+          
+          <button
+            onClick={() => setShowCreateTask(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          >
+            + Create Task
+          </button>
+        </div>
+
+        {/* Kanban Board - Full Width */}
+        <div>
+
+          <DndContext 
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+            sensors={sensors}
+            collisionDetection={closestCenter}
+          >
+            <div className="flex gap-4 pb-4">
+              {COLUMNS.map(column => (
+                <KanbanColumn
+                  key={column.status}
+                  status={column.status}
+                  title={column.title}
+                  tasks={filteredTasks.filter(t => t.status === column.status)}
+                  agents={agents}
+                  onTaskClick={setSelectedTask}
+                />
+              ))}
+            </div>
+            <DragOverlay>
+              {activeId ? (
+                <div className="bg-white border-l-4 border-l-blue-400 rounded-lg p-3 shadow-xl opacity-90">
+                  <h3 className="font-medium text-gray-900 text-sm">
+                    {tasks.find(t => t.id === activeId)?.title}
+                  </h3>
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         </div>
       </div>
 

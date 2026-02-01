@@ -1,8 +1,7 @@
 'use client'
 
 import { Task, Agent } from '@/lib/mission-control'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import { useDraggable } from '@dnd-kit/core'
 
 interface TaskCardProps {
   task: Task
@@ -23,15 +22,12 @@ export default function TaskCard({ task, agents, onClick }: TaskCardProps) {
     listeners,
     setNodeRef,
     transform,
-    transition,
     isDragging
-  } = useSortable({ id: task.id })
+  } = useDraggable({ id: task.id })
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1
-  }
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+  } : undefined
 
   const assignedAgents = agents.filter(a => task.assigned_agent_ids.includes(a.id))
   const timeAgo = getTimeAgo(new Date(task.created_at))
@@ -42,7 +38,7 @@ export default function TaskCard({ task, agents, onClick }: TaskCardProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`bg-white border-l-4 ${priorityColors[task.priority]} rounded-lg p-3 hover:shadow-md transition-shadow relative cursor-grab active:cursor-grabbing`}
+      className={`bg-white border-l-4 ${priorityColors[task.priority]} rounded-lg p-3 hover:shadow-md transition-shadow relative cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-50' : ''}`}
     >
       {/* Clickable card area */}
       <div onClick={onClick} className="cursor-pointer">
