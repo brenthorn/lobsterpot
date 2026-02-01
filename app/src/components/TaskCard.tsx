@@ -41,37 +41,49 @@ export default function TaskCard({ task, agents, onClick }: TaskCardProps) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
-      onClick={onClick}
-      className={`bg-white border-l-4 ${priorityColors[task.priority]} rounded-lg p-3 mb-3 cursor-pointer hover:shadow-md transition-shadow`}
+      className={`bg-white border-l-4 ${priorityColors[task.priority]} rounded-lg p-3 mb-3 hover:shadow-md transition-shadow relative`}
     >
-      <h3 className="font-medium text-gray-900 mb-1 text-sm">{task.title}</h3>
-      
-      {task.description && (
-        <p className="text-xs text-gray-600 mb-2 line-clamp-2">{task.description}</p>
-      )}
-
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-1">
-          {assignedAgents.map(agent => (
-            <span key={agent.id} className="text-sm" title={agent.name}>
-              {agent.emoji}
-            </span>
-          ))}
-        </div>
-
-        <span className="text-xs text-gray-500">{timeAgo}</span>
+      {/* Drag handle */}
+      <div
+        {...listeners}
+        className="absolute top-3 right-3 cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
+        title="Drag to move"
+      >
+        <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+        </svg>
       </div>
 
-      {task.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-2">
-          {task.tags.map(tag => (
-            <span key={tag} className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
-              {tag}
-            </span>
-          ))}
+      {/* Clickable card area */}
+      <div onClick={onClick} className="cursor-pointer pr-8">
+        <h3 className="font-medium text-gray-900 mb-1 text-sm">{task.title}</h3>
+      
+        {task.description && (
+          <p className="text-xs text-gray-600 mb-2 line-clamp-2">{task.description}</p>
+        )}
+
+        <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center gap-1">
+            {assignedAgents.map(agent => (
+              <span key={agent.id} className="text-sm" title={agent.name}>
+                {agent.emoji}
+              </span>
+            ))}
+          </div>
+
+          <span className="text-xs text-gray-500">{timeAgo}</span>
         </div>
-      )}
+
+        {task.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {task.tags.map(tag => (
+              <span key={tag} className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
