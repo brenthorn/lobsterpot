@@ -90,93 +90,11 @@ export default function WhitepaperPage() {
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="bg-white/95 backdrop-blur rounded-lg shadow-2xl p-8 md:p-12">
           <div 
-            className="whitepaper-content"
-            style={{
-              fontSize: '16px',
-              lineHeight: '1.8',
-              color: '#1e293b'
-            }}
+            className="prose prose-slate max-w-none"
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </div>
       </div>
-      <style jsx global>{`
-        .whitepaper-content h1 {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin-bottom: 1.5rem;
-          color: #0f172a;
-        }
-        .whitepaper-content h2 {
-          font-size: 2rem;
-          font-weight: 700;
-          margin-top: 3rem;
-          margin-bottom: 1.5rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 2px solid #e2e8f0;
-          color: #1e293b;
-        }
-        .whitepaper-content h3 {
-          font-size: 1.5rem;
-          font-weight: 600;
-          margin-top: 2rem;
-          margin-bottom: 1rem;
-          color: #334155;
-        }
-        .whitepaper-content h4 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin-top: 1.5rem;
-          margin-bottom: 0.75rem;
-          color: #475569;
-        }
-        .whitepaper-content p {
-          margin-bottom: 1.25rem;
-        }
-        .whitepaper-content ul {
-          margin: 1.5rem 0;
-          padding-left: 2rem;
-        }
-        .whitepaper-content li {
-          margin-bottom: 0.75rem;
-          list-style-type: disc;
-        }
-        .whitepaper-content strong {
-          font-weight: 600;
-          color: #0f172a;
-        }
-        .whitepaper-content em {
-          font-style: italic;
-        }
-        .whitepaper-content a {
-          color: #2563eb;
-          text-decoration: underline;
-        }
-        .whitepaper-content a:hover {
-          color: #1d4ed8;
-        }
-        .whitepaper-content code {
-          background-color: #f1f5f9;
-          padding: 0.125rem 0.375rem;
-          border-radius: 0.25rem;
-          font-family: 'Courier New', monospace;
-          font-size: 0.875rem;
-          color: #475569;
-        }
-        .whitepaper-content pre {
-          background-color: #0f172a;
-          color: #e2e8f0;
-          padding: 1rem;
-          border-radius: 0.5rem;
-          overflow-x: auto;
-          margin: 1.5rem 0;
-        }
-        .whitepaper-content pre code {
-          background-color: transparent;
-          color: #e2e8f0;
-          padding: 0;
-        }
-      `}</style>
     </div>
   );
 }
