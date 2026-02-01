@@ -7,7 +7,7 @@ import KanbanColumn from '@/components/KanbanColumn'
 import ActivityFeed from '@/components/ActivityFeed'
 import TaskDetailModal from '@/components/TaskDetailModal'
 import CreateTaskModal from '@/components/CreateTaskModal'
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay, DragStartEvent } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
@@ -25,6 +25,7 @@ export default function MissionControlClient() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [showCreateTask, setShowCreateTask] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   // Configure drag sensors with proper activation constraints
   const sensors = useSensors(
@@ -34,6 +35,10 @@ export default function MissionControlClient() {
       },
     })
   )
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(event.active.id as string)
+  }
 
   useEffect(() => {
     loadData()
@@ -103,6 +108,7 @@ export default function MissionControlClient() {
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
+    setActiveId(null)
     
     if (!over || active.id === over.id) return
 
@@ -119,6 +125,10 @@ export default function MissionControlClient() {
       console.error('Failed to update task:', error)
       loadData() // Reload on error
     }
+  }
+
+  function handleDragCancel() {
+    setActiveId(null)
   }
 
   const activeAgents = agents.filter(a => a.status === 'active').length
@@ -209,7 +219,13 @@ export default function MissionControlClient() {
               </button>
             </div>
 
-            <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+            <DndContext 
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
+              sensors={sensors}
+              collisionDetection={closestCenter}
+            >
               <div className="flex gap-4 overflow-x-auto pb-4">
                 {COLUMNS.map(column => (
                   <KanbanColumn
@@ -222,6 +238,15 @@ export default function MissionControlClient() {
                   />
                 ))}
               </div>
+              <DragOverlay>
+                {activeId ? (
+                  <div className="bg-white border-l-4 border-l-blue-400 rounded-lg p-3 shadow-xl opacity-90">
+                    <h3 className="font-medium text-gray-900 text-sm">
+                      {tasks.find(t => t.id === activeId)?.title}
+                    </h3>
+                  </div>
+                ) : null}
+              </DragOverlay>
             </DndContext>
           </div>
 

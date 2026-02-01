@@ -40,7 +40,7 @@ export default function KanbanColumn({ status, title, tasks, agents, onTaskClick
           </span>
         </div>
 
-        <div ref={setNodeRef} className="min-h-[200px]">
+        <div ref={setNodeRef} className="min-h-[400px] space-y-3">
           <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
             {tasks.map(task => (
               <TaskCard
@@ -53,7 +53,7 @@ export default function KanbanColumn({ status, title, tasks, agents, onTaskClick
           </SortableContext>
           
           {tasks.length === 0 && (
-            <div className="text-center text-gray-400 text-sm py-8">
+            <div className="text-center text-gray-400 text-sm py-16">
               No tasks
             </div>
           )}

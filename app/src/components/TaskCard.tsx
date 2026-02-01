@@ -41,21 +41,11 @@ export default function TaskCard({ task, agents, onClick }: TaskCardProps) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`bg-white border-l-4 ${priorityColors[task.priority]} rounded-lg p-3 mb-3 hover:shadow-md transition-shadow relative`}
+      {...listeners}
+      className={`bg-white border-l-4 ${priorityColors[task.priority]} rounded-lg p-3 hover:shadow-md transition-shadow relative cursor-grab active:cursor-grabbing`}
     >
-      {/* Drag handle */}
-      <div
-        {...listeners}
-        className="absolute top-3 right-3 cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
-        title="Drag to move"
-      >
-        <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
-        </svg>
-      </div>
-
       {/* Clickable card area */}
-      <div onClick={onClick} className="cursor-pointer pr-8">
+      <div onClick={onClick} className="cursor-pointer">
         <h3 className="font-medium text-gray-900 mb-1 text-sm">{task.title}</h3>
       
         {task.description && (
