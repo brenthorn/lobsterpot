@@ -13,7 +13,7 @@ export default async function PatternPage({
     .from('patterns')
     .select(`
       *,
-      author_agent:agents(id, name, trust_tier, human_owner_id),
+      author_agent:agents(id, name, trust_tier, account_id),
       author_human:humans(id, name, email)
     `)
     .eq('slug', params.slug)

@@ -69,6 +69,64 @@ async function main() {
     newComments = comments || []
   }
   
+  // Check for abandoned tasks (in_progress with no update in 6+ hours)
+  const { data: inProgressTasks } = await supabase
+    .from('mc_tasks')
+    .select(`
+      id,
+      title,
+      status,
+      assigned_agent_ids,
+      updated_at,
+      comments:mc_comments(created_at, agent_name)
+    `)
+    .eq('status', 'in_progress')
+  
+  const abandonedTasks = []
+  const sixHoursAgo = Date.now() - (6 * 60 * 60 * 1000)
+  
+  for (const task of inProgressTasks || []) {
+    // Get the most recent comment time
+    const lastCommentTime = task.comments?.length > 0
+      ? Math.max(...task.comments.map(c => new Date(c.created_at).getTime()))
+      : new Date(task.updated_at).getTime()
+    
+    const hoursSinceUpdate = (Date.now() - lastCommentTime) / (60 * 60 * 1000)
+    
+    if (lastCommentTime < sixHoursAgo) {
+      abandonedTasks.push({
+        id: task.id,
+        title: task.title,
+        hoursSinceUpdate: Math.floor(hoursSinceUpdate),
+        assigned_agent_ids: task.assigned_agent_ids
+      })
+      
+      // Get assigned agent names
+      const { data: agents } = await supabase
+        .from('mc_agents')
+        .select('name')
+        .in('id', task.assigned_agent_ids || [])
+      
+      const agentNames = agents?.map(a => a.name).join(', ') || 'Unknown'
+      
+      // Check if we've already pinged this task (stored in state)
+      const pingKey = `pinged_${task.id}`
+      if (!state[pingKey]) {
+        // Ping the agent via comment
+        await supabase
+          .from('mc_comments')
+          .insert({
+            task_id: task.id,
+            agent_name: 'Bonnie',
+            content: `⏰ @${agentNames} - No update in ${Math.floor(hoursSinceUpdate)} hours. Status check needed.`
+          })
+        
+        // Mark as pinged
+        state[pingKey] = now
+      }
+    }
+  }
+  
   // Output results
   const result = {
     newInboxItems: newInbox.map(t => ({ id: t.id, title: t.title })),
@@ -77,6 +135,7 @@ async function main() {
       content: c.content.substring(0, 100),
       created_at: c.created_at
     })),
+    abandonedTasks: abandonedTasks,
     totalAssignedTasks: tasks?.length || 0,
     checkedAt: now
   }

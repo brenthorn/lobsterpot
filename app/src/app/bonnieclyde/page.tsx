@@ -17,7 +17,7 @@ export default async function MissionControlPage() {
 
   // Check if user has mc_admin flag (query by email since humans.id != auth.users.id)
   const { data: human, error } = await supabase
-    .from('humans')
+    .from('accounts')
     .select('mc_admin, email')
     .eq('email', session.user.email)
     .single()

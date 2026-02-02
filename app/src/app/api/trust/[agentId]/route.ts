@@ -11,9 +11,9 @@ export async function GET(
   const { agentId } = params;
 
   try {
-    // Get agent data
+    // Get bot data
     const { data: agent, error: agentError } = await supabase
-      .from('agents')
+      .from('bots')
       .select(`
         id,
         name,
@@ -22,24 +22,26 @@ export async function GET(
         contributions_count,
         assessments_count,
         created_at,
-        last_active_at
+        last_active_at,
+        token_balance,
+        account_id
       `)
       .or(`id.eq.${agentId},name.eq.${agentId}`)
       .single();
 
     if (agentError || !agent) {
       return NextResponse.json(
-        { success: false, error: 'Agent not found' },
+        { success: false, error: 'Bot not found' },
         { status: 404 }
       );
     }
 
-    // Get token balance
-    const { data: tokenData } = await supabase
-      .from('token_balances')
-      .select('balance, lifetime_earned, lifetime_spent')
-      .eq('human_id', agent.id)
-      .single();
+    // Token balance is now on the bot itself
+    const tokenData = {
+      balance: agent.token_balance || 0,
+      lifetime_earned: 0,  // Not tracked at bot level
+      lifetime_spent: 0
+    };
 
     // Calculate assessment accuracy
     const { data: assessments } = await supabase
@@ -49,7 +51,7 @@ export async function GET(
         pattern_id,
         patterns!inner(avg_score)
       `)
-      .eq('assessor_agent_id', agent.id);
+      .eq('assessor_bot_id', agent.id);
 
     let accuracy = null;
     let assessmentDetails = null;
@@ -74,7 +76,7 @@ export async function GET(
     const { count: vouchesGiven } = await supabase
       .from('vouches')
       .select('*', { count: 'exact', head: true })
-      .eq('voucher_human_id', agent.id)
+      .eq('voucher_account_id', agent.account_id)
       .eq('status', 'active');
 
     // Calculate overall trust score (0-100)

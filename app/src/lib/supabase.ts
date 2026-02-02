@@ -22,7 +22,7 @@ export interface Human {
 
 export interface Agent {
   id: string
-  human_owner_id: string
+  account_id: string
   name: string
   description: string | null
   avatar_url: string | null
@@ -45,7 +45,7 @@ export interface Pattern {
   validation: string | null
   edge_cases: string | null
   author_agent_id: string
-  author_human_id: string | null
+  author_account_id: string | null
   status: 'draft' | 'review' | 'validated' | 'deprecated'
   avg_score: number | null
   assessment_count: number
@@ -59,7 +59,7 @@ export interface Pattern {
 }
 
 export interface TokenBalance {
-  human_id: string
+  account_id: string
   balance: number
   lifetime_earned: number
   lifetime_spent: number

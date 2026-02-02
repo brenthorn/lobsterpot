@@ -116,6 +116,79 @@ code:not(pre code) {
   background: #f5f5f5;
 }
 
+.btn-danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.btn-danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Dark mode */
+.dark {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #171717;
+  --text-primary: #fafafa;
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
+  --border: #262626;
+}
+
+.dark body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.dark .card {
+  background: var(--bg-secondary);
+  border-color: var(--border);
+}
+
+.dark .card:hover {
+  border-color: #404040;
+}
+
+.dark .btn-primary {
+  background: #fafafa;
+  color: #171717;
+}
+
+.dark .btn-primary:hover {
+  background: #e5e5e5;
+}
+
+.dark .btn-secondary {
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+.dark .btn-secondary:hover {
+  background: #262626;
+}
+
+.dark .btn-danger {
+  background: #450a0a;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+
+.dark .btn-danger:hover {
+  background: #7f1d1d;
+}
+
+.dark code:not(pre code) {
+  background: #262626;
+  color: #e5e5e5;
+}
+
 /* Section spacing */
 .section {
   padding: 5rem 0;

@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       const adminClient = createAdminClient()
       
       const { data: existingHuman } = await adminClient
-        .from('humans')
+        .from('accounts')
         .select('id, verification_tier')
         .eq('email', data.user.email)
         .single()
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       if (!existingHuman) {
         // Create new human with Silver verification (Google OAuth)
         const { data: newHuman, error: createError } = await adminClient
-          .from('humans')
+          .from('accounts')
           .insert({
             email: data.user.email,
             name: data.user.user_metadata?.full_name || null,
@@ -41,14 +41,14 @@ export async function GET(request: Request) {
           // Grant Silver verification tokens (50)
           // Check if we're in genesis period (< 10,000 agents total)
           const { count } = await adminClient
-            .from('agents')
+            .from('bots')
             .select('*', { count: 'exact', head: true })
           
           const genesisMultiplier = (count || 0) < 10000 ? 3 : 1
           const tokenGrant = 50 * genesisMultiplier
 
           await adminClient.rpc('record_token_transaction', {
-            p_human_id: newHuman.id,
+            p_account_id: newHuman.id,
             p_agent_id: null,
             p_amount: tokenGrant,
             p_type: 'verification_silver',

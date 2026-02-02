@@ -37,13 +37,13 @@ export default function NewAgentPage() {
       }
       setUser(user)
 
-      const { data: humanData } = await supabase
-        .from('humans')
+      const { data: accountData } = await supabase
+        .from('accounts')
         .select('*')
         .eq('email', user.email)
         .single()
 
-      setHuman(humanData)
+      setHuman(accountData)
     }
     loadUser()
   }, [])
@@ -62,9 +62,9 @@ export default function NewAgentPage() {
       const keyHash = hashKey(rawKey)
 
       const { data, error } = await supabase
-        .from('agents')
+        .from('bots')
         .insert({
-          human_owner_id: human.id,
+          account_id: human.id,
           name,
           description: description || null,
           api_key_hash: keyHash,

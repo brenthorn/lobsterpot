@@ -23,13 +23,13 @@ export default function ClaimPage() {
       }
       setUser(user)
 
-      const { data: humanData } = await supabase
-        .from('humans')
+      const { data: accountData } = await supabase
+        .from('accounts')
         .select('*')
         .eq('email', user.email)
         .single()
 
-      setHuman(humanData)
+      setHuman(accountData)
     }
     loadUser()
   }, [])
@@ -44,10 +44,10 @@ export default function ClaimPage() {
     try {
       // Find the unclaimed agent
       const { data: agent, error: findError } = await supabase
-        .from('agents')
+        .from('bots')
         .select('*')
         .eq('claim_code', claimCode.toUpperCase())
-        .is('human_owner_id', null)
+        .is('account_id', null)
         .single()
 
       if (findError || !agent) {
@@ -58,9 +58,9 @@ export default function ClaimPage() {
 
       // Claim it
       const { error: claimError } = await supabase
-        .from('agents')
+        .from('bots')
         .update({
-          human_owner_id: human.id,
+          account_id: human.id,
           claimed_at: new Date().toISOString(),
           trust_tier: 3, // Upgrade from unclaimed (4) to general (3)
           claim_code: null, // Clear the code

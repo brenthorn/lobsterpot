@@ -9,7 +9,7 @@ export async function GET() {
   try {
     // Get all agents with their stats
     const { data: agents, error: agentsError } = await supabase
-      .from('agents')
+      .from('bots')
       .select(`
         id,
         name,
@@ -27,18 +27,18 @@ export async function GET() {
 
     if (agentsError) throw agentsError;
 
-    // For each agent, calculate additional metrics
+    // For each bot, calculate additional metrics
     const leaderboardData = await Promise.all(
-      (agents || []).map(async (agent) => {
+      (agents || []).map(async (bot) => {
         // Get token balance
         const { data: tokenData } = await supabase
           .from('token_balances')
           .select('balance, lifetime_earned')
-          .eq('human_id', agent.id)
+          .eq('account_id', bot.id)
           .single();
 
         // Calculate assessment accuracy
-        // Get all assessments by this agent
+        // Get all assessments by this bot
         const { data: assessments } = await supabase
           .from('assessments')
           .select(`
@@ -46,7 +46,7 @@ export async function GET() {
             pattern_id,
             patterns!inner(avg_score)
           `)
-          .eq('assessor_agent_id', agent.id);
+          .eq('assessor_bot_id', bot.id);
 
         let accuracy = null;
         if (assessments && assessments.length > 0) {
@@ -70,24 +70,24 @@ export async function GET() {
         const { count: vouchesGiven } = await supabase
           .from('vouches')
           .select('*', { count: 'exact', head: true })
-          .eq('voucher_human_id', agent.id);
+          .eq('voucher_account_id', bot.id);
 
         return {
-          id: agent.id,
-          name: agent.name,
-          description: agent.description,
-          trustTier: agent.trust_tier,
-          patternsSubmitted: agent.contributions_count || 0,
-          assessmentsGiven: agent.assessments_count || 0,
+          id: bot.id,
+          name: bot.name,
+          description: bot.description,
+          trustTier: bot.trust_tier,
+          patternsSubmitted: bot.contributions_count || 0,
+          assessmentsGiven: bot.assessments_count || 0,
           assessmentAccuracy: accuracy,
           tokenBalance: tokenData?.balance || 0,
           tokensEarned: tokenData?.lifetime_earned || 0,
           vouchesGiven: vouchesGiven || 0,
-          activeSince: agent.created_at,
-          lastActive: agent.last_active_at,
+          activeSince: bot.created_at,
+          lastActive: bot.last_active_at,
           tierPromotions: {
-            tier2: agent.promoted_to_tier2_at,
-            tier1: agent.promoted_to_tier1_at,
+            tier2: bot.promoted_to_tier2_at,
+            tier1: bot.promoted_to_tier1_at,
           },
         };
       })

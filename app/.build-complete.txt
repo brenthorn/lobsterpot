@@ -1,0 +1,80 @@
+# Stripe Billing & API Key Integration - COMPLETE
+
+## Summary
+Successfully built Stripe billing integration and API key generation for Mission Control.
+
+## Files Created
+
+### Stripe Integration (Priority 1)
+1. **src/lib/stripe.ts** - Stripe client configuration with tier definitions
+   - Lazy-loaded Stripe client to avoid build-time issues
+   - TIERS constant with free/pro tier limits
+
+2. **src/app/api/stripe/checkout/route.ts** - Create checkout session
+   - Creates/reuses Stripe customer
+   - Initiates Pro tier subscription ($7/mo)
+   - Redirects to Stripe Checkout
+
+3. **src/app/api/stripe/webhook/route.ts** - Handle subscription events
+   - Validates webhook signatures
+   - Handles: subscription.created, subscription.updated, subscription.deleted
+   - Handles: invoice.payment_succeeded, invoice.payment_failed
+   - Updates account tier and limits in database
+
+4. **src/app/api/stripe/portal/route.ts** - Customer portal redirect
+   - Opens Stripe Billing Portal for subscription management
+
+### API Key Generation (Priority 2)
+5. **src/app/api/keys/generate/route.ts** - Generate secure API key
+   - Uses crypto.randomBytes() for 256-bit entropy
+   - Stores SHA-256 hash in database
+   - Returns full key ONCE on generation
+   - Format: mc_<base64url>
+
+6. **src/app/api/keys/revoke/route.ts** - Revoke existing key
+   - Clears api_key_hash, api_key_prefix, api_key_created_at
+
+7. **src/lib/api-auth.ts** - API key validation helper
+   - validateApiKey() - Verify key and return account
+   - extractApiKey() - Extract from Authorization/X-API-Key headers
+   - requireApiKey() - Middleware helper for API routes
+
+### Settings Page (Priority 3)
+8. **src/app/settings/page.tsx** - Account settings UI
+   - Shows current tier (Free/Pro) with status
+   - Subscription info (renewal date, limits)
+   - Upgrade to Pro button → Stripe Checkout
+   - Manage Billing button → Stripe Portal
+   - API key management (generate/revoke)
+   - Copy-to-clipboard for new keys
+   - Sign out functionality
+
+### Updated Files
+- **src/components/NavBar.tsx** - Added Settings link for logged-in users
+- **.env.local.example** - Added Stripe environment variables
+
+## Environment Variables Required
+```
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRO_PRICE_ID=price_...
+NEXT_PUBLIC_APP_URL=https://yourapp.com
+```
+
+## Stripe Setup Required
+1. Create product "Mission Control Pro" in Stripe Dashboard
+2. Create monthly price ($7/mo) and note the price_id
+3. Create webhook endpoint pointing to /api/stripe/webhook
+4. Subscribe to events: customer.subscription.*, invoice.payment_*
+5. Copy webhook signing secret
+
+## API Key Format
+- Prefix: `mc_` (Mission Control)
+- Full key: `mc_<43-char-base64url>` (total ~46 chars)
+- Display prefix: first 11 chars (e.g., `mc_AbCdEfGh`)
+- Storage: SHA-256 hash only
+
+## Build Status
+✅ Build successful (npm run build)
+✅ TypeScript types valid
+✅ All routes compiled

@@ -9,8 +9,8 @@ export default function DashboardPage() {
   const router = useRouter()
   const supabase = createClient()
   const [user, setUser] = useState<any>(null)
-  const [human, setHuman] = useState<any>(null)
-  const [agents, setAgents] = useState<any[]>([])
+  const [account, setAccount] = useState<any>(null)
+  const [bots, setBots] = useState<any[]>([])
   const [balance, setBalance] = useState<number>(0)
   const [loading, setLoading] = useState(true)
 
@@ -23,26 +23,26 @@ export default function DashboardPage() {
       }
       setUser(user)
 
-      const { data: humanData } = await supabase
-        .from('humans')
+      const { data: accountData } = await supabase
+        .from('accounts')
         .select('*')
         .eq('email', user.email)
         .single()
 
-      if (humanData) {
-        setHuman(humanData)
+      if (accountData) {
+        setAccount(accountData)
 
-        const { data: agentsData } = await supabase
-          .from('agents')
+        const { data: botsData } = await supabase
+          .from('bots')
           .select('*')
-          .eq('human_owner_id', humanData.id)
+          .eq('account_id', accountData.id)
         
-        setAgents(agentsData || [])
+        setBots(botsData || [])
 
         const { data: balanceData } = await supabase
           .from('token_balances')
           .select('balance')
-          .eq('human_id', humanData.id)
+          .eq('account_id', accountData.id)
           .single()
         
         setBalance(balanceData?.balance || 0)
@@ -64,7 +64,7 @@ export default function DashboardPage() {
     )
   }
 
-  if (!human) {
+  if (!account) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-12 text-center">
         <h1 className="text-2xl font-semibold text-neutral-900 mb-4">Account not found</h1>
@@ -96,19 +96,19 @@ export default function DashboardPage() {
       <div className="card p-6 mb-8">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            {human.avatar_url && (
-              <img src={human.avatar_url} alt="" className="w-14 h-14 rounded-full" />
+            {account.avatar_url && (
+              <img src={account.avatar_url} alt="" className="w-14 h-14 rounded-full" />
             )}
             <div>
               <h2 className="text-lg font-medium text-neutral-900">
-                {human.name || human.email}
+                {account.name || account.email}
               </h2>
               <div className="flex items-center gap-2 mt-1">
-                <span className={`badge badge-${human.verification_tier}`}>
-                  {human.verification_tier}
+                <span className={`badge badge-${account.verification_tier}`}>
+                  {account.verification_tier}
                 </span>
                 <span className="text-sm text-neutral-500">
-                  since {new Date(human.created_at).toLocaleDateString()}
+                  since {new Date(account.created_at).toLocaleDateString()}
                 </span>
               </div>
             </div>
@@ -120,48 +120,48 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Agents */}
+      {/* Bots */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-neutral-900">Your Agents</h2>
-          <Link href="/dashboard/agents/new" className="btn btn-primary text-sm">
-            Create agent
+          <h2 className="text-lg font-semibold text-neutral-900">Your Bots</h2>
+          <Link href="/dashboard/bots/new" className="btn btn-primary text-sm">
+            Create bot
           </Link>
         </div>
 
-        {agents.length === 0 ? (
+        {bots.length === 0 ? (
           <div className="card p-8 text-center">
             <p className="text-neutral-500 mb-4">
-              Create an agent to start submitting patterns.
+              Create a bot to start submitting patterns.
             </p>
-            <Link href="/dashboard/agents/new" className="btn btn-secondary">
-              Create your first agent
+            <Link href="/dashboard/bots/new" className="btn btn-secondary">
+              Create your first bot
             </Link>
           </div>
         ) : (
           <div className="space-y-3">
-            {agents.map((agent) => (
-              <div key={agent.id} className="card p-4">
+            {bots.map((bot) => (
+              <div key={bot.id} className="card p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center text-neutral-600 font-medium">
-                      {agent.name.charAt(0).toUpperCase()}
+                      {bot.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <div className="font-medium text-neutral-900">{agent.name}</div>
+                      <div className="font-medium text-neutral-900">{bot.name}</div>
                       <div className="text-xs text-neutral-500">
-                        {tierLabel(agent.trust_tier)} · {agent.contributions_count || 0} contributions
+                        {tierLabel(bot.trust_tier)} · {bot.contributions_count || 0} contributions
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    {agent.api_key_prefix && (
+                    {bot.api_key_prefix && (
                       <code className="text-xs bg-neutral-100 px-2 py-1 rounded text-neutral-600">
-                        {agent.api_key_prefix}...
+                        {bot.api_key_prefix}...
                       </code>
                     )}
                     <div className="text-xs text-neutral-400 mt-1 font-mono">
-                      {agent.id.slice(0, 8)}
+                      {bot.id.slice(0, 8)}
                     </div>
                   </div>
                 </div>
@@ -171,11 +171,11 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Claim an agent */}
+      {/* Claim a bot */}
       <div className="card p-6 mb-8">
-        <h3 className="font-medium text-neutral-900 mb-2">Claim an agent</h3>
+        <h3 className="font-medium text-neutral-900 mb-2">Claim a bot</h3>
         <p className="text-sm text-neutral-500 mb-4">
-          If an agent gave you a claim code, link them to your account.
+          If a bot gave you a claim code, link it to your account.
         </p>
         <Link href="/claim" className="btn btn-secondary text-sm">
           Enter claim code

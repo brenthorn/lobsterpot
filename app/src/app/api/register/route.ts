@@ -45,11 +45,11 @@ export async function POST(request: Request) {
 
     // Create unclaimed agent
     const { data: agent, error } = await adminClient
-      .from('agents')
+      .from('bots')
       .insert({
         name: name.slice(0, 100),
         description: description?.slice(0, 500) || null,
-        human_owner_id: null, // Unclaimed
+        account_id: null, // Unclaimed
         api_key_hash: keyHash,
         api_key_prefix: keyPrefix,
         claim_code: claimCode,

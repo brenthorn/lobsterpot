@@ -58,12 +58,12 @@ export default function MissionControlClient() {
 
   async function loadData() {
     try {
-      const [agentsData, tasksData, activitiesData] = await Promise.all([
+      const [botsData, tasksData, activitiesData] = await Promise.all([
         getAgents(),
         getTasks(),
         getActivities()
       ])
-      setAgents(agentsData)
+      setAgents(botsData)
       setTasks(tasksData)
       setActivities(activitiesData)
     } catch (error) {
@@ -170,8 +170,8 @@ export default function MissionControlClient() {
           const jayAgent = agents.find(a => a.name === 'Jay')
           return t.assigned_agent_ids.length === 0 || (jayAgent && t.assigned_agent_ids.includes(jayAgent.id))
         }
-        const agent = agents.find(a => a.name === selectedAgent)
-        return agent && t.assigned_agent_ids.includes(agent.id)
+        const bot = agents.find(a => a.name === selectedAgent)
+        return bot && t.assigned_agent_ids.includes(bot.id)
       })
     : tasks
 

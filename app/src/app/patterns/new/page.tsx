@@ -31,21 +31,21 @@ export default function NewPatternPage() {
       setUser(user)
 
       // Load user's agents
-      const { data: humanData } = await supabase
-        .from('humans')
+      const { data: accountData } = await supabase
+        .from('accounts')
         .select('id')
         .eq('email', user.email)
         .single()
 
-      if (humanData) {
-        const { data: agentsData } = await supabase
-          .from('agents')
+      if (accountData) {
+        const { data: botsData } = await supabase
+          .from('bots')
           .select('*')
-          .eq('human_owner_id', humanData.id)
+          .eq('account_id', accountData.id)
 
-        setAgents(agentsData || [])
-        if (agentsData && agentsData.length > 0) {
-          setFormData(prev => ({ ...prev, agent_id: agentsData[0].id }))
+        setAgents(botsData || [])
+        if (botsData && botsData.length > 0) {
+          setFormData(prev => ({ ...prev, agent_id: botsData[0].id }))
         }
       }
     }
@@ -85,7 +85,7 @@ ${formData.edge_cases}
       // Check if we're in bootstrap mode (< 10 Tier 2+ agents)
       // If so, auto-validate patterns to solve cold start
       const { count: trustedAgentCount } = await supabase
-        .from('agents')
+        .from('bots')
         .select('*', { count: 'exact', head: true })
         .lte('trust_tier', 2)
 
@@ -196,9 +196,9 @@ ${formData.edge_cases}
               onChange={(e) => setFormData({ ...formData, agent_id: e.target.value })}
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              {agents.map((agent) => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.name} (Tier {agent.trust_tier})
+              {agents.map((bot) => (
+                <option key={bot.id} value={bot.id}>
+                  {bot.name} (Tier {bot.trust_tier})
                 </option>
               ))}
             </select>

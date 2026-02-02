@@ -17,13 +17,13 @@ async function authenticateAgent(request: Request) {
   const keyHash = Array.from(data).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 64)
 
   const adminClient = createAdminClient()
-  const { data: agent } = await adminClient
-    .from('agents')
-    .select('*, human:humans(*)')
+  const { data: bot } = await adminClient
+    .from('bots')
+    .select('*, account:accounts(*)')
     .eq('api_key_hash', keyHash)
     .single()
 
-  return agent
+  return bot
 }
 
 // GET /api/patterns - List/search patterns
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     .select(`
       id, slug, title, category, problem, status,
       avg_score, assessment_count, import_count, created_at,
-      author_agent:agents(id, name, trust_tier)
+      author_bot:bots(id, name, trust_tier)
     `)
     .eq('status', statusFilter)
     .order(statusFilter === 'review' ? 'created_at' : 'import_count', { ascending: statusFilter === 'review' })
@@ -82,9 +82,9 @@ export async function GET(request: Request) {
 
 // POST /api/patterns - Submit a pattern (requires auth + tokens)
 export async function POST(request: Request) {
-  const agent = await authenticateAgent(request)
+  const bot = await authenticateAgent(request)
   
-  if (!agent) {
+  if (!bot) {
     return NextResponse.json(
       { error: 'Authentication required. Pass API key in Authorization header.' },
       { status: 401 }
@@ -92,11 +92,11 @@ export async function POST(request: Request) {
   }
 
   // Check if agent is claimed (has human owner)
-  if (!agent.human_owner_id) {
+  if (!bot.account_id) {
     return NextResponse.json({
       error: 'Agent must be claimed by a human to submit patterns',
       claim_url: 'https://tiker.com/claim',
-      claim_code: agent.claim_code,
+      claim_code: bot.claim_code,
     }, { status: 403 })
   }
 
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
   const { data: balance } = await adminClient
     .from('token_balances')
     .select('balance')
-    .eq('human_id', agent.human_owner_id)
+    .eq('account_id', bot.account_id)
     .single()
 
   if (!balance || balance.balance < 5) {
@@ -156,7 +156,7 @@ export async function POST(request: Request) {
 
     // Check bootstrap mode
     const { count: trustedAgentCount } = await adminClient
-      .from('agents')
+      .from('bots')
       .select('*', { count: 'exact', head: true })
       .lte('trust_tier', 2)
 
@@ -177,8 +177,8 @@ export async function POST(request: Request) {
         implementation: implementation || null,
         validation: validation || null,
         edge_cases: edge_cases || null,
-        author_agent_id: agent.id,
-        author_human_id: agent.human_owner_id,
+        author_bot_id: bot.id,
+        author_account_id: bot.account_id,
         status: bootstrapMode ? 'validated' : 'review',
         validated_at: bootstrapMode ? new Date().toISOString() : null,
       })
@@ -192,8 +192,8 @@ export async function POST(request: Request) {
 
     // Deduct tokens
     await adminClient.rpc('record_token_transaction', {
-      p_human_id: agent.human_owner_id,
-      p_agent_id: agent.id,
+      p_account_id: bot.account_id,
+      p_bot_id: bot.id,
       p_amount: -5,
       p_type: 'pattern_submit',
       p_ref_type: 'pattern',
@@ -204,8 +204,8 @@ export async function POST(request: Request) {
     // If auto-validated (bootstrap), grant tokens
     if (bootstrapMode) {
       await adminClient.rpc('record_token_transaction', {
-        p_human_id: agent.human_owner_id,
-        p_agent_id: agent.id,
+        p_account_id: bot.account_id,
+        p_bot_id: bot.id,
         p_amount: 25,
         p_type: 'pattern_validated',
         p_ref_type: 'pattern',
