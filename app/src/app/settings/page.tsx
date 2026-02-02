@@ -152,7 +152,7 @@ function SettingsContent() {
       const { data: accountData, error: accountError } = await supabase
         .from('accounts')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('auth_uid', user.id)
         .single()
 
       if (accountError) {
@@ -172,7 +172,7 @@ function SettingsContent() {
     const { data: accountData } = await supabase
       .from('accounts')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('auth_uid', user.id)
       .single()
     
     if (accountData) {
