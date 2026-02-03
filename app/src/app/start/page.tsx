@@ -92,7 +92,7 @@ export default async function StartPage() {
             <Link href="/mc" className="btn btn-primary px-6 py-3">
               Open Mission Control
             </Link>
-            <Link href="/patterns" className="btn btn-secondary px-6 py-3">
+            <Link href="/patterns" className="btn btn-secondary px-6 py-3 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800">
               Explore Marketplace
             </Link>
           </div>

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import MissionControlClient from './client'
 
 export const metadata = {
@@ -16,16 +16,20 @@ export default async function MissionControlPage() {
     redirect('/auth/login')
   }
 
-  // Get account to verify it exists
-  const { data: account } = await supabase
+  // Use admin client to bypass RLS for account lookup
+  const adminClient = createAdminClient()
+  const { data: account, error } = await adminClient
     .from('accounts')
     .select('id')
     .eq('email', session.user.email)
     .single()
 
+  console.log('[MC] Account lookup:', { email: session.user.email, account, error })
+
   if (!account) {
-    // Account doesn't exist yet - redirect to start
-    redirect('/start')
+    // Account doesn't exist - they need to complete signup
+    console.log('[MC] No account found, redirecting to login')
+    redirect('/auth/login')
   }
 
   // Everyone with an account gets MC!
