@@ -1,7 +1,10 @@
 import { createAdminClient } from '@/lib/supabase-server'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 import HubContent from './HubContent'
+
+// Force dynamic rendering - page uses DB queries
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Hub - Tiker',
@@ -21,7 +24,7 @@ export default async function HubPage({
   // Get current user's plan
   let isTeamPlan = false
   try {
-    const authSupabase = await createServerSupabaseClient()
+    const authSupabase = await createRealSupabaseClient()
     const { data: { session } } = await authSupabase.auth.getSession()
     
     if (session?.user) {

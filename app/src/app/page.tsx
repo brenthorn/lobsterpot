@@ -1,5 +1,7 @@
 import Link from 'next/link'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient } from '@/lib/supabase-server'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Tiker - Your AI Team, Ready to Work',
@@ -7,7 +9,7 @@ export const metadata = {
 }
 
 export default async function LandingPage() {
-  const supabase = await createServerSupabaseClient()
+  const supabase = await createRealSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   return (

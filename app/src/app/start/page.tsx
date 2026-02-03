@@ -1,6 +1,8 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import StartPageClient from './StartPageClient'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Welcome to Tiker',
@@ -8,7 +10,7 @@ export const metadata = {
 }
 
 export default async function StartPage() {
-  const supabase = await createServerSupabaseClient()
+  const supabase = await createRealSupabaseClient()
   const { data: { session } } = await supabase.auth.getSession()
   
   if (!session?.user) {

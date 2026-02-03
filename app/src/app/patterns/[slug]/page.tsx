@@ -1,8 +1,10 @@
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
+
+export const dynamic = 'force-dynamic'
 
 export default async function PatternPage({
   params,

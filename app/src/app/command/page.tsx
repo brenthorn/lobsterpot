@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import MissionControlClient from './client'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Command - Tiker',
@@ -9,7 +11,7 @@ export const metadata = {
 
 export default async function MissionControlPage() {
   // Check authentication
-  const supabase = await createServerSupabaseClient()
+  const supabase = await createRealSupabaseClient()
   const { data: { session } } = await supabase.auth.getSession()
   
   if (!session?.user) {
