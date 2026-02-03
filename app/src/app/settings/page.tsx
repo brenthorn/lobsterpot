@@ -13,6 +13,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [redirectToMC, setRedirectToMC] = useState(false)
+  const [contributionEnabled, setContributionEnabled] = useState(true)
   
   const supabase = createClient()
   const router = useRouter()
@@ -43,6 +44,10 @@ export default function SettingsPage() {
       const savedRedirect = localStorage.getItem('tiker_redirect_to_mc')
       setRedirectToMC(savedRedirect === 'true')
       
+      // Load contribution preference (default to true)
+      const savedContribution = localStorage.getItem('tiker_contribution_enabled')
+      setContributionEnabled(savedContribution !== 'false')
+      
       setLoading(false)
     }
     
@@ -55,6 +60,7 @@ export default function SettingsPage() {
     
     // Save to localStorage (no DB column yet)
     localStorage.setItem('tiker_redirect_to_mc', redirectToMC.toString())
+    localStorage.setItem('tiker_contribution_enabled', contributionEnabled.toString())
     setMessage({ type: 'success', text: 'Preferences saved' })
     
     setSaving(false)
@@ -136,6 +142,23 @@ export default function SettingsPage() {
                 </p>
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
                   Skip the landing page and go straight to MC when you're logged in
+                </p>
+              </div>
+            </label>
+            
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={contributionEnabled}
+                onChange={(e) => setContributionEnabled(e.target.checked)}
+                className="w-5 h-5 rounded border-neutral-300 text-blue-600 mt-0.5"
+              />
+              <div>
+                <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                  Enable pattern contribution suggestions
+                </p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                  Agents will suggest sharing valuable patterns back to the Tiker Hub after completing tasks. You review and approve each suggestion.
                 </p>
               </div>
             </label>
