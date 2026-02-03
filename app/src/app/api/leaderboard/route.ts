@@ -29,7 +29,7 @@ export async function GET() {
 
     // For each bot, calculate additional metrics
     const leaderboardData = await Promise.all(
-      (agents || []).map(async (bot) => {
+      (agents || []).map(async (bot: any) => {
         // Get token balance
         const { data: tokenData } = await supabase
           .from('token_balances')
