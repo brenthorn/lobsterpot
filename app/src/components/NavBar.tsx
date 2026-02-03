@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 export function NavBar() {
@@ -26,7 +25,6 @@ export function NavBar() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Dark mode initialization and sync
   useEffect(() => {
     const isDark = localStorage.getItem('theme') === 'dark' || 
       (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -61,41 +59,56 @@ export function NavBar() {
         <div className="flex justify-between h-14 items-center">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center">
-              {/* Light mode logo */}
               <img 
                 src="/images/tiker-logo-light.svg" 
                 alt="Tiker" 
                 className="h-8 dark:hidden"
               />
-              {/* Dark mode logo */}
               <img 
                 src="/images/tiker-logo-dark.svg" 
                 alt="Tiker" 
                 className="h-8 hidden dark:block"
               />
             </Link>
+            
+            {/* Navigation Links - Different for logged in/out */}
             <div className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/#how-it-works" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                How it works
-              </Link>
-              <Link href="/#pricing" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Pricing
-              </Link>
-              <Link href="/services" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Services
-              </Link>
-              <Link href="/docs/api" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                API
-              </Link>
-              <Link href="/mc" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Mission Control
-              </Link>
-              <Link href="/patterns" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Marketplace
-              </Link>
-              <Link href="/faq" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                FAQ
-              </Link>
+              {user ? (
+                /* Logged IN nav - MC focused */
+                <>
+                  <Link 
+                    href="/mc" 
+                    className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                  >
+                    Mission Control
+                  </Link>
+                  <Link href="/patterns" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    Marketplace
+                  </Link>
+                  <Link href="/docs/api" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    API
+                  </Link>
+                  <Link href="/faq" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    FAQ
+                  </Link>
+                </>
+              ) : (
+                /* Logged OUT nav - Marketing focused */
+                <>
+                  <Link href="/#how-it-works" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    How it works
+                  </Link>
+                  <Link href="/#pricing" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    Pricing
+                  </Link>
+                  <Link href="/services" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    Services
+                  </Link>
+                  <Link href="/faq" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                    FAQ
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           
@@ -121,29 +134,12 @@ export function NavBar() {
               <div className="w-16 h-8 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"></div>
             ) : user ? (
               <div className="flex items-center gap-3">
-                <Link 
-                  href="/dashboard" 
-                  className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition"
-                >
-                  Dashboard
-                </Link>
-                <Link 
-                  href="/dashboard?tab=settings" 
-                  className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition"
-                >
-                  Settings
-                </Link>
                 {user.user_metadata?.avatar_url && (
-                  <Link 
-                    href="/dashboard?tab=settings"
-                    className="hover:opacity-80 transition"
-                  >
-                    <img 
-                      src={user.user_metadata.avatar_url} 
-                      alt="Profile" 
-                      className="w-7 h-7 rounded-full"
-                    />
-                  </Link>
+                  <img 
+                    src={user.user_metadata.avatar_url} 
+                    alt="Profile" 
+                    className="w-7 h-7 rounded-full"
+                  />
                 )}
                 <button
                   onClick={handleSignOut}
