@@ -103,6 +103,14 @@ export async function GET(request: Request) {
     try {
       // Always use real Supabase client for OAuth (not mock)
       const supabase = await createRealSupabaseClient()
+      
+      // First check if already logged in (handles PKCE race conditions)
+      const { data: existingSession } = await supabase.auth.getSession()
+      if (existingSession?.session?.user) {
+        console.log('[Auth Callback] Already have session, skipping exchange')
+        return NextResponse.redirect(`${origin}${next}`)
+      }
+      
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
       
       console.log('[Auth Callback] exchangeCodeForSession result:', { 
@@ -113,6 +121,12 @@ export async function GET(request: Request) {
       })
     
       if (error) {
+        // PKCE error but user might still be logged in - check session
+        const { data: sessionCheck } = await supabase.auth.getSession()
+        if (sessionCheck?.session?.user) {
+          console.log('[Auth Callback] Exchange failed but session exists, continuing')
+          return NextResponse.redirect(`${origin}${next}`)
+        }
         console.error('[Auth Callback] Exchange error:', error)
         return NextResponse.redirect(`${origin}/auth/login?error=exchange_failed`)
       }
@@ -128,16 +142,12 @@ export async function GET(request: Request) {
       
       const { data: existingAccount } = await adminClient
         .from('accounts')
-        .select('id, tier, tier_expires_at')
+        .select('id, tier')
         .eq('auth_uid', data.user.id)
         .single()
 
       if (!existingAccount) {
-        // Calculate 3-month premium trial end date
-        const trialEndDate = new Date()
-        trialEndDate.setMonth(trialEndDate.getMonth() + 3)
-        
-        // Create new account with premium trial
+        // Create new account with team tier
         const { data: newAccount, error: createError } = await adminClient
           .from('accounts')
           .insert({
@@ -148,8 +158,7 @@ export async function GET(request: Request) {
             verification_tier: 'silver',
             verified_at: new Date().toISOString(),
             google_id: data.user.user_metadata?.provider_id || null,
-            tier: 'team', // Premium for 3 months
-            tier_expires_at: trialEndDate.toISOString(),
+            tier: 'team', // Premium for early adopters
           })
           .select('id, name')
           .single()
@@ -157,7 +166,7 @@ export async function GET(request: Request) {
         if (createError) {
           console.error('[Auth Callback] Error creating account:', createError)
         } else {
-          console.log('[Auth Callback] Account created for:', data.user.id, 'with Team tier trial until:', trialEndDate)
+          console.log('[Auth Callback] Account created for:', data.user.id, 'with Team tier')
           
           // Create default bot for the new account
           const botResult = await createDefaultBot(adminClient, newAccount.id, newAccount.name)
