@@ -1,6 +1,11 @@
-import { notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import MissionControlClient from './client'
+
+export const metadata = {
+  title: 'Mission Control - Tiker',
+  description: 'Your AI team task board',
+}
 
 export default async function MissionControlPage() {
   // Check authentication
@@ -8,28 +13,21 @@ export default async function MissionControlPage() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (!session?.user) {
-    console.log('[MC] No session found')
-    notFound()
+    redirect('/auth/login')
   }
 
-  console.log('[MC] Session user ID:', session.user.id)
-  console.log('[MC] Session user email:', session.user.email)
-
-  // Check if user has mc_admin flag (query by email since humans.id != auth.users.id)
-  const { data: human, error } = await supabase
+  // Get account to verify it exists
+  const { data: account } = await supabase
     .from('accounts')
-    .select('mc_admin, email')
+    .select('id')
     .eq('email', session.user.email)
     .single()
 
-  console.log('[MC] Human lookup result:', human)
-  console.log('[MC] Human lookup error:', error)
-
-  if (!human?.mc_admin) {
-    console.log('[MC] Access denied - mc_admin not true')
-    notFound()
+  if (!account) {
+    // Account doesn't exist yet - redirect to start
+    redirect('/start')
   }
 
-  console.log('[MC] Access granted!')
+  // Everyone with an account gets MC!
   return <MissionControlClient />
 }

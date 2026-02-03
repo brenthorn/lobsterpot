@@ -18,6 +18,7 @@ export interface Agent {
   last_heartbeat?: string
   created_at: string
   updated_at: string
+  account_id?: string
 }
 
 export interface Task {
@@ -32,6 +33,7 @@ export interface Task {
   created_at: string
   updated_at: string
   completed_at?: string
+  account_id?: string
 }
 
 export interface Comment {
@@ -41,6 +43,7 @@ export interface Comment {
   content: string
   created_at: string
   agent?: Agent
+  account_id?: string
 }
 
 export interface Activity {
@@ -53,8 +56,26 @@ export interface Activity {
   created_at: string
   agent?: Agent
   task?: Task
+  account_id?: string
 }
 
+// Get current user's account ID
+export async function getCurrentAccountId(): Promise<string | null> {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user?.email) return null
+  
+  const { data: account } = await supabase
+    .from('accounts')
+    .select('id')
+    .eq('email', user.email)
+    .single()
+  
+  return account?.id || null
+}
+
+// RLS handles filtering - these queries will automatically return only user's data
 export async function getAgents() {
   const supabase = createClient()
   const { data, error } = await supabase
@@ -150,9 +171,19 @@ export async function createTask(task: {
   priority?: 'low' | 'normal' | 'high' | 'urgent'
 }) {
   const supabase = createClient()
+  
+  // Get current account_id
+  const accountId = await getCurrentAccountId()
+  if (!accountId) {
+    throw new Error('Not authenticated')
+  }
+  
   const { data, error } = await supabase
     .from('mc_tasks')
-    .insert(task)
+    .insert({
+      ...task,
+      account_id: accountId
+    })
     .select()
     .single()
   
@@ -163,19 +194,58 @@ export async function createTask(task: {
 export async function createComment(taskId: string, content: string, agentId?: string) {
   const supabase = createClient()
   
+  // Get current account_id
+  const accountId = await getCurrentAccountId()
+  if (!accountId) {
+    throw new Error('Not authenticated')
+  }
+  
   // If no agentId provided, try to get the current user's agent
   let finalAgentId = agentId
   if (!finalAgentId) {
     const { data: userData } = await supabase.auth.getUser()
     if (userData?.user?.email) {
-      // Look up agent by email match (for Jay)
+      // Look up agent by name "Jay" within this account
       const { data: agent } = await supabase
         .from('mc_agents')
         .select('id')
         .eq('name', 'Jay')
+        .eq('account_id', accountId)
         .single()
       
       if (agent) finalAgentId = agent.id
+    }
+  }
+  
+  // Create a placeholder "You" agent if none exists
+  if (!finalAgentId) {
+    // Try to find or create a "You" agent for this user
+    const { data: existingYou } = await supabase
+      .from('mc_agents')
+      .select('id')
+      .eq('name', 'You')
+      .eq('account_id', accountId)
+      .single()
+    
+    if (existingYou) {
+      finalAgentId = existingYou.id
+    } else {
+      // Create "You" agent
+      const { data: newAgent, error: agentError } = await supabase
+        .from('mc_agents')
+        .insert({
+          name: 'You',
+          session_key: `user:${accountId}`,
+          role: 'Human operator',
+          level: 'lead',
+          emoji: '👤',
+          status: 'active',
+          account_id: accountId
+        })
+        .select('id')
+        .single()
+      
+      if (newAgent) finalAgentId = newAgent.id
     }
   }
   
@@ -185,10 +255,42 @@ export async function createComment(taskId: string, content: string, agentId?: s
   
   const { data, error } = await supabase
     .from('mc_comments')
-    .insert({ task_id: taskId, agent_id: finalAgentId, content })
+    .insert({ 
+      task_id: taskId, 
+      agent_id: finalAgentId, 
+      content,
+      account_id: accountId
+    })
     .select()
     .single()
   
   if (error) throw error
   return data as Comment
+}
+
+// Create a default agent for new users
+export async function createDefaultAgent(name: string, emoji: string, role: string) {
+  const supabase = createClient()
+  
+  const accountId = await getCurrentAccountId()
+  if (!accountId) {
+    throw new Error('Not authenticated')
+  }
+  
+  const { data, error } = await supabase
+    .from('mc_agents')
+    .insert({
+      name,
+      session_key: `agent:${accountId}:${name.toLowerCase()}`,
+      role,
+      level: 'specialist',
+      emoji,
+      status: 'idle',
+      account_id: accountId
+    })
+    .select()
+    .single()
+  
+  if (error) throw error
+  return data as Agent
 }

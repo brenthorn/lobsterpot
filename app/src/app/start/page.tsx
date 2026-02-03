@@ -88,12 +88,9 @@ export default async function StartPage() {
 
         {/* CTA */}
         <div className="text-center space-y-4">
-          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            Mission Control is coming soon — you'll be able to create tasks and assign them to your agents.
-          </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/settings" className="btn btn-primary px-6 py-3">
-              Set Up API Keys
+            <Link href="/mc" className="btn btn-primary px-6 py-3">
+              Open Mission Control
             </Link>
             <Link href="/patterns" className="btn btn-secondary px-6 py-3">
               Explore Marketplace
