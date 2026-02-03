@@ -7,6 +7,8 @@ import KanbanColumn from '@/components/KanbanColumn'
 import ActivityFeed from '@/components/ActivityFeed'
 import TaskDetailModal from '@/components/TaskDetailModal'
 import CreateTaskModal from '@/components/CreateTaskModal'
+import TwoFactorVerifyModal from '@/components/TwoFactorVerifyModal'
+import { use2FA } from '@/hooks/use2FA'
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay, DragStartEvent } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
 
@@ -28,6 +30,18 @@ export default function MissionControlClient() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [hideDone, setHideDone] = useState(true) // Hide completed by default
+  
+  // 2FA for write access
+  const { 
+    hasWriteAccess, 
+    requires2FA, 
+    needs2FASetup,
+    withWriteAccess,
+    showVerifyModal,
+    onVerifySuccess,
+    onVerifyCancel,
+    loading: twoFALoading 
+  } = use2FA()
 
   // Configure drag sensors with proper activation constraints
   const sensors = useSensors(
@@ -138,7 +152,19 @@ export default function MissionControlClient() {
       return
     }
     
-    console.log(`Updating task "${task?.title}" from ${task?.status} to ${newStatus}`)
+    // Check write access - if no access, prompt for 2FA
+    if (requires2FA && !hasWriteAccess) {
+      withWriteAccess(async () => {
+        await performTaskUpdate(taskId, newStatus, task?.title)
+      })
+      return
+    }
+    
+    await performTaskUpdate(taskId, newStatus, task?.title)
+  }
+
+  async function performTaskUpdate(taskId: string, newStatus: TaskStatus, taskTitle?: string) {
+    console.log(`Updating task "${taskTitle}" to ${newStatus}`)
 
     // Optimistically update UI first
     setTasks(prev => prev.map(t => 
@@ -230,6 +256,28 @@ export default function MissionControlClient() {
         </div>
       </div>
 
+      {/* Write Access Banner */}
+      {requires2FA && !hasWriteAccess && !twoFALoading && (
+        <div className="bg-yellow-50 border-b border-yellow-200">
+          <div className="max-w-[1800px] mx-auto px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span className="text-sm text-yellow-800">
+                <strong>Read-only mode.</strong> Verify 2FA to create or edit tasks.
+              </span>
+            </div>
+            <button
+              onClick={() => withWriteAccess(async () => {})}
+              className="px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition"
+            >
+              Verify Now
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="max-w-[2000px] mx-auto px-6 py-6">
         {/* Filter and Controls Bar */}
@@ -282,7 +330,13 @@ export default function MissionControlClient() {
             </button>
             
             <button
-              onClick={() => setShowCreateTask(true)}
+              onClick={() => {
+                if (requires2FA && !hasWriteAccess) {
+                  withWriteAccess(async () => setShowCreateTask(true))
+                } else {
+                  setShowCreateTask(true)
+                }
+              }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               + Create Task
@@ -354,6 +408,14 @@ export default function MissionControlClient() {
           agents={agents}
           onClose={() => setShowCreateTask(false)}
           onSuccess={() => loadData()}
+        />
+      )}
+
+      {/* 2FA Verify Modal */}
+      {showVerifyModal && (
+        <TwoFactorVerifyModal
+          onSuccess={onVerifySuccess}
+          onCancel={onVerifyCancel}
         />
       )}
     </div>

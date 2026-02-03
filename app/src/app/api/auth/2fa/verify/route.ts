@@ -1,0 +1,151 @@
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { NextResponse } from 'next/server'
+import { authenticator } from 'otplib'
+import crypto from 'crypto'
+import { cookies } from 'next/headers'
+
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
+
+export async function POST(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { code } = await request.json()
+    
+    if (!code) {
+      return NextResponse.json({ error: 'Code required' }, { status: 400 })
+    }
+
+    // Get user's 2FA secret
+    const adminClient = createAdminClient()
+    const { data: account, error: accountError } = await adminClient
+      .from('accounts')
+      .select('two_factor_secret, two_factor_backup_codes')
+      .eq('auth_uid', session.user.id)
+      .single()
+
+    if (accountError || !account?.two_factor_secret) {
+      return NextResponse.json({ error: '2FA not enabled' }, { status: 400 })
+    }
+
+    // Try TOTP verification first
+    let isValid = authenticator.verify({ 
+      token: code, 
+      secret: account.two_factor_secret 
+    })
+
+    // If not valid, check backup codes
+    if (!isValid && account.two_factor_backup_codes) {
+      const hashedCode = crypto.createHash('sha256').update(code.toUpperCase()).digest('hex')
+      const backupIndex = account.two_factor_backup_codes.indexOf(hashedCode)
+      
+      if (backupIndex !== -1) {
+        isValid = true
+        // Remove used backup code
+        const updatedCodes = [...account.two_factor_backup_codes]
+        updatedCodes.splice(backupIndex, 1)
+        
+        await adminClient
+          .from('accounts')
+          .update({ two_factor_backup_codes: updatedCodes })
+          .eq('auth_uid', session.user.id)
+      }
+    }
+
+    if (!isValid) {
+      return NextResponse.json({ error: 'Invalid code' }, { status: 400 })
+    }
+
+    // Set 30-day cookie for write access
+    const cookieStore = await cookies()
+    const expiresAt = Date.now() + THIRTY_DAYS_MS
+    
+    // Create a signed token (in production, use proper JWT)
+    const writeToken = crypto
+      .createHmac('sha256', process.env.NEXTAUTH_SECRET || 'tiker-2fa-secret')
+      .update(`${session.user.id}:${expiresAt}`)
+      .digest('hex')
+    
+    cookieStore.set('tiker_write_access', `${writeToken}:${expiresAt}`, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+      path: '/',
+    })
+
+    return NextResponse.json({ 
+      success: true,
+      expiresAt: new Date(expiresAt).toISOString()
+    })
+    
+  } catch (error) {
+    console.error('2FA verify error:', error)
+    return NextResponse.json({ error: 'Failed to verify 2FA' }, { status: 500 })
+  }
+}
+
+// Check if user has valid write access
+export async function GET(request: Request) {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    if (!session?.user) {
+      return NextResponse.json({ hasWriteAccess: false, requires2FA: false })
+    }
+
+    // Check if user has 2FA enabled
+    const adminClient = createAdminClient()
+    const { data: account } = await adminClient
+      .from('accounts')
+      .select('two_factor_enabled')
+      .eq('auth_uid', session.user.id)
+      .single()
+
+    if (!account?.two_factor_enabled) {
+      // No 2FA required, full access
+      return NextResponse.json({ hasWriteAccess: true, requires2FA: false, needs2FASetup: true })
+    }
+
+    // Check for valid write token
+    const cookieStore = await cookies()
+    const writeAccessCookie = cookieStore.get('tiker_write_access')
+    
+    if (!writeAccessCookie?.value) {
+      return NextResponse.json({ hasWriteAccess: false, requires2FA: true })
+    }
+
+    const [token, expiresAtStr] = writeAccessCookie.value.split(':')
+    const expiresAt = parseInt(expiresAtStr)
+
+    if (Date.now() > expiresAt) {
+      return NextResponse.json({ hasWriteAccess: false, requires2FA: true })
+    }
+
+    // Verify token
+    const expectedToken = crypto
+      .createHmac('sha256', process.env.NEXTAUTH_SECRET || 'tiker-2fa-secret')
+      .update(`${session.user.id}:${expiresAt}`)
+      .digest('hex')
+
+    if (token !== expectedToken) {
+      return NextResponse.json({ hasWriteAccess: false, requires2FA: true })
+    }
+
+    return NextResponse.json({ 
+      hasWriteAccess: true, 
+      requires2FA: true,
+      expiresAt: new Date(expiresAt).toISOString()
+    })
+    
+  } catch (error) {
+    console.error('2FA check error:', error)
+    return NextResponse.json({ hasWriteAccess: false, requires2FA: false })
+  }
+}

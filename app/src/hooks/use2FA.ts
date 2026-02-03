@@ -1,0 +1,79 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+
+interface WriteAccessStatus {
+  hasWriteAccess: boolean
+  requires2FA: boolean
+  needs2FASetup?: boolean
+  expiresAt?: string
+  loading: boolean
+}
+
+export function use2FA() {
+  const [status, setStatus] = useState<WriteAccessStatus>({
+    hasWriteAccess: false,
+    requires2FA: false,
+    loading: true,
+  })
+  const [showVerifyModal, setShowVerifyModal] = useState(false)
+  const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null)
+
+  const checkWriteAccess = useCallback(async () => {
+    try {
+      const res = await fetch('/api/auth/2fa/verify')
+      const data = await res.json()
+      setStatus({ ...data, loading: false })
+      return data
+    } catch (error) {
+      console.error('Failed to check write access:', error)
+      setStatus(prev => ({ ...prev, loading: false }))
+      return { hasWriteAccess: false, requires2FA: false }
+    }
+  }, [])
+
+  useEffect(() => {
+    checkWriteAccess()
+  }, [checkWriteAccess])
+
+  // Wrap a write action with 2FA check
+  const withWriteAccess = useCallback(async (action: () => Promise<void>) => {
+    const currentStatus = await checkWriteAccess()
+    
+    if (currentStatus.hasWriteAccess) {
+      // Has write access, execute action
+      await action()
+    } else if (currentStatus.requires2FA) {
+      // Needs 2FA verification
+      setPendingAction(() => action)
+      setShowVerifyModal(true)
+    } else {
+      // No 2FA required (shouldn't happen in production)
+      await action()
+    }
+  }, [checkWriteAccess])
+
+  const onVerifySuccess = useCallback(async () => {
+    setShowVerifyModal(false)
+    await checkWriteAccess()
+    
+    if (pendingAction) {
+      await pendingAction()
+      setPendingAction(null)
+    }
+  }, [pendingAction, checkWriteAccess])
+
+  const onVerifyCancel = useCallback(() => {
+    setShowVerifyModal(false)
+    setPendingAction(null)
+  }, [])
+
+  return {
+    ...status,
+    checkWriteAccess,
+    withWriteAccess,
+    showVerifyModal,
+    onVerifySuccess,
+    onVerifyCancel,
+  }
+}
