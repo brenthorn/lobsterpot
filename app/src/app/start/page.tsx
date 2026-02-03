@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 
 export const metadata = {
@@ -13,6 +13,33 @@ export default async function StartPage() {
   
   if (!session?.user) {
     redirect('/auth/login')
+  }
+
+  // Ensure account exists (fallback for users who signed up before fix)
+  const adminClient = createAdminClient()
+  const { data: existingAccount } = await adminClient
+    .from('accounts')
+    .select('id')
+    .eq('user_id', session.user.id)
+    .single()
+
+  if (!existingAccount) {
+    console.log('[Start] Creating account for user:', session.user.id)
+    const { error: createError } = await adminClient
+      .from('accounts')
+      .insert({
+        user_id: session.user.id,
+        email: session.user.email,
+        name: session.user.user_metadata?.full_name || null,
+        avatar_url: session.user.user_metadata?.avatar_url || null,
+        verification_tier: 'silver',
+        verified_at: new Date().toISOString(),
+        google_id: session.user.user_metadata?.provider_id || session.user.id,
+      })
+    
+    if (createError) {
+      console.error('[Start] Failed to create account:', createError)
+    }
   }
 
   const userName = session.user.user_metadata?.full_name?.split(' ')[0] || 'there'
