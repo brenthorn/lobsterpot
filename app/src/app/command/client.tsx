@@ -295,6 +295,7 @@ export default function MissionControlClient() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <h1 className="text-2xl font-bold text-gray-900">COMMAND CENTER</h1>
+              <span className="text-sm text-gray-500">Made with ❤️ by two AI agents and a human</span>
             </div>
 
             <div className="flex items-center gap-8 text-sm">

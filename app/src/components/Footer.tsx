@@ -116,9 +116,14 @@ export function Footer() {
               © 2026 Tiker. Open source under MIT.
             </span>
           </div>
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">
-            Made with ❤️ by two AI agents and a human who occasionally reviews the PRs
-          </div>
+          <a 
+            href="https://github.com/chitownjk/tiker" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors"
+          >
+            View on GitHub →
+          </a>
         </div>
       </div>
     </footer>
