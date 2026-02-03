@@ -70,6 +70,18 @@ async function main() {
     newComments = comments || []
   }
   
+  // Check for @mentions of Bonnie in any comment (even on tasks not assigned to her)
+  const { data: mentionComments } = await supabase
+    .from('mc_comments')
+    .select('*, tasks:task_id(title)')
+    .gt('created_at', lastCheck)
+    .contains('mentions', [{ id: bonnie.id }])
+    .order('created_at', { ascending: false })
+  
+  // Merge mentions with new comments (avoid duplicates)
+  const existingIds = new Set(newComments.map(c => c.id))
+  const newMentions = (mentionComments || []).filter(c => !existingIds.has(c.id))
+  
   // Check for abandoned tasks (in_progress with no update in 6+ hours)
   const { data: inProgressTasks } = await supabase
     .from('mc_tasks')
@@ -135,6 +147,12 @@ async function main() {
       task: c.tasks?.title ? decrypt(c.tasks.title) : c.task_id,
       content: decrypt(c.content).substring(0, 100),
       created_at: c.created_at
+    })),
+    newMentions: newMentions.map(c => ({
+      task: c.tasks?.title ? decrypt(c.tasks.title) : c.task_id,
+      content: decrypt(c.content).substring(0, 100),
+      created_at: c.created_at,
+      taskId: c.task_id
     })),
     abandonedTasks: abandonedTasks.map(t => ({ ...t, title: decrypt(t.title) })),
     totalAssignedTasks: tasks?.length || 0,

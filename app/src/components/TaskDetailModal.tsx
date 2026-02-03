@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import { getTaskComments, createComment } from '@/lib/mission-control'
 import { createClient } from '@/lib/supabase'
 import SimpleMarkdown from '@/components/SimpleMarkdown'
+import MentionInput from '@/components/MentionInput'
+import CommentContent from '@/components/CommentContent'
 
 interface TaskDetailModalProps {
   task: Task
@@ -245,7 +247,9 @@ export default function TaskDetailModal({ task, agents, onClose, onDelete, onMar
                         {new Date(comment.created_at).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-gray-700 text-sm">{comment.content}</p>
+                    <p className="text-gray-700 text-sm">
+                      <CommentContent content={comment.content} />
+                    </p>
                   </div>
                 </div>
               ))}
@@ -259,17 +263,20 @@ export default function TaskDetailModal({ task, agents, onClose, onDelete, onMar
         <div className="p-6 border-t bg-gray-50 flex-shrink-0">
           <form onSubmit={handleSubmitComment} className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Add Comment
+              Add Comment <span className="font-normal text-gray-400">— use @name to mention</span>
             </label>
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Type your comment..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                disabled={submitting}
-              />
+              <div className="flex-1">
+                <MentionInput
+                  value={newComment}
+                  onChange={setNewComment}
+                  onSubmit={() => handleSubmitComment({ preventDefault: () => {} } as React.FormEvent)}
+                  agents={agents}
+                  placeholder="Type your comment..."
+                  disabled={submitting}
+                  submitting={submitting}
+                />
+              </div>
               <button
                 type="submit"
                 disabled={!newComment.trim() || submitting}
