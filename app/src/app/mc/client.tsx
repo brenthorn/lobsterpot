@@ -265,15 +265,28 @@ export default function MissionControlClient() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
               <span className="text-sm text-yellow-800">
-                <strong>Read-only mode.</strong> Verify 2FA to create or edit tasks.
+                {needs2FASetup ? (
+                  <><strong>Read-only mode.</strong> Enable 2FA to create or edit tasks.</>
+                ) : (
+                  <><strong>Read-only mode.</strong> Verify 2FA to create or edit tasks.</>
+                )}
               </span>
             </div>
-            <button
-              onClick={() => withWriteAccess(async () => {})}
-              className="px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition"
-            >
-              Verify Now
-            </button>
+            {needs2FASetup ? (
+              <a
+                href="/dashboard?tab=settings"
+                className="px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition"
+              >
+                Enable 2FA
+              </a>
+            ) : (
+              <button
+                onClick={() => withWriteAccess(async () => {})}
+                className="px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition"
+              >
+                Verify Now
+              </button>
+            )}
           </div>
         </div>
       )}

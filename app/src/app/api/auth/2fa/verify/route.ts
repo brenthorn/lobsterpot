@@ -109,8 +109,8 @@ export async function GET(request: Request) {
       .single()
 
     if (!account?.two_factor_enabled) {
-      // No 2FA required, full access
-      return NextResponse.json({ hasWriteAccess: true, requires2FA: false, needs2FASetup: true })
+      // 2FA not set up yet - read-only until they enable it
+      return NextResponse.json({ hasWriteAccess: false, requires2FA: true, needs2FASetup: true })
     }
 
     // Check for valid write token

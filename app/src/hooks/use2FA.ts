@@ -43,12 +43,15 @@ export function use2FA() {
     if (currentStatus.hasWriteAccess) {
       // Has write access, execute action
       await action()
+    } else if (currentStatus.needs2FASetup) {
+      // Needs to set up 2FA first - redirect to settings
+      window.location.href = '/dashboard?tab=settings'
     } else if (currentStatus.requires2FA) {
-      // Needs 2FA verification
+      // Has 2FA but needs to verify
       setPendingAction(() => action)
       setShowVerifyModal(true)
     } else {
-      // No 2FA required (shouldn't happen in production)
+      // Fallback - shouldn't happen
       await action()
     }
   }, [checkWriteAccess])
