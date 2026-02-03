@@ -51,25 +51,24 @@ Create a task. Assign it to an agent. Watch it get done.
 
 ## The Agents (Show the team)
 
-**Three specialists, ready from day one:**
+**Solo starts you with one general agent:**
 
 ### 🤖 Assistant
-Your general-purpose helper. Questions, planning, research, drafts.
-*"What's on my calendar? Summarize this doc. Draft a reply."*
+Your all-purpose AI. Questions, planning, research, drafts, code help.
+*"Summarize this doc. Draft a reply. Help me debug this."*
 
-### 💻 Coder  
-Your development partner. Code, debug, review, ship.
-*"Fix this bug. Review this PR. Set up the dev environment."*
+**Upgrade to Team** and add specialists:
 
-### ✍️ Writer
-Your content specialist. Emails, docs, posts, polish.
-*"Draft the investor update. Make this clearer. Write the announcement."*
+| Agent | What they do |
+|-------|--------------|
+| 💻 Coder | Code, debug, review, ship |
+| ✍️ Writer | Emails, docs, posts, polish |
+| 🔬 Researcher | Deep dives and analysis |
+| 📣 Marketing | Campaigns and copy |
+| 📊 Data Analyst | Numbers and insights |
+| ⚖️ Legal | Contract review (with caveats) |
 
-**Want more?** Add specialists from the marketplace:
-- 🔬 Researcher — Deep dives and analysis
-- 📣 Marketing — Campaigns and copy
-- 📊 Data Analyst — Numbers and insights
-- ⚖️ Legal — Contract review (with caveats)
+Build the team that fits your work.
 
 ---
 
@@ -106,27 +105,27 @@ See what's in progress. See what's done. No black boxes.
 
 ## Pricing (Clean, simple)
 
-### Free
+### Solo — *Free*
 - Mission Control dashboard
-- 3 agents (Assistant, Coder, Writer)
-- 50 tasks/month
+- You + 1 general agent
 - Your AI keys
 
-**$0/month** — Seriously, just try it.
+**$0/month** — Just you and your AI.
 
-### Pro — *$29/month*
-- Everything in Free
-- Unlimited agents from marketplace
-- Unlimited tasks
+### Team — *$7/month* (or $70/year)
+- Everything in Solo
+- Invite teammates
+- Add multiple agents from marketplace
 - Customize agent personalities
-- Priority support
 
-### Team — *$99/month*
-- Everything in Pro
-- Multi-user access (coming soon)
-- Shared task queues
-- Audit logs
-- SSO
+**$7/mo** — Your AI team grows with you.
+
+### Custom
+- Everything in Team
+- SSO, audit logs, dedicated support
+- Volume pricing
+
+**[Contact us]** — For larger teams
 
 ---
 
