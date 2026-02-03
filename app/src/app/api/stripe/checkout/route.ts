@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const { data: account, error: accountError } = await adminClient
       .from('accounts')
       .select('id, email, stripe_customer_id, tier')
-      .eq('user_id', user.id)
+      .eq('auth_uid', user.id)
       .single()
 
     if (accountError || !account) {
