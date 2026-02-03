@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { getStripe } from '@/lib/stripe'
 import { getService } from '@/lib/services'
 import Stripe from 'stripe'
 
 export async function POST(request: NextRequest) {
   try {
-    // Get authenticated user
-    const supabase = await createServerSupabaseClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    // Get authenticated user - use REAL Supabase client (checkout requires actual auth)
+    const supabase = await createRealSupabaseClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    console.log('[Checkout] Auth check:', { userId: user?.id, authError: authError?.message })
 
     if (!user) {
       return NextResponse.json(

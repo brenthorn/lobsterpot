@@ -14,13 +14,19 @@ export default function ServicesPage() {
       const response = await fetch('/api/services/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',  // Ensure cookies are sent
         body: JSON.stringify({ service_type: serviceId, price_id: priceId }),
       })
       const data = await response.json()
       if (data.url) {
         window.location.href = data.url
       } else if (data.error) {
-        alert(`Checkout error: ${data.error}`)
+        if (response.status === 401) {
+          // Not logged in - redirect to login then back here
+          window.location.href = '/auth/login?redirect=/services'
+        } else {
+          alert(`Checkout error: ${data.error}`)
+        }
         setLoading(null)
       } else {
         console.error('Unexpected response:', data)
