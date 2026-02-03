@@ -102,8 +102,8 @@ export default async function HubPage({
   const typeFilters = [
     { id: 'all', name: 'All', count: allItems.length },
     { id: 'agents', name: 'Agents', count: agents.length },
-    { id: 'patterns', name: 'Patterns', count: (patterns || []).filter(p => p.category !== 'skills').length },
-    { id: 'skills', name: 'Skills', count: (patterns || []).filter(p => p.category === 'skills').length },
+    { id: 'patterns', name: 'Patterns', count: (patterns || []).filter((p: any) => p.category !== 'skills').length },
+    { id: 'skills', name: 'Skills', count: (patterns || []).filter((p: any) => p.category === 'skills').length },
   ]
 
   const categoryFilters = [
