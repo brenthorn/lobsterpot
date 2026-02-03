@@ -86,7 +86,7 @@ export async function GET(
         .map((a: any) => Math.abs(a.weighted_score - a.patterns.avg_score));
 
       if (diffs.length > 0) {
-        const avgDiff = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+        const avgDiff = diffs.reduce((a: number, b: number) => a + b, 0) / diffs.length;
         accuracy = Math.max(0, Math.min(100, (10 - avgDiff) * 10));
         
         assessmentDetails = {
