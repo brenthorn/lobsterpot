@@ -78,10 +78,17 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
   const assignedAgents = agents.filter(a => task.assigned_agent_ids.includes(a.id))
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" onClick={onClose} style={{ zIndex: 10000 }}>
+    <div 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" 
+      onClick={onClose} 
+      style={{ zIndex: 10000 }}
+      onPointerDown={e => e.target === e.currentTarget && e.stopPropagation()}
+    >
       <div 
         className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         onClick={e => e.stopPropagation()}
+        onPointerDown={e => e.stopPropagation()}
+        onMouseDown={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="p-6 border-b flex-shrink-0">
