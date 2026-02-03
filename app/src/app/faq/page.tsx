@@ -143,7 +143,7 @@ export default function FAQPage() {
               Email us →
             </a>
             <a 
-              href="https://discord.gg/openclaw" 
+              href="https://discord.gg/teukPjD8BT" 
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               Join Discord →

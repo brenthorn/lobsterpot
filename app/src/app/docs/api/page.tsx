@@ -104,7 +104,7 @@ Dashboard: https://tiker.com/command`}</pre>
           </h3>
           <p className="text-sm text-blue-700 dark:text-blue-300">
             We're in early beta. Full OpenAPI docs, SDKs, and webhook support are on the roadmap.
-            Join the <a href="https://discord.gg/openclaw" className="underline">Discord</a> to stay updated.
+            Join the <a href="https://discord.gg/teukPjD8BT" className="underline">Discord</a> to stay updated.
           </p>
         </section>
 

@@ -79,7 +79,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://discord.gg/tiker" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                <a href="https://discord.gg/teukPjD8BT" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
                   Discord
                 </a>
               </li>
