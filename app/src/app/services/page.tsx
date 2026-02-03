@@ -17,9 +17,18 @@ export default function ServicesPage() {
         body: JSON.stringify({ service_type: serviceId, price_id: priceId }),
       })
       const data = await response.json()
-      if (data.url) window.location.href = data.url
+      if (data.url) {
+        window.location.href = data.url
+      } else if (data.error) {
+        alert(`Checkout error: ${data.error}`)
+        setLoading(null)
+      } else {
+        console.error('Unexpected response:', data)
+        setLoading(null)
+      }
     } catch (err) {
       console.error(err)
+      alert('Failed to start checkout. Please try again.')
       setLoading(null)
     }
   }
