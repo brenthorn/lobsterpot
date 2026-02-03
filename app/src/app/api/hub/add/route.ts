@@ -1,31 +1,51 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
+import { encrypt } from '@/lib/crypto'
 
-// Hub agent templates (same as in the page)
-const agentTemplates: Record<string, { emoji: string; role: string; description: string }> = {
-  assistant: {
+interface AddRequest {
+  type: 'agent' | 'pattern'
+  id: string
+  customizations?: {
+    name?: string
+    personality?: string
+    modelTier?: string
+  }
+}
+
+// Static agent templates (same as hub page - will move to DB later)
+const AGENT_TEMPLATES: Record<string, {
+  name: string
+  emoji: string
+  description: string
+  tier: string
+}> = {
+  'assistant': {
+    name: 'Assistant',
     emoji: '🤖',
-    role: 'All-purpose AI assistant',
     description: 'Your all-purpose AI. Questions, planning, research, drafts, code help.',
+    tier: 'free',
   },
-  coder: {
+  'coder': {
+    name: 'Coder',
     emoji: '💻',
-    role: 'Software developer',
     description: 'Code, debug, review, ship. Speaks Python, TypeScript, Go, Rust, and more.',
+    tier: 'team',
   },
-  writer: {
+  'writer': {
+    name: 'Writer',
     emoji: '✍️',
-    role: 'Content writer',
     description: 'Emails, docs, blog posts, social content. Clear, on-brand, polished.',
+    tier: 'team',
   },
-  researcher: {
+  'researcher': {
+    name: 'Researcher',
     emoji: '🔬',
-    role: 'Research analyst',
     description: 'Deep dives, competitive analysis, market research. Cites sources.',
+    tier: 'team',
   },
 }
 
-// POST /api/hub/add - Add an agent from the Hub to user's team
+// POST /api/hub/add - Add an agent or pattern to the user's Command
 export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabaseClient()
@@ -35,24 +55,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
-    const { agentId, name, personality, modelTier } = body
+    const body: AddRequest = await request.json()
+    const { type, id, customizations } = body
 
-    if (!agentId || !name) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    if (!type || !id) {
+      return NextResponse.json({ error: 'Type and id are required' }, { status: 400 })
     }
 
-    // Validate agent template exists
-    const template = agentTemplates[agentId]
-    if (!template) {
-      return NextResponse.json({ error: 'Unknown agent template' }, { status: 400 })
+    if (type !== 'agent' && type !== 'pattern') {
+      return NextResponse.json({ error: 'Type must be "agent" or "pattern"' }, { status: 400 })
     }
 
-    // Get account
     const adminClient = createAdminClient()
+
+    // Get account ID
     const { data: account } = await adminClient
       .from('accounts')
-      .select('id, plan')
+      .select('id')
       .eq('auth_uid', session.user.id)
       .single()
 
@@ -60,53 +79,139 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Account not found' }, { status: 404 })
     }
 
-    // Check if user already has this agent (by template id)
-    const { data: existingAgent } = await adminClient
-      .from('mc_agents')
-      .select('id')
-      .eq('account_id', account.id)
-      .eq('template_id', agentId)
-      .single()
+    let title: string
+    let description: string
 
-    if (existingAgent) {
-      return NextResponse.json({ error: 'You already have this agent on your team' }, { status: 400 })
+    if (type === 'agent') {
+      // Look up agent template
+      const template = AGENT_TEMPLATES[id]
+      if (!template) {
+        return NextResponse.json({ error: 'Agent template not found' }, { status: 404 })
+      }
+
+      const agentName = customizations?.name || template.name
+      title = `Setup: ${agentName} agent`
+      
+      // Build description with agent details and customizations
+      const descriptionParts = [
+        `## Agent Details`,
+        `- **Template:** ${template.name} ${template.emoji}`,
+        `- **Tier:** ${template.tier}`,
+        `- **Description:** ${template.description}`,
+      ]
+
+      if (customizations) {
+        descriptionParts.push('', '## Customizations')
+        if (customizations.name) {
+          descriptionParts.push(`- **Custom Name:** ${customizations.name}`)
+        }
+        if (customizations.personality) {
+          descriptionParts.push(`- **Personality:** ${customizations.personality}`)
+        }
+        if (customizations.modelTier) {
+          descriptionParts.push(`- **Model Tier:** ${customizations.modelTier}`)
+        }
+      }
+
+      descriptionParts.push(
+        '',
+        '## Next Steps',
+        '1. Review the agent configuration above',
+        '2. Create the agent in Team settings',
+        '3. Configure any additional settings',
+        '4. Test the agent with a simple task'
+      )
+
+      description = descriptionParts.join('\n')
+
+      // Note: agent templates don't have import_count in DB yet (static)
+      // Will be added when agent_templates table is created
+    } else {
+      // Look up pattern from database
+      const { data: pattern, error: patternError } = await adminClient
+        .from('patterns')
+        .select('id, title, category, problem, solution, implementation, validation, import_count')
+        .eq('id', id)
+        .single()
+
+      if (patternError || !pattern) {
+        return NextResponse.json({ error: 'Pattern not found' }, { status: 404 })
+      }
+
+      title = `Review: ${pattern.title}`
+      
+      // Build description with full pattern content
+      const descriptionParts = [
+        `## Pattern: ${pattern.title}`,
+        `**Category:** ${pattern.category}`,
+        '',
+        '## Problem',
+        pattern.problem || 'No problem statement provided.',
+        '',
+        '## Solution',
+        pattern.solution || 'No solution provided.',
+      ]
+
+      if (pattern.implementation) {
+        descriptionParts.push('', '## Implementation', pattern.implementation)
+      }
+
+      if (pattern.validation) {
+        descriptionParts.push('', '## Validation', pattern.validation)
+      }
+
+      descriptionParts.push(
+        '',
+        '## Next Steps',
+        '1. Review the pattern above',
+        '2. Evaluate if it fits your use case',
+        '3. Implement the solution in your agents/system',
+        '4. Mark as complete when done'
+      )
+
+      description = descriptionParts.join('\n')
+
+      // Increment import_count on the pattern
+      await adminClient
+        .from('patterns')
+        .update({ import_count: (pattern.import_count || 0) + 1 })
+        .eq('id', id)
     }
 
-    // Build role with personality if provided
-    let role = template.role
-    if (personality) {
-      role = `${template.role}\n\nPersonality: ${personality}`
-    }
-
-    // Create the agent
-    const { data: agent, error } = await adminClient
-      .from('mc_agents')
+    // Create task with encrypted fields
+    const { data: task, error: taskError } = await adminClient
+      .from('mc_tasks')
       .insert({
-        name: name.trim(),
-        session_key: `agent:${account.id}:${name.toLowerCase().replace(/\s+/g, '-')}`,
-        role,
-        level: 'specialist',
-        emoji: template.emoji,
-        status: 'idle',
+        title: encrypt(title),
+        description: encrypt(description),
+        assigned_agent_ids: [],
+        tags: [type === 'agent' ? 'setup' : 'review', 'hub-import'],
+        priority: 'normal',
+        status: 'inbox',
         account_id: account.id,
-        template_id: agentId,
-        model_tier: modelTier || 'standard',
       })
       .select()
       .single()
 
-    if (error) {
-      console.error('Error creating agent:', error)
-      return NextResponse.json({ error: 'Failed to create agent' }, { status: 500 })
+    if (taskError) {
+      console.error('Error creating task:', taskError)
+      return NextResponse.json({ error: 'Failed to create task' }, { status: 500 })
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      agent,
-      message: `${name} has been added to your team!`
+    // Return with decrypted fields for immediate use
+    return NextResponse.json({
+      success: true,
+      task: {
+        ...task,
+        title,
+        description,
+      },
+      message: type === 'agent' 
+        ? `"${title}" added to your Command inbox`
+        : `Pattern "${title.replace('Review: ', '')}" added to your Command inbox`,
     })
   } catch (error) {
-    console.error('Error adding agent from hub:', error)
+    console.error('Error in hub/add:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
