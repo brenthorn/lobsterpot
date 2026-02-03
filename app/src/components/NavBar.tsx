@@ -125,17 +125,22 @@ export function NavBar() {
                   Dashboard
                 </Link>
                 <Link 
-                  href="/settings" 
+                  href="/dashboard?tab=settings" 
                   className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition"
                 >
                   Settings
                 </Link>
                 {user.user_metadata?.avatar_url && (
-                  <img 
-                    src={user.user_metadata.avatar_url} 
-                    alt="" 
-                    className="w-7 h-7 rounded-full"
-                  />
+                  <Link 
+                    href="/dashboard?tab=settings"
+                    className="hover:opacity-80 transition"
+                  >
+                    <img 
+                      src={user.user_metadata.avatar_url} 
+                      alt="Profile" 
+                      className="w-7 h-7 rounded-full"
+                    />
+                  </Link>
                 )}
                 <button
                   onClick={handleSignOut}

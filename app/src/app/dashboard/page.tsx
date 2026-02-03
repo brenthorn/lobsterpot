@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 
@@ -140,9 +140,12 @@ function CopyButton({ text, className = '' }: { text: string; className?: string
 
 function DashboardContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   
-  const [activeTab, setActiveTab] = useState<'overview' | 'settings'>('overview')
+  // Read initial tab from URL param
+  const initialTab = searchParams.get('tab') === 'settings' ? 'settings' : 'overview'
+  const [activeTab, setActiveTab] = useState<'overview' | 'settings'>(initialTab)
   const [user, setUser] = useState<any>(null)
   const [account, setAccount] = useState<Account | null>(null)
   const [bots, setBots] = useState<Bot[]>([])
@@ -439,7 +442,7 @@ function DashboardContent() {
               <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
                 Your Bots
               </h2>
-              <Link href="/patterns/new" className="btn btn-primary text-sm">
+              <Link href="/claim" className="btn btn-primary text-sm">
                 <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
