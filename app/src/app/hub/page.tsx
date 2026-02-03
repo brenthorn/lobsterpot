@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase-server'
 import Link from 'next/link'
+import HubItemCard from './HubItemCard'
 
 export const metadata = {
   title: 'Hub - Tiker',

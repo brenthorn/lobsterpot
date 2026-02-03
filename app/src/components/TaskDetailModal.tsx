@@ -4,6 +4,7 @@ import { Task, Agent, Comment } from '@/lib/mission-control'
 import { useEffect, useState } from 'react'
 import { getTaskComments, createComment } from '@/lib/mission-control'
 import { createClient } from '@/lib/supabase'
+import SimpleMarkdown from '@/components/SimpleMarkdown'
 
 interface TaskDetailModalProps {
   task: Task
@@ -100,7 +101,7 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
                   <div 
                     className={`text-gray-600 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}
                   >
-                    {task.description}
+                    <SimpleMarkdown content={task.description} />
                   </div>
                   {task.description.length > 150 && (
                     <button

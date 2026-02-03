@@ -11,6 +11,7 @@ import TwoFactorVerifyModal from '@/components/TwoFactorVerifyModal'
 import { use2FA } from '@/hooks/use2FA'
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay, DragStartEvent } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
+import Link from 'next/link'
 
 const COLUMNS: { status: TaskStatus; title: string }[] = [
   { status: 'inbox', title: 'Inbox' },
@@ -218,6 +219,8 @@ export default function MissionControlClient() {
     )
   }
 
+  const hasNoData = tasks.length === 0 && agents.length === 0
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -301,6 +304,36 @@ export default function MissionControlClient() {
 
       {/* Main Content */}
       <div className="max-w-[2000px] mx-auto px-6 py-6">
+        {/* Empty State - New User */}
+        {hasNoData && (
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center mb-8">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Command!</h2>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              Start by adding an agent to your team. Agents help you automate tasks, manage workflows, and get things done.
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <Link
+                href="/hub?type=agents"
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                Browse Agents
+              </Link>
+              <button
+                onClick={() => {
+                  if (requires2FA && !hasWriteAccess) {
+                    withWriteAccess(async () => setShowCreateTask(true))
+                  } else {
+                    setShowCreateTask(true)
+                  }
+                }}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+              >
+                Create your first task
+              </button>
+            </div>
+          </div>
+        )}
         {/* Filter and Controls Bar */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -349,6 +382,13 @@ export default function MissionControlClient() {
               {hideDone ? 'Show Done' : 'Hide Done'}
               {!hideDone && ` (${tasks.filter(t => t.status === 'done').length})`}
             </button>
+            
+            <Link
+              href="/hub?type=agents"
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+            >
+              + Add Agent
+            </Link>
             
             <button
               onClick={() => {
