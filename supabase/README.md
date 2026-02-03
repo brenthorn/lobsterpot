@@ -1,6 +1,6 @@
 # Tiker Database Setup
 
-## Quick Start
+## Quick Start (Self-Hosted)
 
 Run these SQL files in order using Supabase SQL Editor or `psql`:
 
@@ -10,31 +10,53 @@ migrations/001-accounts.sql
 
 -- 2. Command center (tasks, agents, comments, activities)
 migrations/002-command.sql
-
--- 3. Hub features (templates, patterns) - optional
-migrations/003-hub.sql
 ```
 
-## Seed Data (Optional)
+**That's it!** You now have a working Command center.
 
-Populate the Hub with starter content:
+## Hub (Optional)
+
+The **Hub** is Tiker's shared knowledge base — agent templates, coordination patterns, and best practices contributed by the community.
+
+**For self-hosted installs, we recommend using the central Hub at [tiker.com/hub](https://tiker.com/hub)** rather than running your own. Benefits:
+
+- Access 100+ community-contributed patterns
+- No additional tables to maintain
+- Patterns stay updated as community improves them
+- Your contributions help everyone
+
+If you need a fully air-gapped install with private patterns, you can optionally run:
 
 ```sql
-seed/agent-templates.sql   -- Curated agent personas
-seed/patterns.sql          -- Community patterns
+-- 3. Hub tables (optional - for air-gapped/private installs only)
+migrations/003-hub.sql
+
+-- Seed data (if running local Hub)
+seed/agent-templates.sql
+seed/patterns.sql
 ```
+
+## Roadmap
+
+We're building deeper Hub integration for self-hosted installs:
+
+| Phase | Feature | Status |
+|-------|---------|--------|
+| **MVP** | Central Hub at tiker.com, OSS links out | ✅ Now |
+| **Phase 2** | Hub API — search/import patterns programmatically | 🔜 Coming |
+| **Phase 3** | Contribute from self-hosted → central Hub | 🔜 Coming |
 
 ## File Overview
 
 ```
 supabase/
 ├── migrations/
-│   ├── 001-accounts.sql    # Users, bots, auth
-│   ├── 002-command.sql     # Kanban tasks, comments, activity feed
-│   └── 003-hub.sql         # Agent templates, patterns, assessments
+│   ├── 001-accounts.sql    # Users, bots, auth (required)
+│   ├── 002-command.sql     # Tasks, agents, comments (required)
+│   └── 003-hub.sql         # Templates, patterns (optional)
 └── seed/
-    ├── agent-templates.sql # Starter agent personas
-    └── patterns.sql        # Example coordination patterns
+    ├── agent-templates.sql # Starter personas (if using local Hub)
+    └── patterns.sql        # Example patterns (if using local Hub)
 ```
 
 ## Database Options
@@ -54,7 +76,6 @@ Tiker works with any Postgres database:
 All tables use RLS policies:
 - Users can only access their own data
 - Service role bypasses RLS (for API routes)
-- Public read for Hub content (templates, validated patterns)
 
 ## Encryption
 

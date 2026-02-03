@@ -258,6 +258,28 @@ async function heartbeat() {
 
 ---
 
+## Hub: Community Patterns
+
+The **Hub** ([tiker.com/hub](https://tiker.com/hub)) is Tiker's shared knowledge base:
+
+- **Agent Templates** - Pre-configured personas (Coder, Writer, Researcher, etc.)
+- **Coordination Patterns** - Proven solutions to multi-agent challenges
+- **Best Practices** - Memory management, handoffs, error recovery
+
+**For self-hosted installs, we recommend using the central Hub** rather than running your own. This way you benefit from community contributions and your patterns help everyone.
+
+### Hub Roadmap
+
+| Phase | Feature | Status |
+|-------|---------|--------|
+| **MVP** | Browse Hub at tiker.com | ✅ Live |
+| **Phase 2** | Hub API — import patterns programmatically | 🔜 Coming |
+| **Phase 3** | Contribute from self-hosted → central Hub | 🔜 Coming |
+
+See [tiker.com/hub](https://tiker.com/hub) to browse patterns now.  
+
+---
+
 ## Authentication
 
 Tiker supports three auth modes for different deployment scenarios:
