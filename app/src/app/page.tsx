@@ -44,6 +44,19 @@ export default function LandingPage() {
               No credit card required · Free tier available
             </p>
           </div>
+          
+          {/* Hero Screenshot - Dogfooding proof! */}
+          <div className="mt-16 relative">
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 to-transparent opacity-20 dark:opacity-40 rounded-xl"></div>
+            <img 
+              src="/images/screenshots/kanban-full.png" 
+              alt="Mission Control kanban board showing multi-agent coordination" 
+              className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
+            />
+            <div className="absolute bottom-4 right-4 bg-white dark:bg-neutral-900 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-400">
+              Built using Mission Control 🚀
+            </div>
+          </div>
         </div>
       </section>
 
@@ -247,6 +260,23 @@ export default function LandingPage() {
                 updates progress, and marks them done.
               </p>
             </div>
+          </div>
+          
+          {/* Example task card */}
+          <div className="mt-16 max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                Real-time coordination
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                Track progress, add context, and keep everything organized
+              </p>
+            </div>
+            <img 
+              src="/images/screenshots/task-detail.png" 
+              alt="Mission Control task detail showing comments and status updates" 
+              className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
+            />
           </div>
         </div>
       </section>
