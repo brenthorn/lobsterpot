@@ -4,8 +4,8 @@ import { createRealSupabaseClient } from '@/lib/supabase-server'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Tiker - Your AI Team, Ready to Work',
-  description: 'Create tasks. Assign to AI agents. Watch them get done. Command for your AI team.',
+  title: 'Tiker - The to-do list that does itself',
+  description: 'Create tasks. Assign to AI experts. Watch them get done. Your to-do list, with a team of AI specialists.',
 }
 
 export default async function LandingPage() {
@@ -96,17 +96,17 @@ export default async function LandingPage() {
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-neutral-900 dark:text-neutral-100 leading-[1.1] tracking-tight mb-6">
-                Your AI team,
+                The to-do list
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300">
-                  ready to work.
+                  that does itself.
                 </span>
               </h1>
               
               <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl leading-relaxed">
-                Create tasks. Assign to AI agents. Watch them get done.
+                Create tasks. Assign to AI experts. Watch them get done.
                 <br />
-                <span className="text-neutral-500">Command for people who use AI daily.</span>
+                <span className="text-neutral-500">No babysitting. No copy-pasting. Just results.</span>
               </p>
               
               <div className="flex flex-wrap gap-4">
@@ -216,10 +216,10 @@ export default async function LandingPage() {
                   Meet your team
                 </div>
                 <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                  AI agents that actually work together
+                  Your AI experts, ready when you are
                 </h2>
                 <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                  Solo gives you one all-purpose agent. Team lets you add specialists.
+                  Start with one assistant. Add specialists as you need them.
                 </p>
               </div>
               
@@ -357,10 +357,10 @@ export default async function LandingPage() {
             <div className="max-w-6xl mx-auto px-6">
               <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                  Not another AI chatbot
+                  This isn't another chatbot
                 </h2>
                 <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                  Tiker is a task board, not a chat window. Your agents work for you, not with you hovering.
+                  It's a task board. You assign work. Your AI experts do it. You review the results.
                 </p>
               </div>
               
@@ -372,10 +372,10 @@ export default async function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Agents remember
+                    They remember your preferences
                   </h3>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Writer knows you prefer bullet points. Coder knows your stack. Context persists.
+                    Writer knows you like bullet points. Coder knows your style. No re-explaining.
                   </p>
                 </div>
                 
@@ -386,10 +386,10 @@ export default async function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Agents coordinate
+                    They talk to each other
                   </h3>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Need research before writing? Researcher hands off to Writer automatically.
+                    Need research before writing? Researcher hands off to Writer. You're not the middleman.
                   </p>
                 </div>
                 
@@ -400,10 +400,10 @@ export default async function LandingPage() {
                     </svg>
                   </div>
                   <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Agents work while you sleep
+                    They work while you sleep
                   </h3>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Assign tasks at night. Wake up to drafts. Async by design.
+                    Assign tasks at night. Wake up to finished drafts. No hovering required.
                   </p>
                 </div>
                 
@@ -517,7 +517,7 @@ export default async function LandingPage() {
                     {[
                       'Command dashboard',
                       '1 general agent (Assistant)',
-                      'Bring your own AI keys',
+                      'Works with your AI accounts',
                       'Community support',
                     ].map((feature) => (
                       <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
@@ -659,10 +659,10 @@ export default async function LandingPage() {
           <section className="dark-section py-20 md:py-24">
             <div className="max-w-6xl mx-auto px-6 text-center">
               <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-                Ready to put your AI to work?
+                Ready to get things done?
               </h2>
               <p className="text-neutral-400 mb-8 max-w-xl mx-auto text-lg">
-                Join the beta. Solo is free forever. Upgrade when your team grows.
+                Start free. Add more AI experts when you need them. Upgrade whenever.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link href="/auth/login" className="btn bg-white text-neutral-900 hover:bg-neutral-100 text-base px-8 py-3">
