@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { TwoFactorSetup } from '@/components/TwoFactorSetup'
+import TwoFactorSetup from '@/components/TwoFactorSetup'
 
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null)
