@@ -7,6 +7,36 @@ import { decrypt } from '@/lib/crypto'
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
 
+// Simple in-memory rate limiting (use Redis in production for multi-instance)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT_MAX = 5 // 5 attempts
+const RATE_LIMIT_WINDOW_MS = 60 * 1000 // per minute
+
+function checkRateLimit(identifier: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(identifier)
+  
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(identifier, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    return true
+  }
+  
+  if (entry.count >= RATE_LIMIT_MAX) {
+    return false
+  }
+  
+  entry.count++
+  return true
+}
+
+function getHmacSecret(): string {
+  const secret = process.env.NEXTAUTH_SECRET
+  if (!secret) {
+    throw new Error('NEXTAUTH_SECRET environment variable is required')
+  }
+  return secret
+}
+
 export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabaseClient()
@@ -14,6 +44,11 @@ export async function POST(request: Request) {
     
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Rate limiting to prevent brute-force attacks
+    if (!checkRateLimit(session.user.id)) {
+      return NextResponse.json({ error: 'Too many attempts. Please try again later.' }, { status: 429 })
     }
 
     const { code } = await request.json()
@@ -72,7 +107,7 @@ export async function POST(request: Request) {
     
     // Create a signed token (in production, use proper JWT)
     const writeToken = crypto
-      .createHmac('sha256', process.env.NEXTAUTH_SECRET || 'tiker-2fa-secret')
+      .createHmac('sha256', getHmacSecret())
       .update(`${session.user.id}:${expiresAt}`)
       .digest('hex')
     
@@ -135,7 +170,7 @@ export async function GET(request: Request) {
 
     // Verify token
     const expectedToken = crypto
-      .createHmac('sha256', process.env.NEXTAUTH_SECRET || 'tiker-2fa-secret')
+      .createHmac('sha256', getHmacSecret())
       .update(`${session.user.id}:${expiresAt}`)
       .digest('hex')
 

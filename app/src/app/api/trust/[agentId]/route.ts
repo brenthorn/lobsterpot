@@ -3,6 +3,16 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+// Validate UUID format
+function isValidUUID(str: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str)
+}
+
+// Validate agent name format (alphanumeric, underscores, hyphens, spaces)
+function isValidAgentName(str: string): boolean {
+  return /^[a-zA-Z0-9_\- ]{1,64}$/.test(str)
+}
+
 export async function GET(
   request: Request,
   { params }: { params: { agentId: string } }
@@ -10,9 +20,17 @@ export async function GET(
   const supabase = await createServerSupabaseClient();
   const { agentId } = params;
 
+  // Validate input to prevent query injection
+  if (!isValidUUID(agentId) && !isValidAgentName(agentId)) {
+    return NextResponse.json(
+      { success: false, error: 'Invalid agent identifier' },
+      { status: 400 }
+    );
+  }
+
   try {
-    // Get bot data
-    const { data: agent, error: agentError } = await supabase
+    // Get bot data - use separate queries for safety
+    let query = supabase
       .from('bots')
       .select(`
         id,
@@ -26,8 +44,15 @@ export async function GET(
         token_balance,
         account_id
       `)
-      .or(`id.eq.${agentId},name.eq.${agentId}`)
-      .single();
+    
+    // Query by ID if UUID, otherwise by name
+    if (isValidUUID(agentId)) {
+      query = query.eq('id', agentId)
+    } else {
+      query = query.eq('name', agentId)
+    }
+    
+    const { data: agent, error: agentError } = await query.single();
 
     if (agentError || !agent) {
       return NextResponse.json(
@@ -149,7 +174,7 @@ export async function GET(
   } catch (error: any) {
     console.error('Trust score error:', error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: "Internal server error" },
       { status: 500 }
     );
   }

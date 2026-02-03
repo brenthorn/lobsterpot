@@ -1,6 +1,21 @@
 import fs from 'fs';
 import path from 'path';
 
+// Sanitize URLs to prevent javascript: XSS attacks
+function sanitizeUrl(url: string): string {
+  const allowedProtocols = ['http:', 'https:', 'mailto:']
+  try {
+    // Handle relative URLs
+    if (url.startsWith('/') || url.startsWith('#')) return url
+    const parsed = new URL(url)
+    return allowedProtocols.includes(parsed.protocol) ? url : '#'
+  } catch {
+    // Invalid URL, check if it looks like a relative path
+    if (/^[a-zA-Z0-9\-_\/\.]+$/.test(url)) return url
+    return '#'
+  }
+}
+
 function markdownToHtml(markdown: string): string {
   let html = markdown;
 
@@ -19,8 +34,10 @@ function markdownToHtml(markdown: string): string {
   // Italic
   html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-  // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  // Links - sanitize URLs to prevent XSS
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => 
+    `<a href="${sanitizeUrl(url)}">${text}</a>`
+  );
 
   // Code blocks
   html = html.replace(/```([^`]+)```/g, '<pre><code>$1</code></pre>');
