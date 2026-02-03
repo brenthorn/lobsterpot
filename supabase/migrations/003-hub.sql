@@ -106,29 +106,38 @@ ALTER TABLE patterns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pattern_assessments ENABLE ROW LEVEL SECURITY;
 
 -- Agent templates: public read
+DROP POLICY IF EXISTS "Anyone can view agent templates" ON agent_templates;
 CREATE POLICY "Anyone can view agent templates" ON agent_templates
   FOR SELECT USING (true);
 
 -- Patterns: validated = public, drafts = owner only
+DROP POLICY IF EXISTS "Anyone can view validated patterns" ON patterns;
 CREATE POLICY "Anyone can view validated patterns" ON patterns
   FOR SELECT USING (status = 'validated');
 
+DROP POLICY IF EXISTS "Authors can view own patterns" ON patterns;
 CREATE POLICY "Authors can view own patterns" ON patterns
   FOR SELECT USING (author_account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid()));
 
+DROP POLICY IF EXISTS "Authors can manage own patterns" ON patterns;
 CREATE POLICY "Authors can manage own patterns" ON patterns
   FOR ALL USING (author_account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid()));
 
 -- Assessments: authenticated users can create
+DROP POLICY IF EXISTS "Users can create assessments" ON pattern_assessments;
 CREATE POLICY "Users can create assessments" ON pattern_assessments
   FOR INSERT WITH CHECK (
     assessor_account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid())
   );
 
+DROP POLICY IF EXISTS "Users can view assessments" ON pattern_assessments;
 CREATE POLICY "Users can view assessments" ON pattern_assessments
   FOR SELECT USING (true);
 
 -- Service role bypass
+DROP POLICY IF EXISTS "Service role agent_templates" ON agent_templates;
 CREATE POLICY "Service role agent_templates" ON agent_templates FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Service role patterns" ON patterns;
 CREATE POLICY "Service role patterns" ON patterns FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Service role pattern_assessments" ON pattern_assessments;
 CREATE POLICY "Service role pattern_assessments" ON pattern_assessments FOR ALL USING (auth.role() = 'service_role');

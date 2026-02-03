@@ -76,21 +76,26 @@ ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bots ENABLE ROW LEVEL SECURITY;
 
 -- Accounts: users see their own
+DROP POLICY IF EXISTS "Users view own account" ON accounts;
 CREATE POLICY "Users view own account" ON accounts
   FOR SELECT USING (auth_uid = auth.uid());
 
+DROP POLICY IF EXISTS "Users update own account" ON accounts;
 CREATE POLICY "Users update own account" ON accounts
   FOR UPDATE USING (auth_uid = auth.uid());
 
 -- Bots: users manage their own
+DROP POLICY IF EXISTS "Users manage own bots" ON bots;
 CREATE POLICY "Users manage own bots" ON bots
   FOR ALL USING (
     account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid())
   );
 
 -- Service role bypass (for API routes)
+DROP POLICY IF EXISTS "Service role full access accounts" ON accounts;
 CREATE POLICY "Service role full access accounts" ON accounts
   FOR ALL USING (auth.role() = 'service_role');
 
+DROP POLICY IF EXISTS "Service role full access bots" ON bots;
 CREATE POLICY "Service role full access bots" ON bots
   FOR ALL USING (auth.role() = 'service_role');

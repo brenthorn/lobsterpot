@@ -112,20 +112,28 @@ ALTER TABLE mc_comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mc_activities ENABLE ROW LEVEL SECURITY;
 
 -- Users manage their own data
+DROP POLICY IF EXISTS "Users manage own mc_agents" ON mc_agents;
 CREATE POLICY "Users manage own mc_agents" ON mc_agents
   FOR ALL USING (account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid()));
 
+DROP POLICY IF EXISTS "Users manage own mc_tasks" ON mc_tasks;
 CREATE POLICY "Users manage own mc_tasks" ON mc_tasks
   FOR ALL USING (account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid()));
 
+DROP POLICY IF EXISTS "Users manage own mc_comments" ON mc_comments;
 CREATE POLICY "Users manage own mc_comments" ON mc_comments
   FOR ALL USING (account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid()));
 
+DROP POLICY IF EXISTS "Users view own mc_activities" ON mc_activities;
 CREATE POLICY "Users view own mc_activities" ON mc_activities
   FOR SELECT USING (account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid()));
 
 -- Service role bypass
+DROP POLICY IF EXISTS "Service role mc_agents" ON mc_agents;
 CREATE POLICY "Service role mc_agents" ON mc_agents FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Service role mc_tasks" ON mc_tasks;
 CREATE POLICY "Service role mc_tasks" ON mc_tasks FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Service role mc_comments" ON mc_comments;
 CREATE POLICY "Service role mc_comments" ON mc_comments FOR ALL USING (auth.role() = 'service_role');
+DROP POLICY IF EXISTS "Service role mc_activities" ON mc_activities;
 CREATE POLICY "Service role mc_activities" ON mc_activities FOR ALL USING (auth.role() = 'service_role');
