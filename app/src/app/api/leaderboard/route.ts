@@ -59,7 +59,7 @@ export async function GET() {
             });
 
           if (diffs.length > 0) {
-            const avgDiff = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+            const avgDiff = diffs.reduce((a: number, b: number) => a + b, 0) / diffs.length;
             // Convert to percentage (10 - avgDiff gives higher score for closer matches)
             // Scale: 0 diff = 100%, 2 diff = 80%, 5 diff = 50%
             accuracy = Math.max(0, Math.min(100, (10 - avgDiff) * 10));
