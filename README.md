@@ -122,7 +122,7 @@ NEXTAUTH_SECRET=your-nextauth-secret
 NEXTAUTH_URL=http://localhost:3000
 ```
 
-**Note:** Supabase provides auth + realtime out of the box. For local Postgres, you'll need to handle auth separately or disable features that require it.
+**Note:** Supabase provides auth + realtime out of the box. For local Postgres, use `AUTH_MODE=local` or `AUTH_MODE=password` (see Authentication section).
 
 ### Optional Environment Variables
 
@@ -256,6 +256,31 @@ async function heartbeat() {
 ✅ **2FA protection** - Write access requires TOTP verification  
 ✅ **End-to-end encryption** - AES-256-GCM for sensitive data  
 ✅ **Self-hosted** - Your data, your infrastructure  
+
+---
+
+## Authentication
+
+Tiker supports three auth modes for different deployment scenarios:
+
+### Option A: Supabase Auth (default)
+```bash
+AUTH_MODE=supabase  # or just don't set it
+```
+Uses Google SSO via Supabase. Best for cloud/team deployments.
+
+### Option B: Local Mode (no auth)
+```bash
+AUTH_MODE=local
+```
+No login required. Single user assumed. **Only use on localhost or trusted networks.**
+
+### Option C: Password Auth
+```bash
+AUTH_MODE=password
+LOCAL_ADMIN_PASSWORD=your-secure-password
+```
+Simple password login at `/auth/local`. Good for self-hosted installs without Google/Supabase.
 
 ---
 
