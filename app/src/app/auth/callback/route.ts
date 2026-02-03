@@ -25,6 +25,7 @@ export async function GET(request: Request) {
         const { data: newHuman, error: createError } = await adminClient
           .from('accounts')
           .insert({
+            user_id: data.user.id,  // Required: link to auth.users
             email: data.user.email,
             name: data.user.user_metadata?.full_name || null,
             avatar_url: data.user.user_metadata?.avatar_url || null,

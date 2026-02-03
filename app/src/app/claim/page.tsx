@@ -23,11 +23,18 @@ export default function ClaimPage() {
       }
       setUser(user)
 
-      const { data: accountData } = await supabase
+      const { data: accountData, error: accountError } = await supabase
         .from('accounts')
         .select('*')
-        .eq('email', user.email)
+        .eq('user_id', user.id)
         .single()
+
+      if (accountError || !accountData) {
+        console.error('Account not found:', accountError)
+        // Account doesn't exist - redirect to start to create it
+        router.push('/start')
+        return
+      }
 
       setHuman(accountData)
     }
