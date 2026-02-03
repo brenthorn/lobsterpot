@@ -40,8 +40,16 @@ export default function MissionControlClient() {
     showVerifyModal,
     onVerifySuccess,
     onVerifyCancel,
+    checkWriteAccess,
     loading: twoFALoading 
   } = use2FA()
+
+  // Refresh 2FA status when modal closes to ensure banner updates
+  useEffect(() => {
+    if (!showVerifyModal && !twoFALoading) {
+      checkWriteAccess()
+    }
+  }, [showVerifyModal, twoFALoading, checkWriteAccess])
 
   // Configure drag sensors with proper activation constraints
   const sensors = useSensors(
