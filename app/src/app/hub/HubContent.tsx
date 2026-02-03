@@ -26,8 +26,6 @@ interface HubItem {
 
 interface HubContentProps {
   filteredItems: HubItem[]
-  agents: HubItem[]
-  patterns: HubItem[]
   typeFilters: { id: string; name: string; count: number }[]
   categoryFilters: { id: string; name: string }[]
   selectedType: string

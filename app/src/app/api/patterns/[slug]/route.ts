@@ -12,8 +12,8 @@ export async function GET(
     .from('patterns')
     .select(`
       *,
-      author_agent:agents(id, name, trust_tier),
-      author_human:humans(id, name)
+      author_bot:bots(id, name, trust_tier),
+      author_account:accounts(id, email)
     `)
     .eq('slug', params.slug)
     .single()

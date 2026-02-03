@@ -2,16 +2,6 @@ import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-se
 import { NextResponse } from 'next/server'
 import { encrypt } from '@/lib/crypto'
 
-interface AddRequest {
-  type: 'agent' | 'pattern'
-  id: string
-  customizations?: {
-    name?: string
-    personality?: string
-    modelTier?: string
-  }
-}
-
 // Static agent templates (same as hub page - will move to DB later)
 const AGENT_TEMPLATES: Record<string, {
   name: string
@@ -55,15 +45,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body: AddRequest = await request.json()
-    const { type, id, customizations } = body
+    const body = await request.json()
+    
+    // Support two formats:
+    // 1. Agent from modal: { agentId, name, personality, modelTier }
+    // 2. Generic format: { type, id, customizations }
+    const { agentId, name, personality, modelTier, type, id, customizations } = body
 
-    if (!type || !id) {
-      return NextResponse.json({ error: 'Type and id are required' }, { status: 400 })
-    }
-
-    if (type !== 'agent' && type !== 'pattern') {
-      return NextResponse.json({ error: 'Type must be "agent" or "pattern"' }, { status: 400 })
+    // Determine if this is an agent or pattern request
+    const isAgent = agentId || type === 'agent'
+    const isPattern = type === 'pattern'
+    
+    if (!isAgent && !isPattern) {
+      return NextResponse.json({ error: 'Invalid request. Must provide agentId or type.' }, { status: 400 })
     }
 
     const adminClient = createAdminClient()
@@ -81,16 +75,21 @@ export async function POST(request: Request) {
 
     let title: string
     let description: string
+    let itemType: 'agent' | 'pattern'
 
-    if (type === 'agent') {
+    if (isAgent) {
+      itemType = 'agent'
+      const agentIdToUse = agentId || id
+      const agentName = name || customizations?.name
+      
       // Look up agent template
-      const template = AGENT_TEMPLATES[id]
+      const template = AGENT_TEMPLATES[agentIdToUse]
       if (!template) {
         return NextResponse.json({ error: 'Agent template not found' }, { status: 404 })
       }
 
-      const agentName = customizations?.name || template.name
-      title = `Setup: ${agentName} agent`
+      const finalName = agentName || template.name
+      title = `Setup: ${finalName} agent`
       
       // Build description with agent details and customizations
       const descriptionParts = [
@@ -100,16 +99,13 @@ export async function POST(request: Request) {
         `- **Description:** ${template.description}`,
       ]
 
-      if (customizations) {
+      if (personality || customizations?.personality || modelTier || customizations?.modelTier) {
         descriptionParts.push('', '## Customizations')
-        if (customizations.name) {
-          descriptionParts.push(`- **Custom Name:** ${customizations.name}`)
+        if (personality || customizations?.personality) {
+          descriptionParts.push(`- **Personality:** ${personality || customizations?.personality}`)
         }
-        if (customizations.personality) {
-          descriptionParts.push(`- **Personality:** ${customizations.personality}`)
-        }
-        if (customizations.modelTier) {
-          descriptionParts.push(`- **Model Tier:** ${customizations.modelTier}`)
+        if (modelTier || customizations?.modelTier) {
+          descriptionParts.push(`- **Model Tier:** ${modelTier || customizations?.modelTier}`)
         }
       }
 
@@ -123,15 +119,23 @@ export async function POST(request: Request) {
       )
 
       description = descriptionParts.join('\n')
-
+      
       // Note: agent templates don't have import_count in DB yet (static)
-      // Will be added when agent_templates table is created
+      
     } else {
+      // Pattern
+      itemType = 'pattern'
+      const patternId = id
+      
+      if (!patternId) {
+        return NextResponse.json({ error: 'Pattern id is required' }, { status: 400 })
+      }
+
       // Look up pattern from database
       const { data: pattern, error: patternError } = await adminClient
         .from('patterns')
         .select('id, title, category, problem, solution, implementation, validation, import_count')
-        .eq('id', id)
+        .eq('id', patternId)
         .single()
 
       if (patternError || !pattern) {
@@ -175,7 +179,7 @@ export async function POST(request: Request) {
       await adminClient
         .from('patterns')
         .update({ import_count: (pattern.import_count || 0) + 1 })
-        .eq('id', id)
+        .eq('id', patternId)
     }
 
     // Create task with encrypted fields
@@ -185,7 +189,7 @@ export async function POST(request: Request) {
         title: encrypt(title),
         description: encrypt(description),
         assigned_agent_ids: [],
-        tags: [type === 'agent' ? 'setup' : 'review', 'hub-import'],
+        tags: [itemType === 'agent' ? 'setup' : 'review', 'hub-import'],
         priority: 'normal',
         status: 'inbox',
         account_id: account.id,
@@ -206,7 +210,7 @@ export async function POST(request: Request) {
         title,
         description,
       },
-      message: type === 'agent' 
+      message: itemType === 'agent' 
         ? `"${title}" added to your Command inbox`
         : `Pattern "${title.replace('Review: ', '')}" added to your Command inbox`,
     })

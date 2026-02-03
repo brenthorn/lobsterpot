@@ -215,8 +215,6 @@ export default async function HubPage({
         <div className="max-w-6xl mx-auto px-6">
           <HubContent
             filteredItems={filteredItems}
-            agents={agents}
-            patterns={patterns || []}
             typeFilters={typeFilters}
             categoryFilters={categoryFilters}
             selectedType={selectedType}
