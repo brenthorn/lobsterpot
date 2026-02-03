@@ -1,13 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
+import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { cookies } from 'next/headers'
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
-
-// Create admin client for operations
-const adminClient = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 // DELETE /api/command/tasks/[id] - Delete a task
 export async function DELETE(
@@ -16,34 +9,25 @@ export async function DELETE(
 ) {
   try {
     const { id: taskId } = await params
+    const adminClient = createAdminClient()
     
     // Get user session
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
-        },
-      }
-    )
+    const supabase = await createServerSupabaseClient()
+    const { data: { session } } = await supabase.auth.getSession()
     
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user?.email) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     
     // Check 2FA
+    const cookieStore = await cookies()
     const writeAccess = cookieStore.get('tiker_write_access')
     if (!writeAccess?.value) {
       // Check if user has 2FA enabled
       const { data: account } = await adminClient
         .from('accounts')
         .select('id, two_factor_enabled')
-        .eq('email', user.email)
+        .eq('auth_uid', session.user.id)
         .single()
       
       if (account?.two_factor_enabled) {
@@ -55,7 +39,7 @@ export async function DELETE(
     const { data: account } = await adminClient
       .from('accounts')
       .select('id')
-      .eq('email', user.email)
+      .eq('auth_uid', session.user.id)
       .single()
     
     if (!account) {
