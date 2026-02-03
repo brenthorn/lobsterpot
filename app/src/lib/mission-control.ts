@@ -1,11 +1,6 @@
 // Command API client
+// Note: Encryption/decryption happens server-side in API routes
 import { createClient } from '@/lib/supabase'
-import { encrypt, decrypt, decryptFields } from '@/lib/crypto'
-
-// Sensitive fields that are encrypted at rest
-const TASK_ENCRYPTED_FIELDS = ['title', 'description'] as const
-const COMMENT_ENCRYPTED_FIELDS = ['content'] as const
-const ACTIVITY_ENCRYPTED_FIELDS = ['message'] as const
 
 export type AgentStatus = 'idle' | 'active' | 'blocked'
 export type TaskStatus = 'inbox' | 'assigned' | 'in_progress' | 'review' | 'done' | 'blocked'
@@ -81,70 +76,29 @@ export async function getCurrentAccountId(): Promise<string | null> {
   return account?.id || null
 }
 
-// RLS handles filtering - these queries will automatically return only user's data
-export async function getAgents() {
-  const supabase = createClient()
-  const { data, error } = await supabase
-    .from('mc_agents')
-    .select('*')
-    .order('name')
-  
-  if (error) throw error
-  return data as Agent[]
+// Fetch via API routes (handles server-side decryption)
+export async function getAgents(): Promise<Agent[]> {
+  const response = await fetch('/api/command/agents')
+  if (!response.ok) throw new Error('Failed to fetch agents')
+  return response.json()
 }
 
-export async function getTasks() {
-  const supabase = createClient()
-  const { data, error } = await supabase
-    .from('mc_tasks')
-    .select('*')
-    .order('created_at', { ascending: false })
-  
-  if (error) throw error
-  
-  // Decrypt sensitive fields
-  return (data || []).map(task => decryptFields(task, [...TASK_ENCRYPTED_FIELDS])) as Task[]
+export async function getTasks(): Promise<Task[]> {
+  const response = await fetch('/api/command/tasks')
+  if (!response.ok) throw new Error('Failed to fetch tasks')
+  return response.json()
 }
 
-export async function getActivities(limit = 50) {
-  const supabase = createClient()
-  const { data, error } = await supabase
-    .from('mc_activities')
-    .select(`
-      *,
-      agent:mc_agents(name, emoji),
-      task:mc_tasks(title)
-    `)
-    .order('created_at', { ascending: false })
-    .limit(limit)
-  
-  if (error) throw error
-  
-  // Decrypt sensitive fields (including nested task title)
-  return (data || []).map(activity => {
-    const decrypted = decryptFields(activity, [...ACTIVITY_ENCRYPTED_FIELDS])
-    if (decrypted.task?.title) {
-      decrypted.task.title = decrypt(decrypted.task.title)
-    }
-    return decrypted
-  }) as Activity[]
+export async function getActivities(limit = 50): Promise<Activity[]> {
+  const response = await fetch(`/api/command/activities?limit=${limit}`)
+  if (!response.ok) throw new Error('Failed to fetch activities')
+  return response.json()
 }
 
-export async function getTaskComments(taskId: string) {
-  const supabase = createClient()
-  const { data, error } = await supabase
-    .from('mc_comments')
-    .select(`
-      *,
-      agent:mc_agents(name, emoji)
-    `)
-    .eq('task_id', taskId)
-    .order('created_at', { ascending: true })
-  
-  if (error) throw error
-  
-  // Decrypt sensitive fields
-  return (data || []).map(comment => decryptFields(comment, [...COMMENT_ENCRYPTED_FIELDS])) as Comment[]
+export async function getTaskComments(taskId: string): Promise<Comment[]> {
+  const response = await fetch(`/api/command/comments?taskId=${taskId}`)
+  if (!response.ok) throw new Error('Failed to fetch comments')
+  return response.json()
 }
 
 export async function updateTaskStatus(taskId: string, status: TaskStatus) {
@@ -181,113 +135,30 @@ export async function createTask(task: {
   assigned_agent_ids?: string[]
   tags?: string[]
   priority?: 'low' | 'normal' | 'high' | 'urgent'
-}) {
-  const supabase = createClient()
-  
-  // Get current account_id
-  const accountId = await getCurrentAccountId()
-  if (!accountId) {
-    throw new Error('Not authenticated')
+}): Promise<Task> {
+  const response = await fetch('/api/command/tasks/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(task),
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to create task')
   }
-  
-  // Encrypt sensitive fields before storing
-  const encryptedTask = {
-    ...task,
-    title: encrypt(task.title),
-    description: task.description ? encrypt(task.description) : null,
-    account_id: accountId
-  }
-  
-  const { data, error } = await supabase
-    .from('mc_tasks')
-    .insert(encryptedTask)
-    .select()
-    .single()
-  
-  if (error) throw error
-  
-  // Return decrypted for immediate use
-  return decryptFields(data, [...TASK_ENCRYPTED_FIELDS]) as Task
+  return response.json()
 }
 
-export async function createComment(taskId: string, content: string, agentId?: string) {
-  const supabase = createClient()
-  
-  // Get current account_id
-  const accountId = await getCurrentAccountId()
-  if (!accountId) {
-    throw new Error('Not authenticated')
+export async function createComment(taskId: string, content: string, agentId?: string): Promise<Comment> {
+  const response = await fetch('/api/command/comments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ taskId, content, agentId }),
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to create comment')
   }
-  
-  // If no agentId provided, try to get the current user's agent
-  let finalAgentId = agentId
-  if (!finalAgentId) {
-    const { data: userData } = await supabase.auth.getUser()
-    if (userData?.user?.email) {
-      // Look up agent by name "Jay" within this account
-      const { data: agent } = await supabase
-        .from('mc_agents')
-        .select('id')
-        .eq('name', 'Jay')
-        .eq('account_id', accountId)
-        .single()
-      
-      if (agent) finalAgentId = agent.id
-    }
-  }
-  
-  // Create a placeholder "You" agent if none exists
-  if (!finalAgentId) {
-    // Try to find or create a "You" agent for this user
-    const { data: existingYou } = await supabase
-      .from('mc_agents')
-      .select('id')
-      .eq('name', 'You')
-      .eq('account_id', accountId)
-      .single()
-    
-    if (existingYou) {
-      finalAgentId = existingYou.id
-    } else {
-      // Create "You" agent
-      const { data: newAgent, error: agentError } = await supabase
-        .from('mc_agents')
-        .insert({
-          name: 'You',
-          session_key: `user:${accountId}`,
-          role: 'Human operator',
-          level: 'lead',
-          emoji: '👤',
-          status: 'active',
-          account_id: accountId
-        })
-        .select('id')
-        .single()
-      
-      if (newAgent) finalAgentId = newAgent.id
-    }
-  }
-  
-  if (!finalAgentId) {
-    throw new Error('Unable to determine agent/user for comment')
-  }
-  
-  // Encrypt content before storing
-  const { data, error } = await supabase
-    .from('mc_comments')
-    .insert({ 
-      task_id: taskId, 
-      agent_id: finalAgentId, 
-      content: encrypt(content),
-      account_id: accountId
-    })
-    .select()
-    .single()
-  
-  if (error) throw error
-  
-  // Return decrypted for immediate use
-  return decryptFields(data, [...COMMENT_ENCRYPTED_FIELDS]) as Comment
+  return response.json()
 }
 
 // Create a default agent for new users
