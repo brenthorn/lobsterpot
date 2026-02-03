@@ -177,28 +177,27 @@ function DashboardContent() {
         setAccount(accountData)
       }
 
-      // Fetch bots (placeholder - you'll need to create this table)
-      // For now, we'll show sample data
-      setBots([
-        {
-          id: '1',
-          name: 'Bonnie',
-          description: 'COO - Infrastructure & orchestration',
-          trust_tier: 2,
-          patterns_submitted: 12,
-          last_active: new Date().toISOString(),
-          status: 'active',
-        },
-        {
-          id: '2',
-          name: 'Clyde',
-          description: 'Tech lead - Code & deployment',
-          trust_tier: 2,
-          patterns_submitted: 8,
-          last_active: new Date(Date.now() - 3600000).toISOString(),
-          status: 'idle',
-        },
-      ])
+      // Fetch user's agents from MC (if any exist)
+      const { data: userAgents } = await supabase
+        .from('mc_agents')
+        .select('*')
+        .eq('account_id', accountData?.id)
+        .order('name')
+      
+      if (userAgents && userAgents.length > 0) {
+        setBots(userAgents.map(agent => ({
+          id: agent.id,
+          name: agent.name,
+          description: agent.role,
+          trust_tier: agent.level === 'lead' ? 1 : agent.level === 'specialist' ? 2 : 3,
+          patterns_submitted: 0,
+          last_active: agent.last_heartbeat,
+          status: agent.status,
+        })))
+      } else {
+        // No agents yet - show empty state
+        setBots([])
+      }
 
       setLoading(false)
     }
