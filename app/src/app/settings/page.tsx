@@ -14,6 +14,9 @@ export default function SettingsPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [redirectToMC, setRedirectToMC] = useState(false)
   const [contributionEnabled, setContributionEnabled] = useState(true)
+  const [exporting, setExporting] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   
   const supabase = createClient()
   const router = useRouter()
@@ -64,6 +67,54 @@ export default function SettingsPage() {
     setMessage({ type: 'success', text: 'Preferences saved' })
     
     setSaving(false)
+  }
+
+  const handleExport = async () => {
+    setExporting(true)
+    try {
+      const response = await fetch('/api/account/export', {
+        credentials: 'include'
+      })
+      if (!response.ok) {
+        throw new Error('Export failed')
+      }
+      // Trigger download
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `tiker-export-${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      setMessage({ type: 'success', text: 'Data exported successfully' })
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to export data' })
+    }
+    setExporting(false)
+  }
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true)
+    try {
+      const response = await fetch('/api/account/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ confirm: 'DELETE' })
+      })
+      if (!response.ok) {
+        throw new Error('Delete failed')
+      }
+      // Redirect to home after deletion
+      await supabase.auth.signOut()
+      window.location.href = '/'
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete account' })
+      setDeleting(false)
+      setShowDeleteConfirm(false)
+    }
   }
 
   if (loading) {
@@ -245,25 +296,59 @@ export default function SettingsPage() {
                   Download all your tasks, agents, and settings
                 </p>
               </div>
-              <button className="btn btn-secondary text-sm">
-                Export
+              <button 
+                onClick={handleExport}
+                disabled={exporting}
+                className="btn btn-secondary text-sm"
+              >
+                {exporting ? 'Exporting...' : 'Export'}
               </button>
             </div>
             
             <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                    Delete account
-                  </p>
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                    Permanently delete your account and all data
-                  </p>
+              {!showDeleteConfirm ? (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                      Delete account
+                    </p>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                      Permanently delete your account and all data
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => setShowDeleteConfirm(true)}
+                    className="btn bg-red-600 hover:bg-red-700 text-white text-sm"
+                  >
+                    Delete Account
+                  </button>
                 </div>
-                <button className="btn bg-red-600 hover:bg-red-700 text-white text-sm">
-                  Delete Account
-                </button>
-              </div>
+              ) : (
+                <div className="bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
+                  <p className="font-medium text-red-800 dark:text-red-200 mb-2">
+                    Are you sure? This cannot be undone.
+                  </p>
+                  <p className="text-sm text-red-700 dark:text-red-300 mb-4">
+                    All your tasks, agents, comments, and settings will be permanently deleted.
+                  </p>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => setShowDeleteConfirm(false)}
+                      disabled={deleting}
+                      className="btn btn-secondary text-sm"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={handleDeleteAccount}
+                      disabled={deleting}
+                      className="btn bg-red-600 hover:bg-red-700 text-white text-sm"
+                    >
+                      {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
