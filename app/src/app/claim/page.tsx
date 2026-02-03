@@ -26,7 +26,7 @@ export default function ClaimPage() {
       const { data: accountData, error: accountError } = await supabase
         .from('accounts')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('email', user.email)
         .single()
 
       if (accountError || !accountData) {

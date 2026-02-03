@@ -21,10 +21,10 @@ export default async function MissionControlPage() {
   const { data: account, error } = await adminClient
     .from('accounts')
     .select('id')
-    .eq('user_id', session.user.id)
+    .eq('email', session.user.email)
     .single()
 
-  console.log('[MC] Account lookup:', { userId: session.user.id, account, error })
+  console.log('[MC] Account lookup:', { email: session.user.email, account, error })
 
   if (!account) {
     // Account doesn't exist - send to onboarding to create it

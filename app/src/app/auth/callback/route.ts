@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       const { data: existingAccount } = await adminClient
         .from('accounts')
         .select('id')
-        .eq('user_id', data.user.id)
+        .eq('email', data.user.email)
         .single()
 
       if (!existingAccount) {
@@ -25,7 +25,6 @@ export async function GET(request: Request) {
         const { error: createError } = await adminClient
           .from('accounts')
           .insert({
-            user_id: data.user.id,
             email: data.user.email!,
           })
 
