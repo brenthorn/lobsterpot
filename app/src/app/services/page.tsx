@@ -137,11 +137,6 @@ function ServiceCard({ service, featured }: ServiceCardProps) {
             <span className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               {formatPrice(currentPrice)}
             </span>
-            {service.pricing.type === 'one_time_with_recurring' && (
-              <span className="text-sm text-neutral-500 dark:text-neutral-400 ml-1">
-                + {formatPrice(service.pricing.recurringAmount || 0)}/mo hosting
-              </span>
-            )}
             {service.pricing.type === 'one_time' && (
               <span className="text-sm text-neutral-500 dark:text-neutral-400 ml-1">
                 one-time

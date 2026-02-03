@@ -267,11 +267,6 @@ export function getPriceDisplay(service: ServiceOffering): string {
 
   const base = formatPrice(pricing.amount)
 
-  if (pricing.type === 'one_time_with_recurring') {
-    const recurring = formatPrice(pricing.recurringAmount || 0)
-    return `${base} + ${recurring}/mo`
-  }
-
   if (pricing.type === 'recurring' && pricing.interval) {
     return `${base}/${pricing.interval === 'month' ? 'mo' : 'yr'}`
   }
