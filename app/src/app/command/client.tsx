@@ -294,7 +294,7 @@ export default function MissionControlClient() {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold text-gray-900">COMMAND</h1>
+              <h1 className="text-2xl font-bold text-gray-900">COMMAND CENTER</h1>
             </div>
 
             <div className="flex items-center gap-8 text-sm">
