@@ -523,9 +523,12 @@ function ServicesContent() {
                   </p>
                 </div>
               </div>
-              <p className="text-amber-800 dark:text-amber-200 mb-4">
+              <p className="text-amber-800 dark:text-amber-200 mb-3">
                 1-hour remote session. We configure Tiker on your existing VPS or home computer.
                 You provide Tailscale or remote access, we do the rest. Done in a day.
+              </p>
+              <p className="text-sm text-amber-700 dark:text-amber-300 mb-4 bg-amber-100/50 dark:bg-amber-900/30 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800">
+                💡 <strong>Don't have a VPS?</strong> Reply to your confirmation email and we can provision one for you at $10/mo (includes Tiker Pro).
               </p>
               <ul className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-amber-700 dark:text-amber-300">
                 <li className="flex items-center gap-1">
