@@ -244,6 +244,12 @@ export async function POST(request: Request) {
   
   // Rate limiting check: Max 3 patterns per account per day
   // Rate limiting prevents bot spam attacks during seed stage
+  if (!accountId) {
+    return NextResponse.json(
+      { error: 'Account ID required for rate limiting' },
+      { status: 400 }
+    )
+  }
   const rateLimit = checkRateLimit(accountId)
   if (!rateLimit.allowed) {
     return NextResponse.json({
