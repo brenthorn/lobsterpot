@@ -88,7 +88,7 @@ export default async function HubPage({
   // Combine and filter based on type
   const allItems = [
     ...agents.map(a => ({ ...a, itemType: 'agent' as const })),
-    ...(patterns || []).map(p => ({ ...p, itemType: 'pattern' as const })),
+    ...(patterns || []).map((p: any) => ({ ...p, itemType: 'pattern' as const })),
   ]
 
   const filteredItems = allItems.filter(item => {
