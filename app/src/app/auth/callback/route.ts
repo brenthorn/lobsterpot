@@ -57,6 +57,9 @@ export async function GET(request: Request) {
               : 'Silver verification (Google OAuth)'
           })
         }
+
+        // New user - redirect to onboarding
+        return NextResponse.redirect(`${origin}/start`)
       }
 
       return NextResponse.redirect(`${origin}${next}`)
