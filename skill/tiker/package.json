@@ -1,0 +1,18 @@
+{
+  "name": "tiker",
+  "version": "0.1.0",
+  "description": "Tiker Mission Control and Agent Marketplace integration",
+  "main": "tiker.js",
+  "bin": {
+    "tiker": "./tiker.js"
+  },
+  "scripts": {
+    "test": "node tiker.js status"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "keywords": ["openclaw", "tiker", "mission-control", "agents"],
+  "author": "Tiker",
+  "license": "MIT"
+}
