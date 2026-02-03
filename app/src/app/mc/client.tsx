@@ -27,6 +27,7 @@ export default function MissionControlClient() {
   const [loading, setLoading] = useState(true)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
+  const [hideDone, setHideDone] = useState(true) // Hide completed by default
 
   // Configure drag sensors with proper activation constraints
   const sensors = useSensors(
@@ -266,12 +267,27 @@ export default function MissionControlClient() {
             </div>
           </div>
           
-          <button
-            onClick={() => setShowCreateTask(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-          >
-            + Create Task
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Hide Done toggle */}
+            <button
+              onClick={() => setHideDone(!hideDone)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                hideDone 
+                  ? 'bg-gray-200 text-gray-600' 
+                  : 'bg-green-100 text-green-700'
+              }`}
+            >
+              {hideDone ? 'Show Done' : 'Hide Done'}
+              {!hideDone && ` (${tasks.filter(t => t.status === 'done').length})`}
+            </button>
+            
+            <button
+              onClick={() => setShowCreateTask(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            >
+              + Create Task
+            </button>
+          </div>
         </div>
 
         {/* Kanban Board - Full Width */}
@@ -285,7 +301,7 @@ export default function MissionControlClient() {
             collisionDetection={closestCenter}
           >
             <div className="flex gap-4 pb-4">
-              {COLUMNS.map(column => (
+              {COLUMNS.filter(col => !hideDone || col.status !== 'done').map(column => (
                 <KanbanColumn
                   key={column.status}
                   status={column.status}
