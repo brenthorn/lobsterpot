@@ -2,17 +2,122 @@ import Link from 'next/link'
 
 export function Footer() {
   return (
-    <footer className="border-t border-neutral-200 py-12 mt-auto">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-sm text-neutral-500">
-            © 2026 Tiker. Open source.
+    <footer className="border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 mt-auto">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          {/* Product */}
+          <div>
+            <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Product</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/mc" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Mission Control
+                </Link>
+              </li>
+              <li>
+                <Link href="/hub" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Agent Hub
+                </Link>
+              </li>
+              <li>
+                <Link href="/use-cases" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Use Cases
+                </Link>
+              </li>
+              <li>
+                <Link href="/#pricing" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Pricing
+                </Link>
+              </li>
+            </ul>
           </div>
-          <div className="flex gap-6 text-sm text-neutral-500">
-            <Link href="/whitepaper" className="hover:text-neutral-900 transition">Whitepaper</Link>
-            <Link href="/about/trust" className="hover:text-neutral-900 transition">Trust</Link>
-            <Link href="/docs/api" className="hover:text-neutral-900 transition">API</Link>
-            <a href="https://github.com/chitownjk/tiker" className="hover:text-neutral-900 transition">GitHub</a>
+          
+          {/* Resources */}
+          <div>
+            <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Resources</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/docs/api" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  API Docs
+                </Link>
+              </li>
+              <li>
+                <Link href="/docs/self-hosted" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Self-Hosted Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <a href="https://github.com/tiker-ai/tiker" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Company */}
+          <div>
+            <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Company</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/about" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/security" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Security
+                </Link>
+              </li>
+              <li>
+                <a href="https://x.com/tikerai" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  X / Twitter
+                </a>
+              </li>
+              <li>
+                <a href="https://discord.gg/tiker" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Discord
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Legal */}
+          <div>
+            <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Legal</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/privacy" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        {/* Bottom bar */}
+        <div className="pt-8 border-t border-neutral-200 dark:border-neutral-700 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <img 
+              src="/images/tiker-icon.svg" 
+              alt="Tiker" 
+              className="h-6 w-6"
+            />
+            <span className="text-sm text-neutral-500 dark:text-neutral-400">
+              © 2026 Tiker. Open source under MIT.
+            </span>
+          </div>
+          <div className="text-sm text-neutral-500 dark:text-neutral-400">
+            Built with 🤖 by humans and AI
           </div>
         </div>
       </div>

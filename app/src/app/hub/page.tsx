@@ -6,12 +6,17 @@ export const metadata = {
   description: 'Vetted AI agents ready to join your team. Coder, Writer, Researcher, and more.',
 }
 
-export default async function AgentHubPage() {
+export default async function AgentHubPage({
+  searchParams,
+}: {
+  searchParams: { category?: string }
+}) {
   const supabase = await createServerSupabaseClient()
+  const selectedCategory = searchParams.category || 'all'
   
   // For now, show static agent templates
   // Later: fetch from agent_templates table
-  const agents = [
+  const allAgents = [
     {
       id: 'assistant',
       name: 'Assistant',
@@ -20,6 +25,7 @@ export default async function AgentHubPage() {
       tier: 'free',
       category: 'general',
       skills: ['research', 'writing', 'planning', 'code-review'],
+      modelTier: 'standard',
     },
     {
       id: 'coder',
@@ -29,6 +35,7 @@ export default async function AgentHubPage() {
       tier: 'team',
       category: 'engineering',
       skills: ['coding', 'debugging', 'code-review', 'architecture'],
+      modelTier: 'reasoning',
     },
     {
       id: 'writer',
@@ -38,6 +45,7 @@ export default async function AgentHubPage() {
       tier: 'team',
       category: 'content',
       skills: ['copywriting', 'editing', 'tone-matching', 'seo'],
+      modelTier: 'standard',
     },
     {
       id: 'researcher',
@@ -47,6 +55,7 @@ export default async function AgentHubPage() {
       tier: 'team',
       category: 'research',
       skills: ['web-search', 'analysis', 'summarization', 'citation'],
+      modelTier: 'standard',
     },
     {
       id: 'marketer',
@@ -56,6 +65,7 @@ export default async function AgentHubPage() {
       tier: 'team',
       category: 'marketing',
       skills: ['social-media', 'copywriting', 'analytics', 'strategy'],
+      modelTier: 'standard',
     },
     {
       id: 'analyst',
@@ -65,6 +75,7 @@ export default async function AgentHubPage() {
       tier: 'team',
       category: 'data',
       skills: ['sql', 'excel', 'visualization', 'statistics'],
+      modelTier: 'reasoning',
     },
   ]
 
@@ -77,6 +88,11 @@ export default async function AgentHubPage() {
     { id: 'marketing', name: 'Marketing' },
     { id: 'data', name: 'Data' },
   ]
+
+  // Filter agents by category
+  const agents = selectedCategory === 'all' 
+    ? allAgents 
+    : allAgents.filter(a => a.category === selectedCategory)
 
   return (
     <main className="min-h-screen">
@@ -107,6 +123,34 @@ export default async function AgentHubPage() {
         </div>
       </section>
 
+      {/* What is the Agent Hub? */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <details className="group">
+            <summary className="flex items-center gap-2 cursor-pointer list-none">
+              <svg className="w-5 h-5 text-neutral-500 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              <span className="font-medium text-neutral-900 dark:text-neutral-100">What is the Agent Hub?</span>
+            </summary>
+            <div className="mt-4 pl-7 text-neutral-600 dark:text-neutral-400 space-y-3">
+              <p>
+                The Agent Hub is Tiker's curated library of AI agents. Each agent is a specialized AI teammate with specific skills, tested configurations, and verified security.
+              </p>
+              <p>
+                <strong className="text-neutral-900 dark:text-neutral-100">For humans:</strong> Think of it like hiring. Browse available roles, see what each agent can do, and add them to your team with one click.
+              </p>
+              <p>
+                <strong className="text-neutral-900 dark:text-neutral-100">For bots:</strong> Hub agents come with pre-configured system prompts, skill declarations, and model tier recommendations. When added, they're automatically registered in Mission Control with appropriate permissions.
+              </p>
+              <p>
+                <strong className="text-neutral-900 dark:text-neutral-100">How it connects:</strong> Adding an agent creates a task in your Mission Control. Your orchestrator (or you) can then assign work to that agent. The agent runs via OpenClaw, coordinated through MC.
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+
       {/* Main Content */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-6">
@@ -114,16 +158,17 @@ export default async function AgentHubPage() {
           {/* Category Filters */}
           <div className="flex flex-wrap gap-2 mb-8">
             {categories.map((cat) => (
-              <button
+              <Link
                 key={cat.id}
+                href={cat.id === 'all' ? '/hub' : `/hub?category=${cat.id}`}
                 className={`px-4 py-2 rounded-full text-sm transition ${
-                  cat.id === 'all'
+                  selectedCategory === cat.id
                     ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
                     : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700'
                 }`}
               >
                 {cat.name}
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -165,6 +210,21 @@ export default async function AgentHubPage() {
                   {agent.description}
                 </p>
                 
+                {/* Model Tier */}
+                <div className="flex items-center gap-2 mb-3 text-xs">
+                  <span className="text-neutral-500 dark:text-neutral-400">Model:</span>
+                  <span className={`px-2 py-0.5 rounded-full ${
+                    agent.modelTier === 'reasoning' 
+                      ? 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300'
+                      : agent.modelTier === 'fast'
+                      ? 'bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300'
+                      : 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300'
+                  }`}>
+                    {agent.modelTier}
+                  </span>
+                </div>
+                
+                {/* Skills */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {agent.skills.map((skill) => (
                     <span
@@ -188,6 +248,18 @@ export default async function AgentHubPage() {
               </div>
             ))}
           </div>
+
+          {/* Empty state for filtered */}
+          {agents.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-neutral-500 dark:text-neutral-400">
+                No agents in this category yet.
+              </p>
+              <Link href="/hub" className="text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">
+                View all agents
+              </Link>
+            </div>
+          )}
 
           {/* Coming Soon */}
           <div className="mt-12 text-center">
@@ -215,7 +287,7 @@ export default async function AgentHubPage() {
               Hub agents not quite right? Create custom agents with your own prompts, personalities, and skills. 
               Custom agents start restricted and require explicit trust escalation.
             </p>
-            <Link href="/docs/custom-agents" className="btn btn-secondary">
+            <Link href="/docs/api" className="btn btn-secondary">
               Read the docs →
             </Link>
           </div>

@@ -37,8 +37,11 @@ export default function SettingsPage() {
       
       if (accountData) {
         setAccount(accountData)
-        setRedirectToMC(accountData.redirect_to_mc || false)
       }
+      
+      // Load redirect preference from localStorage
+      const savedRedirect = localStorage.getItem('tiker_redirect_to_mc')
+      setRedirectToMC(savedRedirect === 'true')
       
       setLoading(false)
     }
@@ -47,21 +50,12 @@ export default function SettingsPage() {
   }, [])
 
   const handleSavePreferences = async () => {
-    if (!account) return
-    
     setSaving(true)
     setMessage(null)
     
-    const { error } = await supabase
-      .from('accounts')
-      .update({ redirect_to_mc: redirectToMC })
-      .eq('id', account.id)
-    
-    if (error) {
-      setMessage({ type: 'error', text: 'Failed to save preferences' })
-    } else {
-      setMessage({ type: 'success', text: 'Preferences saved' })
-    }
+    // Save to localStorage (no DB column yet)
+    localStorage.setItem('tiker_redirect_to_mc', redirectToMC.toString())
+    setMessage({ type: 'success', text: 'Preferences saved' })
     
     setSaving(false)
   }
