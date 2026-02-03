@@ -330,7 +330,7 @@ export default function SecurityPage() {
           
           <div className="flex flex-wrap gap-4">
             <Link 
-              href="https://github.com/tiker-ai/tiker" 
+              href="https://github.com/chitownjk/tiker" 
               className="btn btn-secondary"
               target="_blank"
               rel="noopener noreferrer"
