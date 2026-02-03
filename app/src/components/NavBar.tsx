@@ -75,23 +75,17 @@ export function NavBar() {
               />
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm">
-              <Link href="/patterns" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Patterns
+              <Link href="/#how-it-works" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                How it works
               </Link>
-              <Link href="/leaderboard" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Leaderboard
-              </Link>
-              <Link href="/whitepaper" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Whitepaper
+              <Link href="/#pricing" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                Pricing
               </Link>
               <Link href="/docs/api" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
                 API
               </Link>
-              <Link href="/about/trust" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Trust
-              </Link>
-              <Link href="/pricing" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                Pricing
+              <Link href="/app" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                Patterns
               </Link>
               <Link href="/faq" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
                 FAQ

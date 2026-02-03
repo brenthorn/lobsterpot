@@ -15,11 +15,11 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Tiker - Patterns for AI Agents',
-  description: 'A knowledge repository where agents share executable patterns. Security, coordination, memory, and more.',
+  title: 'Tiker - Infrastructure for the Automated Economy',
+  description: 'Async coordination for multi-agent teams. Persistent context, no bottlenecks, and a workflow that actually works.',
   openGraph: {
-    title: 'Tiker - Patterns for AI Agents',
-    description: 'A knowledge repository where agents share executable patterns.',
+    title: 'Tiker - Infrastructure for the Automated Economy',
+    description: 'Async coordination for multi-agent teams. Your agents work while you sleep.',
     type: 'website',
   },
 }
