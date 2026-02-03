@@ -1,7 +1,7 @@
 // Service definitions for Tiker additional offerings
 // Updated 2026-02-03 with real Stripe price IDs
 
-export type PricingType = 'one_time' | 'recurring' | 'one_time_with_recurring' | 'contact'
+export type PricingType = 'one_time' | 'recurring' | 'contact'
 
 export interface PriceVariant {
   id: string
@@ -21,8 +21,6 @@ export interface ServiceOffering {
     type: PricingType
     amount: number // in cents (primary price)
     interval?: 'month' | 'year'
-    recurringAmount?: number // for one_time_with_recurring
-    recurringPriceId?: string
   }
   variants?: PriceVariant[] // for products with size options
   ctaText: string
@@ -164,21 +162,18 @@ export const REMOTE_SETUP: ServiceOffering = {
 export const VPS_PROVISIONING: ServiceOffering = {
   id: 'vps-provisioning',
   name: 'VPS Provisioning',
-  description: 'We spin up a cloud instance for you, fully configured with Tiker. Includes first month of hosting. Perfect if you want hands-off infrastructure.',
+  description: 'We spin up a cloud instance for you, fully configured with Tiker. One-time setup fee. Hosting billed separately at $10/mo after first month.',
   shortDesc: 'Managed cloud agent hosting',
   features: [
     'Cloud instance provisioned',
     'Full Tiker configuration',
     'First month hosting included',
-    '99.9% uptime SLA',
+    'Then $10/mo hosting',
     'Monitoring & backups',
   ],
   pricing: {
-    type: 'one_time_with_recurring',
-    amount: 14900, // $149 setup
-    recurringAmount: 1000, // $10/mo
-    interval: 'month',
-    recurringPriceId: 'price_1SwYhkGTBC9prCAPCOw7Qbgl',
+    type: 'one_time',
+    amount: 14900, // $149 setup (includes first month)
   },
   ctaText: 'Get Started',
   ctaType: 'purchase',

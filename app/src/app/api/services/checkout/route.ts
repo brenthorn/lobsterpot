@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
     // Determine checkout mode and pricing
-    const isRecurring = service.pricing.type === 'recurring' || service.pricing.type === 'one_time_with_recurring'
+    const isRecurring = service.pricing.type === 'recurring'
     const priceAmount = amount_cents || service.pricing.amount
 
     // stripePriceId was already determined above from price_id, variant, or service default
