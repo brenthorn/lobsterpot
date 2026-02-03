@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
+import TwoFactorSetup from '@/components/TwoFactorSetup'
 
 interface Account {
   id: string
@@ -19,6 +20,53 @@ interface Account {
   current_bot_count: number
   current_task_count: number
   created_at: string
+  two_factor_enabled: boolean
+}
+
+// 2FA Setup Section component
+function TwoFactorSetupSection() {
+  const [enabled, setEnabled] = useState<boolean | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function check2FAStatus() {
+      try {
+        const res = await fetch('/api/auth/2fa/verify')
+        const data = await res.json()
+        setEnabled(data.requires2FA && !data.needs2FASetup)
+      } catch (e) {
+        setEnabled(false)
+      } finally {
+        setLoading(false)
+      }
+    }
+    check2FAStatus()
+  }, [])
+
+  if (loading) {
+    return <div className="animate-pulse h-24 bg-neutral-100 dark:bg-neutral-800 rounded-lg" />
+  }
+
+  if (enabled) {
+    return (
+      <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-green-100 dark:bg-green-800/50 rounded-full flex items-center justify-center">
+            <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <p className="font-medium text-green-800 dark:text-green-200">2FA Enabled</p>
+            <p className="text-sm text-green-600 dark:text-green-400">Your account is protected with two-factor authentication.</p>
+          </div>
+        </div>
+        <span className="text-green-600 dark:text-green-400 text-sm">✓ Active</span>
+      </div>
+    )
+  }
+
+  return <TwoFactorSetup onComplete={() => setEnabled(true)} />
 }
 
 interface Bot {
@@ -816,6 +864,14 @@ function DashboardContent() {
                 Sign out
               </button>
             </div>
+          </section>
+
+          {/* Security Section */}
+          <section className="card p-6">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+              Security
+            </h2>
+            <TwoFactorSetupSection />
           </section>
         </div>
       )}
