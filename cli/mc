@@ -71,6 +71,10 @@ const commands = {
         }
       }
 
+      // Default to Jay's account for CLI-created tasks
+      // TODO: Make this configurable or detect from environment
+      const defaultAccountId = process.env.MC_ACCOUNT_ID || '99741f28-95aa-4e33-b29c-5bf046a4ba55'
+      
       const { data, error } = await supabase
         .from('mc_tasks')
         .insert({
@@ -78,7 +82,8 @@ const commands = {
           description,
           assigned_agent_ids: assignedAgentIds,
           status: assignedAgentIds.length > 0 ? 'assigned' : 'inbox',
-          tags: tags ? tags.split(',').map(t => t.trim()) : []
+          tags: tags ? tags.split(',').map(t => t.trim()) : [],
+          account_id: defaultAccountId
         })
         .select()
         .single()
