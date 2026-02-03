@@ -116,9 +116,9 @@ export default function ServicesPage() {
             {/* Option 2: Full Kit */}
             <div className="card p-8">
               <div className="text-center mb-6">
-                <span className="text-4xl mb-4 block">📦</span>
+                <span className="text-4xl mb-4 block">🍓</span>
                 <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                  Full Kit Shipped
+                  Pi 5 Kit Shipped
                 </h2>
                 <p className="text-neutral-600 dark:text-neutral-400">
                   Hardware + setup, delivered to your door
@@ -126,17 +126,17 @@ export default function ServicesPage() {
               </div>
               
               <div className="text-center mb-6">
-                <span className="text-4xl font-bold text-neutral-900 dark:text-neutral-100">$349</span>
+                <span className="text-4xl font-bold text-neutral-900 dark:text-neutral-100">$299</span>
                 <span className="text-neutral-500 dark:text-neutral-400 ml-2">shipped</span>
               </div>
               
               <ul className="space-y-3 mb-8">
                 {[
                   'Raspberry Pi 5 (8GB)',
-                  'Pre-configured SD card',
+                  '128GB SD pre-configured',
                   'Power supply + case',
-                  'Ethernet cable',
                   'Tiker fully installed',
+                  '2 weeks setup support',
                   'Plug in and go',
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
@@ -149,11 +149,11 @@ export default function ServicesPage() {
               </ul>
               
               <button
-                onClick={() => handleCheckout('pi5-kit-8gb', 'price_1SwYhjGTBC9prCAPgC8KXhMN')}
-                disabled={loading === 'pi5-kit-8gb'}
+                onClick={() => handleCheckout('raspberry-pi-kit', 'price_1SwYhiGTBC9prCAPWLEsdwAa')}
+                disabled={loading === 'raspberry-pi-kit'}
                 className="w-full btn btn-secondary py-3"
               >
-                {loading === 'pi5-kit-8gb' ? 'Redirecting...' : 'Order Kit'}
+                {loading === 'raspberry-pi-kit' ? 'Redirecting...' : 'Order Kit'}
               </button>
               
               <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center mt-4">
@@ -162,12 +162,21 @@ export default function ServicesPage() {
             </div>
           </div>
           
-          {/* Already have a Pi? */}
-          <div className="mt-8 text-center">
+          {/* Additional Options */}
+          <div className="mt-8 space-y-4 text-center">
+            <p className="text-neutral-600 dark:text-neutral-400">
+              Want more power?{' '}
+              <button
+                onClick={() => handleCheckout('mac-mini-m4', 'price_1SwYhiGTBC9prCAPVhdIt4HX')}
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Mac Mini M4 for $999
+              </button>
+            </p>
             <p className="text-neutral-600 dark:text-neutral-400">
               Already have a Raspberry Pi?{' '}
               <button
-                onClick={() => handleCheckout('sd-card', 'price_1SwYhjGTBC9prCAPxSDCard')}
+                onClick={() => handleCheckout('sd-card', 'price_1SwYhjGTBC9prCAPPuV5jtoW')}
                 className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
               >
                 Just get the SD card ($49)
