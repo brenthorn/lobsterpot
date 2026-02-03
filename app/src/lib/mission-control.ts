@@ -1,5 +1,11 @@
 // Command API client
 import { createClient } from '@/lib/supabase'
+import { encrypt, decrypt, decryptFields } from '@/lib/crypto'
+
+// Sensitive fields that are encrypted at rest
+const TASK_ENCRYPTED_FIELDS = ['title', 'description'] as const
+const COMMENT_ENCRYPTED_FIELDS = ['content'] as const
+const ACTIVITY_ENCRYPTED_FIELDS = ['message'] as const
 
 export type AgentStatus = 'idle' | 'active' | 'blocked'
 export type TaskStatus = 'inbox' | 'assigned' | 'in_progress' | 'review' | 'done' | 'blocked'
@@ -95,7 +101,9 @@ export async function getTasks() {
     .order('created_at', { ascending: false })
   
   if (error) throw error
-  return data as Task[]
+  
+  // Decrypt sensitive fields
+  return (data || []).map(task => decryptFields(task, [...TASK_ENCRYPTED_FIELDS])) as Task[]
 }
 
 export async function getActivities(limit = 50) {
@@ -111,7 +119,15 @@ export async function getActivities(limit = 50) {
     .limit(limit)
   
   if (error) throw error
-  return data as Activity[]
+  
+  // Decrypt sensitive fields (including nested task title)
+  return (data || []).map(activity => {
+    const decrypted = decryptFields(activity, [...ACTIVITY_ENCRYPTED_FIELDS])
+    if (decrypted.task?.title) {
+      decrypted.task.title = decrypt(decrypted.task.title)
+    }
+    return decrypted
+  }) as Activity[]
 }
 
 export async function getTaskComments(taskId: string) {
@@ -126,7 +142,9 @@ export async function getTaskComments(taskId: string) {
     .order('created_at', { ascending: true })
   
   if (error) throw error
-  return data as Comment[]
+  
+  // Decrypt sensitive fields
+  return (data || []).map(comment => decryptFields(comment, [...COMMENT_ENCRYPTED_FIELDS])) as Comment[]
 }
 
 export async function updateTaskStatus(taskId: string, status: TaskStatus) {
@@ -178,17 +196,24 @@ export async function createTask(task: {
     throw new Error('Not authenticated')
   }
   
+  // Encrypt sensitive fields before storing
+  const encryptedTask = {
+    ...task,
+    title: encrypt(task.title),
+    description: task.description ? encrypt(task.description) : null,
+    account_id: accountId
+  }
+  
   const { data, error } = await supabase
     .from('mc_tasks')
-    .insert({
-      ...task,
-      account_id: accountId
-    })
+    .insert(encryptedTask)
     .select()
     .single()
   
   if (error) throw error
-  return data as Task
+  
+  // Return decrypted for immediate use
+  return decryptFields(data, [...TASK_ENCRYPTED_FIELDS]) as Task
 }
 
 export async function createComment(taskId: string, content: string, agentId?: string) {
@@ -253,19 +278,22 @@ export async function createComment(taskId: string, content: string, agentId?: s
     throw new Error('Unable to determine agent/user for comment')
   }
   
+  // Encrypt content before storing
   const { data, error } = await supabase
     .from('mc_comments')
     .insert({ 
       task_id: taskId, 
       agent_id: finalAgentId, 
-      content,
+      content: encrypt(content),
       account_id: accountId
     })
     .select()
     .single()
   
   if (error) throw error
-  return data as Comment
+  
+  // Return decrypted for immediate use
+  return decryptFields(data, [...COMMENT_ENCRYPTED_FIELDS]) as Comment
 }
 
 // Create a default agent for new users

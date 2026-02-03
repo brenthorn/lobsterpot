@@ -4,6 +4,7 @@ const { createClient } = require('@supabase/supabase-js')
 const fs = require('fs')
 const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, '../app/.env.local') })
+const { encrypt, decrypt } = require('./crypto')
 
 const STATE_FILE = '/home/umbrel/.openclaw/workspace/memory/heartbeat-state.json'
 
@@ -112,13 +113,13 @@ async function main() {
       // Check if we've already pinged this task (stored in state)
       const pingKey = `pinged_${task.id}`
       if (!state[pingKey]) {
-        // Ping the agent via comment
+        // Ping the agent via comment (encrypted)
         await supabase
           .from('mc_comments')
           .insert({
             task_id: task.id,
             agent_name: 'Bonnie',
-            content: `⏰ @${agentNames} - No update in ${Math.floor(hoursSinceUpdate)} hours. Status check needed.`
+            content: encrypt(`⏰ @${agentNames} - No update in ${Math.floor(hoursSinceUpdate)} hours. Status check needed.`)
           })
         
         // Mark as pinged
@@ -127,15 +128,15 @@ async function main() {
     }
   }
   
-  // Output results
+  // Output results (decrypt sensitive fields)
   const result = {
-    newInboxItems: newInbox.map(t => ({ id: t.id, title: t.title })),
+    newInboxItems: newInbox.map(t => ({ id: t.id, title: decrypt(t.title) })),
     newComments: newComments.map(c => ({
-      task: c.tasks?.title || c.task_id,
-      content: c.content.substring(0, 100),
+      task: c.tasks?.title ? decrypt(c.tasks.title) : c.task_id,
+      content: decrypt(c.content).substring(0, 100),
       created_at: c.created_at
     })),
-    abandonedTasks: abandonedTasks,
+    abandonedTasks: abandonedTasks.map(t => ({ ...t, title: decrypt(t.title) })),
     totalAssignedTasks: tasks?.length || 0,
     checkedAt: now
   }

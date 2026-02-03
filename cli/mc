@@ -5,6 +5,7 @@
 
 const { createClient } = require('@supabase/supabase-js')
 require('dotenv').config({ path: require('path').join(__dirname, '../app/.env.local') })
+const { encrypt, decrypt } = require('./crypto')
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -75,11 +76,12 @@ const commands = {
       // TODO: Make this configurable or detect from environment
       const defaultAccountId = process.env.MC_ACCOUNT_ID || '99741f28-95aa-4e33-b29c-5bf046a4ba55'
       
+      // Encrypt sensitive fields before storing
       const { data, error } = await supabase
         .from('mc_tasks')
         .insert({
-          title,
-          description,
+          title: encrypt(title),
+          description: description ? encrypt(description) : null,
           assigned_agent_ids: assignedAgentIds,
           status: assignedAgentIds.length > 0 ? 'assigned' : 'inbox',
           tags: tags ? tags.split(',').map(t => t.trim()) : [],
@@ -90,7 +92,7 @@ const commands = {
       
       if (error) throw error
       
-      await logActivity(null, 'task_created', `Task created: ${title}`, data.id)
+      await logActivity(null, 'task_created', encrypt(`Task created: ${title}`), data.id)
       console.log(`✓ Task created: ${data.id}`)
       console.log(`  Title: ${title}`)
       if (assignedAgentIds.length > 0) {
@@ -105,8 +107,8 @@ const commands = {
       const updates = { updated_at: new Date().toISOString() }
       
       if (status) updates.status = status
-      if (title) updates.title = title
-      if (description) updates.description = description
+      if (title) updates.title = encrypt(title)
+      if (description) updates.description = encrypt(description)
       if (tags) updates.tags = tags.split(',').map(t => t.trim())
       
       if (assign) {
@@ -132,8 +134,9 @@ const commands = {
       
       if (error) throw error
       
-      await logActivity(null, 'task_updated', `Task updated: ${data.title}`, id)
-      console.log(`✓ Task updated: ${data.title}`)
+      const decryptedTitle = decrypt(data.title)
+      await logActivity(null, 'task_updated', encrypt(`Task updated: ${decryptedTitle}`), id)
+      console.log(`✓ Task updated: ${decryptedTitle}`)
       if (status) console.log(`  Status: ${status}`)
     }
   },
@@ -163,17 +166,18 @@ const commands = {
       process.exit(1)
     }
 
+    // Encrypt content before storing
     const { error } = await supabase
       .from('mc_comments')
       .insert({
         task_id: taskData.id,
         agent_id: agentData.id,
-        content: message
+        content: encrypt(message)
       })
     
     if (error) throw error
     
-    await logActivity(agent, 'comment', message, taskData.id)
+    await logActivity(agent, 'comment', encrypt(message), taskData.id)
     console.log(`✓ Comment posted to task: ${task}`)
   },
 
@@ -234,15 +238,17 @@ const commands = {
     
     if (newInbox.length > 0) {
       console.log(`🆕 NEW INBOX ITEMS (${newInbox.length}):`)
-      newInbox.forEach(t => console.log(`   • ${t.title}`))
+      newInbox.forEach(t => console.log(`   • ${decrypt(t.title)}`))
       console.log()
     }
     
     if (newComments.length > 0) {
       console.log(`💬 NEW COMMENTS (${newComments.length}):`)
       newComments.forEach(c => {
-        const preview = c.content.substring(0, 60).replace(/\n/g, ' ')
-        console.log(`   • [${c.tasks?.title}] ${preview}${c.content.length > 60 ? '...' : ''}`)
+        const content = decrypt(c.content)
+        const preview = content.substring(0, 60).replace(/\n/g, ' ')
+        const taskTitle = c.tasks?.title ? decrypt(c.tasks.title) : 'Unknown'
+        console.log(`   • [${taskTitle}] ${preview}${content.length > 60 ? '...' : ''}`)
       })
       console.log()
     }
@@ -271,9 +277,11 @@ const commands = {
       
       console.log('\nACTIVE TASKS:\n')
       data.forEach(task => {
-        console.log(`[${task.status.toUpperCase()}] ${task.title}`)
+        const title = decrypt(task.title)
+        const desc = task.description ? decrypt(task.description) : null
+        console.log(`[${task.status.toUpperCase()}] ${title}`)
         console.log(`  ID: ${task.id}`)
-        if (task.description) console.log(`  ${task.description}`)
+        if (desc) console.log(`  ${desc}`)
         console.log()
       })
     } else if (type === 'agents') {

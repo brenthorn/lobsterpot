@@ -2,6 +2,7 @@ import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-se
 import { NextResponse } from 'next/server'
 import { verify } from 'otplib'
 import crypto from 'crypto'
+import { encrypt } from '@/lib/crypto'
 
 export async function POST(request: Request) {
   try {
@@ -31,14 +32,14 @@ export async function POST(request: Request) {
       crypto.createHash('sha256').update(code).digest('hex')
     )
 
-    // Save to database
+    // Save to database with encrypted secret
     const adminClient = createAdminClient()
     const { error: updateError } = await adminClient
       .from('accounts')
       .update({
         two_factor_enabled: true,
-        two_factor_secret: secret, // In production, encrypt this
-        two_factor_backup_codes: hashedBackupCodes,
+        two_factor_secret: encrypt(secret), // Encrypted at rest
+        two_factor_backup_codes: hashedBackupCodes, // Already hashed
       })
       .eq('auth_uid', session.user.id)
 

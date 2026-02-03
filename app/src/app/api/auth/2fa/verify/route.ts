@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { verify } from 'otplib'
 import crypto from 'crypto'
 import { cookies } from 'next/headers'
+import { decrypt } from '@/lib/crypto'
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
 
@@ -33,10 +34,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '2FA not enabled' }, { status: 400 })
     }
 
+    // Decrypt the secret before verification
+    const decryptedSecret = decrypt(account.two_factor_secret)
+
     // Try TOTP verification first
     const verifyResult = await verify({ 
       token: code, 
-      secret: account.two_factor_secret 
+      secret: decryptedSecret 
     })
     let isValid = verifyResult.valid
 
