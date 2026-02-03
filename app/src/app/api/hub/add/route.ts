@@ -138,6 +138,7 @@ export async function POST(request: Request) {
         '2. [ ] Create the agent in Team settings',
         '3. [ ] Test agent with a simple task',
         '4. [ ] Verify `hub` CLI is installed and API key configured'
+      )
 
       description = descriptionParts.join('\n')
       
