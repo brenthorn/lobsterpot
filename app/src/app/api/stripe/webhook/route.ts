@@ -168,6 +168,66 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      // Service purchases - one-time payments
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session
+        const serviceType = session.metadata?.service_type
+        const accountId = session.metadata?.account_id
+
+        if (serviceType && accountId) {
+          // This is a service purchase, update the record
+          await adminClient
+            .from('service_purchases')
+            .update({
+              payment_status: 'paid',
+              stripe_payment_intent_id: session.payment_intent as string,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('stripe_checkout_session_id', session.id)
+
+          console.log(`Service purchase completed: ${serviceType} for account ${accountId}`)
+        }
+        break
+      }
+
+      case 'payment_intent.succeeded': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent
+        const serviceType = paymentIntent.metadata?.service_type
+        const accountId = paymentIntent.metadata?.account_id
+
+        if (serviceType && accountId) {
+          // Update service purchase by payment intent
+          await adminClient
+            .from('service_purchases')
+            .update({
+              payment_status: 'paid',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('stripe_payment_intent_id', paymentIntent.id)
+
+          console.log(`Payment intent succeeded for service: ${serviceType}`)
+        }
+        break
+      }
+
+      case 'payment_intent.payment_failed': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent
+        const serviceType = paymentIntent.metadata?.service_type
+
+        if (serviceType) {
+          await adminClient
+            .from('service_purchases')
+            .update({
+              payment_status: 'failed',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('stripe_payment_intent_id', paymentIntent.id)
+
+          console.log(`Payment failed for service: ${serviceType}`)
+        }
+        break
+      }
+
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }

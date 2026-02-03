@@ -202,6 +202,14 @@ code:not(pre code) {
   background-size: 24px 24px;
 }
 
+/* Dark mode: much more subtle grid (barely visible) */
+.dark .bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 /* Dark sections */
 .dark-section {
   background: var(--bg-dark);
