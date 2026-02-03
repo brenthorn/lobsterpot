@@ -47,7 +47,7 @@ Running one AI agent is easy. Running a *team* of agents that actually coordinat
 
 ### Prerequisites
 - Node.js 18+ and npm/pnpm
-- Supabase account (free tier works)
+- PostgreSQL database (Supabase, local Postgres, or any Postgres-compatible DB)
 - 10 minutes
 
 ### 1. Clone & Install
@@ -65,15 +65,31 @@ cp .env.example .env.local
 # Edit .env.local with your credentials (see Configuration section)
 ```
 
-### 3. Set Up Supabase
+### 3. Set Up Database
 
+**Option A: Supabase (recommended for quick start)**
 1. Create a new project at https://supabase.com
-2. Run the SQL migrations in `supabase/` directory:
-   - `schema.sql` - Core tables
-   - `mission-control.sql` - Command tables
-   - `billing-schema.sql` - Billing tables (optional)
+2. Run the SQL migrations in `supabase/` directory
 3. Copy your project URL and anon key to `.env.local`
-4. Generate an `ENCRYPTION_KEY` (see Security section)
+
+**Option B: Local PostgreSQL**
+1. Install PostgreSQL locally or use Docker:
+   ```bash
+   docker run -d --name tiker-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:15
+   ```
+2. Run the SQL migrations in `supabase/` directory
+3. Configure connection in `.env.local` (see Configuration section)
+
+**Option C: Any Postgres-compatible DB**
+- Neon, Railway, Render, AWS RDS, etc. all work
+- Just run the migrations and configure your connection string
+
+**Migrations to run (in order):**
+- `schema.sql` - Core tables
+- `mission-control.sql` - Command tables  
+- `billing-schema.sql` - Billing tables (optional)
+
+Generate an `ENCRYPTION_KEY` (see Security section)
 
 ### 4. Run Locally
 
@@ -90,10 +106,13 @@ Visit http://localhost:3000
 ### Required Environment Variables
 
 ```bash
-# Supabase (from your Supabase project settings)
+# Database - Option A: Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Database - Option B: Direct PostgreSQL connection
+# DATABASE_URL=postgresql://user:password@localhost:5432/tiker
 
 # Encryption (generate with: openssl rand -base64 32)
 ENCRYPTION_KEY=your-encryption-key-min-32-chars
@@ -102,6 +121,8 @@ ENCRYPTION_KEY=your-encryption-key-min-32-chars
 NEXTAUTH_SECRET=your-nextauth-secret
 NEXTAUTH_URL=http://localhost:3000
 ```
+
+**Note:** Supabase provides auth + realtime out of the box. For local Postgres, you'll need to handle auth separately or disable features that require it.
 
 ### Optional Environment Variables
 
@@ -133,13 +154,19 @@ openssl rand -base64 32
 
 ## Database Setup
 
-Run these SQL files in your Supabase SQL Editor:
+Run these SQL files in your database (Supabase SQL Editor, psql, or any Postgres client):
 
 1. `supabase/schema.sql` - Core tables (accounts, auth, etc.)
 2. `supabase/mission-control.sql` - Command tables (agents, tasks, etc.)
 3. `supabase/billing-schema.sql` - Optional billing tables
 
 **Order matters** - run them in the order listed above.
+
+```bash
+# Example with psql for local Postgres:
+psql -d tiker -f supabase/schema.sql
+psql -d tiker -f supabase/mission-control.sql
+```
 
 ---
 
