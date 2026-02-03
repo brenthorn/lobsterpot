@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-server'
 import Link from 'next/link'
 
 export const metadata = {
@@ -11,11 +11,12 @@ export default async function HubPage({
 }: {
   searchParams: { type?: string; category?: string }
 }) {
-  const supabase = await createServerSupabaseClient()
+  // Use admin client to bypass RLS for public patterns
+  const supabase = createAdminClient()
   const selectedType = searchParams.type || 'all'
   const selectedCategory = searchParams.category || 'all'
   
-  // Fetch patterns from database
+  // Fetch validated patterns (public, shared economy)
   let patternsQuery = supabase
     .from('patterns')
     .select(`
@@ -30,7 +31,11 @@ export default async function HubPage({
     patternsQuery = patternsQuery.eq('category', selectedCategory)
   }
 
-  const { data: patterns } = await patternsQuery
+  const { data: patterns, error } = await patternsQuery
+  
+  if (error) {
+    console.error('Error fetching patterns:', error)
+  }
 
   // Static agents for now (will come from agent_templates table)
   const agents = [
