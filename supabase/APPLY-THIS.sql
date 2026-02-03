@@ -249,26 +249,26 @@ CREATE POLICY "Anyone can view published templates" ON agent_templates
 DROP POLICY IF EXISTS "Users can view own agent templates" ON account_agent_templates;
 CREATE POLICY "Users can view own agent templates" ON account_agent_templates
   FOR SELECT USING (
-    account_id IN (SELECT id FROM accounts WHERE user_id = auth.uid())
+    account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid())
   );
 
 DROP POLICY IF EXISTS "Users can manage own agent templates" ON account_agent_templates;
 CREATE POLICY "Users can manage own agent templates" ON account_agent_templates
   FOR ALL USING (
-    account_id IN (SELECT id FROM accounts WHERE user_id = auth.uid())
+    account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid())
   );
 
 -- Model config: users manage their own
 DROP POLICY IF EXISTS "Users can view own model config" ON account_model_config;
 CREATE POLICY "Users can view own model config" ON account_model_config
   FOR SELECT USING (
-    account_id IN (SELECT id FROM accounts WHERE user_id = auth.uid())
+    account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid())
   );
 
 DROP POLICY IF EXISTS "Users can manage own model config" ON account_model_config;
 CREATE POLICY "Users can manage own model config" ON account_model_config
   FOR ALL USING (
-    account_id IN (SELECT id FROM accounts WHERE user_id = auth.uid())
+    account_id IN (SELECT id FROM accounts WHERE auth_uid = auth.uid())
   );
 
 -- ============================================
