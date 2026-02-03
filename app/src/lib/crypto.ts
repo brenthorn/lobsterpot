@@ -75,9 +75,11 @@ export function decrypt(ciphertext: string): string {
     
     return decrypted.toString('utf8')
   } catch (error) {
-    // If decryption fails, data might be unencrypted (migration period)
-    // Return as-is to allow graceful migration
-    console.warn('Decryption failed, returning raw value (may be unencrypted legacy data)')
+    // If decryption fails, data might be unencrypted (legacy/migration period)
+    // TODO: Remove this fallback after confirming all data is encrypted
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Decryption failed, returning raw value')
+    }
     return ciphertext
   }
 }

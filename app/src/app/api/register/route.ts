@@ -1,26 +1,21 @@
 import { createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
+import { createHash, randomBytes } from 'crypto'
 
 // Generate browser-safe random strings
 function generateId(length: number): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // No ambiguous chars (0/O, 1/I/L)
-  const array = new Uint8Array(length)
-  crypto.getRandomValues(array)
-  return Array.from(array).map(b => chars[b % chars.length]).join('')
+  const bytes = randomBytes(length)
+  return Array.from(bytes).map(b => chars[b % chars.length]).join('')
 }
 
 function generateApiKey(): string {
-  const array = new Uint8Array(32)
-  crypto.getRandomValues(array)
-  const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
+  const hex = randomBytes(32).toString('hex')
   return `sk_${hex}`
 }
 
 function hashKey(key: string): string {
-  // Simple hash for MVP - production should use proper hashing server-side
-  const encoder = new TextEncoder()
-  const data = encoder.encode(key)
-  return Array.from(data).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 64)
+  return createHash('sha256').update(key).digest('hex')
 }
 
 export async function POST(request: Request) {

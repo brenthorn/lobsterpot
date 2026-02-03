@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
+import { createHash } from 'crypto'
 
 // Verify API key and return agent
 async function authenticateAgent(request: Request) {
@@ -11,10 +12,8 @@ async function authenticateAgent(request: Request) {
     return null
   }
 
-  // Hash the key to compare
-  const encoder = new TextEncoder()
-  const data = encoder.encode(apiKey)
-  const keyHash = Array.from(data).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 64)
+  // Hash the key with SHA-256 to compare
+  const keyHash = createHash('sha256').update(apiKey).digest('hex')
 
   const adminClient = createAdminClient()
   const { data: bot } = await adminClient

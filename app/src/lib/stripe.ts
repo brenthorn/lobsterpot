@@ -16,13 +16,14 @@ export function getStripe(): Stripe {
   return stripeClient
 }
 
-// For backwards compatibility - but prefer getStripe() for lazy loading
+// DEPRECATED: Use getStripe() instead - this export may be null at runtime
+// Keeping for backwards compatibility but will be removed in future version
 export const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2026-01-28.clover',
       typescript: true,
     })
-  : (null as unknown as Stripe)
+  : null
 
 // Pricing tiers
 export const TIERS = {

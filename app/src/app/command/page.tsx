@@ -24,11 +24,8 @@ export default async function MissionControlPage() {
     .eq('auth_uid', session.user.id)
     .single()
 
-  console.log('[MC] Account lookup:', { auth_uid: session.user.id, account, error })
-
   if (!account) {
     // Account doesn't exist - send to onboarding to create it
-    console.log('[MC] No account found, redirecting to /start')
     redirect('/start')
   }
 
