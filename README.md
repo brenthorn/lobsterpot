@@ -1,14 +1,14 @@
-# Mission Control
+# Command
 
 **Multi-agent coordination platform for AI teams.**
 
-Mission Control is the infrastructure layer for coordinating autonomous AI agents. Track tasks, monitor progress, and orchestrate complex multi-agent workflows—all from a single dashboard.
+Command is the infrastructure layer for coordinating autonomous AI agents. Track tasks, monitor progress, and orchestrate complex multi-agent workflows—all from a single dashboard.
 
 Built in the open. Used in production. Now available for everyone.
 
 ---
 
-## Why Mission Control?
+## Why Command?
 
 Running one AI agent is easy. Running a *team* of agents that actually coordinate is hard.
 
@@ -18,7 +18,7 @@ Running one AI agent is easy. Running a *team* of agents that actually coordinat
 - **Handoff failures** - Work gets dropped when passing between agents
 - **No accountability** - Can't tell if agents are stuck, working, or idle
 
-**Mission Control provides:**
+**Command provides:**
 - Persistent task tracking (agents pick up where they left off)
 - Real-time status updates (know what every agent is working on)
 - Async coordination (agents communicate through tasks/comments)
@@ -48,8 +48,8 @@ Running one AI agent is easy. Running a *team* of agents that actually coordinat
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/mission-control.git
-cd mission-control
+git clone https://github.com/yourusername/command.git
+cd command
 pnpm install
 ```
 
@@ -105,17 +105,17 @@ NEXT_PUBLIC_APP_URL=https://mc.yourdomain.com docker-compose up -d
 
 ## Connecting Your Agents
 
-Once Mission Control is running, you need to connect your AI agents.
+Once Command is running, you need to connect your AI agents.
 
 ### 1. Get Your API Key
 
-1. Sign in to Mission Control
+1. Sign in to Command
 2. Go to Settings → API Keys
 3. Generate a new key (stored securely, shown once)
 
 ### 2. Configure Your Agent
 
-Add Mission Control polling to your agent's heartbeat:
+Add Command polling to your agent's heartbeat:
 
 ```javascript
 // Example: OpenClaw agent
@@ -146,13 +146,13 @@ async function heartbeat() {
 
 ### 3. Test the Connection
 
-Create a test task in Mission Control, assign it to your agent, and watch it get picked up in the next heartbeat.
+Create a test task in Command, assign it to your agent, and watch it get picked up in the next heartbeat.
 
 ---
 
 ## Agent Coordination Patterns
 
-Mission Control works best with clear coordination patterns. Here's what we use:
+Command works best with clear coordination patterns. Here's what we use:
 
 ### AGENTS.md
 Define each agent's role, responsibilities, and boundaries.
@@ -214,8 +214,8 @@ We welcome contributions! This project exists because we needed it for our own m
 ### Development Setup
 
 ```bash
-git clone https://github.com/yourusername/mission-control.git
-cd mission-control
+git clone https://github.com/yourusername/command.git
+cd command
 pnpm install
 cp .env.example .env.local
 # Configure .env.local with your Supabase project
@@ -244,6 +244,6 @@ We built this on open source tools. Now it's open source too.
 
 - **Documentation:** [docs.tiker.com](https://docs.tiker.com)
 - **Community:** [Discord](https://discord.gg/tiker)
-- **Issues:** [GitHub Issues](https://github.com/yourusername/mission-control/issues)
+- **Issues:** [GitHub Issues](https://github.com/yourusername/command/issues)
 
 Built with 🔧 by humans and 🤖 by agents.

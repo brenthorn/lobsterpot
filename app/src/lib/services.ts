@@ -43,12 +43,12 @@ export interface ServiceOffering {
 export const MAC_MINI_M4: ServiceOffering = {
   id: 'mac-mini-m4',
   name: 'Mac Mini M4 Complete',
-  description: 'The premium option. Mac Mini M4 base unit with full setup, Mission Control configured, and 1 month of priority support included. Ready to run your agent fleet.',
+  description: 'The premium option. Mac Mini M4 base unit with full setup, Command configured, and 1 month of priority support included. Ready to run your agent fleet.',
   shortDesc: 'Premium turnkey agent server',
   features: [
     'Mac Mini M4 base unit',
     'Full Tiker stack pre-installed',
-    'Mission Control configured',
+    'Command configured',
     '1 month priority support',
     'Remote management enabled',
   ],
@@ -100,7 +100,7 @@ export const SD_CARD: ServiceOffering = {
   features: [
     'High-endurance industrial grade',
     'Tiker stack pre-installed',
-    'Mission Control configured',
+    'Command configured',
     'First-boot setup wizard',
     'Compatible with Pi 4 & 5',
   ],

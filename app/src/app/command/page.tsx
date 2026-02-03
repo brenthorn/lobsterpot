@@ -3,7 +3,7 @@ import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-se
 import MissionControlClient from './client'
 
 export const metadata = {
-  title: 'Mission Control - Tiker',
+  title: 'Command - Tiker',
   description: 'Your AI team task board',
 }
 

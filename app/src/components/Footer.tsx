@@ -10,8 +10,8 @@ export function Footer() {
             <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Product</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/mc" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  Mission Control
+                <Link href="/command" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  Command
                 </Link>
               </li>
               <li>

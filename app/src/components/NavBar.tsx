@@ -77,10 +77,10 @@ export function NavBar() {
                 /* Logged IN nav - Work focused */
                 <>
                   <Link 
-                    href="/mc" 
+                    href="/command" 
                     className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
                   >
-                    Mission Control
+                    Command
                   </Link>
                   <Link href="/hub" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
                     Agent Hub

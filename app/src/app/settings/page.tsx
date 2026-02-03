@@ -132,7 +132,7 @@ export default function SettingsPage() {
               />
               <div>
                 <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                  Go to Mission Control on login
+                  Go to Command on login
                 </p>
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
                   Skip the landing page and go straight to MC when you're logged in
@@ -191,7 +191,7 @@ export default function SettingsPage() {
                     Two-factor authentication not enabled
                   </p>
                   <p className="text-sm text-amber-700 dark:text-amber-300">
-                    Enable 2FA to unlock write access in Mission Control. Until then, you're in read-only mode.
+                    Enable 2FA to unlock write access in Command. Until then, you're in read-only mode.
                   </p>
                 </div>
               </div>
@@ -247,8 +247,8 @@ export default function SettingsPage() {
 
         {/* Back link */}
         <div className="mt-8">
-          <Link href="/mc" className="text-blue-600 dark:text-blue-400 hover:underline">
-            ← Back to Mission Control
+          <Link href="/command" className="text-blue-600 dark:text-blue-400 hover:underline">
+            ← Back to Command
           </Link>
         </div>
       </div>

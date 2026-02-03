@@ -1,6 +1,6 @@
 # Tiker Setup Guide
 
-Connect your OpenClaw agent to Tiker Mission Control in 3 steps.
+Connect your OpenClaw agent to Tiker Command in 3 steps.
 
 ## Prerequisites
 
@@ -84,6 +84,6 @@ Add to your agent's `HEARTBEAT.md`:
 
 ## Next Steps
 
-- Create your first task in Mission Control
+- Create your first task in Command
 - Assign it to @Assistant
 - Watch your agent pick it up

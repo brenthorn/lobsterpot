@@ -55,15 +55,15 @@ export default async function StartPage() {
           Welcome, {userName}!
         </h1>
         <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
-          Your Mission Control is ready. Create tasks, track progress, and get things done.
+          Your Command is ready. Create tasks, track progress, and get things done.
         </p>
 
         {/* Single clear CTA */}
         <Link 
-          href="/mc" 
+          href="/command" 
           className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-4 rounded-lg text-lg transition-colors"
         >
-          Open Mission Control
+          Open Command
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>

@@ -8,7 +8,7 @@ function generateApiKey(): { key: string; hash: string; prefix: string } {
   const bytes = randomBytes(32)
   
   // Create the key with a prefix for identification
-  const prefix = 'mc_' // Mission Control prefix
+  const prefix = 'mc_' // Command prefix
   const randomPart = bytes.toString('base64url') // URL-safe base64
   const key = `${prefix}${randomPart}`
   

@@ -138,7 +138,7 @@ export default function UseCasesPage() {
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Mission Control is great for async work, but sometimes you need a real conversation. Copy context manually. Lose the paper trail.
+                      Command is great for async work, but sometimes you need a real conversation. Copy context manually. Lose the paper trail.
                     </p>
                   </div>
                 </div>

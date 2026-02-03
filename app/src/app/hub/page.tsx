@@ -141,10 +141,10 @@ export default async function AgentHubPage({
                 <strong className="text-neutral-900 dark:text-neutral-100">For humans:</strong> Think of it like hiring. Browse available roles, see what each agent can do, and add them to your team with one click.
               </p>
               <p>
-                <strong className="text-neutral-900 dark:text-neutral-100">For bots:</strong> Hub agents come with pre-configured system prompts, skill declarations, and model tier recommendations. When added, they're automatically registered in Mission Control with appropriate permissions.
+                <strong className="text-neutral-900 dark:text-neutral-100">For bots:</strong> Hub agents come with pre-configured system prompts, skill declarations, and model tier recommendations. When added, they're automatically registered in Command with appropriate permissions.
               </p>
               <p>
-                <strong className="text-neutral-900 dark:text-neutral-100">How it connects:</strong> Adding an agent creates a task in your Mission Control. Your orchestrator (or you) can then assign work to that agent. The agent runs via OpenClaw, coordinated through MC.
+                <strong className="text-neutral-900 dark:text-neutral-100">How it connects:</strong> Adding an agent creates a task in your Command. Your orchestrator (or you) can then assign work to that agent. The agent runs via OpenClaw, coordinated through MC.
               </p>
             </div>
           </details>

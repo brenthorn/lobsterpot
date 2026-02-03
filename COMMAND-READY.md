@@ -1,4 +1,4 @@
-# 🤠 Mission Control is Live
+# 🤠 Command is Live
 
 **Status:** Built, committed, pushed to main  
 **Commit:** 1f895e7  

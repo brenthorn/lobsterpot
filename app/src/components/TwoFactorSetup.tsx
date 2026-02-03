@@ -98,7 +98,7 @@ export default function TwoFactorSetup({ onComplete }: TwoFactorSetupProps) {
               Enable Two-Factor Authentication
             </h3>
             <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-              Protect your Mission Control with an authenticator app. Write access requires 2FA verification (valid for 30 days).
+              Protect your Command with an authenticator app. Write access requires 2FA verification (valid for 30 days).
             </p>
             <button
               onClick={startSetup}

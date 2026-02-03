@@ -1,4 +1,4 @@
-# Mission Control
+# Command
 
 Dashboard for coordinating Clyde & Bonnie agent activities.
 
@@ -124,8 +124,8 @@ fi
 ### When Starting Work
 
 ```bash
-mc status --agent Clyde --status active --task "Building Mission Control"
-mc comment --task "Building Mission Control" --agent Clyde --message "Starting on the UI components"
+mc status --agent Clyde --status active --task "Building Command"
+mc comment --task "Building Command" --agent Clyde --message "Starting on the UI components"
 ```
 
 ### When Blocked
@@ -138,7 +138,7 @@ mc comment --task "Fix Bonnie heartbeat" --agent Clyde --message "Need Jay to ch
 ### When Done
 
 ```bash
-mc comment --task "Building Mission Control" --agent Clyde --message "UI complete, ready for review"
+mc comment --task "Building Command" --agent Clyde --message "UI complete, ready for review"
 # Jay will drag task to "Done" column in UI
 ```
 
@@ -160,7 +160,7 @@ Pushes to `main` branch auto-deploy to Vercel → tiker.com
 ```bash
 cd ~/botnet/development/clawstack
 git add .
-git commit -m "Mission Control MVP"
+git commit -m "Command MVP"
 git push origin main
 ```
 

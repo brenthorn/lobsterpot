@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Mission Control CLI for agents
+// Command CLI for agents
 // Usage: mc <command> [options]
 
 const { createClient } = require('@supabase/supabase-js')
@@ -325,7 +325,7 @@ const command = args[0]
 
 if (!command || !commands[command]) {
   console.log(`
-Mission Control CLI
+Command CLI
 
 Usage:
   mc heartbeat --agent <name>
@@ -338,7 +338,7 @@ Usage:
 
 Examples:
   mc heartbeat --agent Clyde
-  mc status --agent Clyde --status active --task "Building Mission Control"
+  mc status --agent Clyde --status active --task "Building Command"
   mc task create --title "Fix Bonnie heartbeat" --assign Bonnie --tags bug,urgent
   mc task update --id abc123 --status done
   mc comment --task "Fix Bonnie heartbeat" --agent Clyde --message "Looking into it"

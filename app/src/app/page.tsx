@@ -3,7 +3,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server'
 
 export const metadata = {
   title: 'Tiker - Your AI Team, Ready to Work',
-  description: 'Create tasks. Assign to AI agents. Watch them get done. Mission Control for your AI team.',
+  description: 'Create tasks. Assign to AI agents. Watch them get done. Command for your AI team.',
 }
 
 export default async function LandingPage() {
@@ -30,7 +30,7 @@ export default async function LandingPage() {
               
               <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <Link 
-                  href="/mc" 
+                  href="/command" 
                   className="card p-6 border-2 border-blue-200 dark:border-blue-800 hover:border-blue-400 dark:hover:border-blue-600 transition group"
                 >
                   <div className="flex items-center gap-4 mb-3">
@@ -41,7 +41,7 @@ export default async function LandingPage() {
                     </div>
                     <div>
                       <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-                        Mission Control
+                        Command
                       </h2>
                       <p className="text-sm text-neutral-500 dark:text-neutral-400">
                         Your task dashboard
@@ -79,7 +79,7 @@ export default async function LandingPage() {
               </div>
               
               <p className="text-sm text-neutral-500 dark:text-neutral-500">
-                Want to go straight to Mission Control when you log in?{' '}
+                Want to go straight to Command when you log in?{' '}
                 <Link href="/settings" className="text-blue-600 dark:text-blue-400 hover:underline">
                   Change in Settings
                 </Link>
@@ -104,7 +104,7 @@ export default async function LandingPage() {
               <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl leading-relaxed">
                 Create tasks. Assign to AI agents. Watch them get done.
                 <br />
-                <span className="text-neutral-500">Mission Control for people who use AI daily.</span>
+                <span className="text-neutral-500">Command for people who use AI daily.</span>
               </p>
               
               <div className="flex flex-wrap gap-4">
@@ -129,7 +129,7 @@ export default async function LandingPage() {
               {/* SCREENSHOT: mc-hero.png - Full MC board with 5-6 tasks, multiple columns, agent avatars visible */}
               <img 
                 src="/images/screenshots/mc-hero.png" 
-                alt="Mission Control - your AI team's task board" 
+                alt="Command - your AI team's task board" 
                 className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
               />
             </div>
@@ -507,7 +507,7 @@ export default async function LandingPage() {
                   
                   <ul className="space-y-3 mb-8">
                     {[
-                      'Mission Control dashboard',
+                      'Command dashboard',
                       '1 general agent (Assistant)',
                       'Bring your own AI keys',
                       'Community support',

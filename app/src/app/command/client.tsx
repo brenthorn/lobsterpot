@@ -73,9 +73,9 @@ export default function MissionControlClient() {
   useEffect(() => {
     const reviewCount = tasks.filter(t => t.status === 'review').length
     if (reviewCount > 0) {
-      document.title = `(${reviewCount}) Mission Control - Needs Review`
+      document.title = `(${reviewCount}) Command - Needs Review`
     } else {
-      document.title = 'Mission Control - Bonnie & Clyde'
+      document.title = 'Command - Bonnie & Clyde'
     }
   }, [tasks])
 
@@ -213,7 +213,7 @@ export default function MissionControlClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">Loading Mission Control...</div>
+        <div className="text-gray-500">Loading Command...</div>
       </div>
     )
   }

@@ -9,7 +9,7 @@
 
 ## Post Title Options
 
-1. "We built Mission Control for AI agents — soft launching tonight"
+1. "We built Command for AI agents — soft launching tonight"
 2. "Tired of juggling 5 AI tabs? We made them work as a team"
 3. "Tiker: Your AI team, not another chatbot"
 
@@ -18,7 +18,7 @@
 ## Post Body (Short Version)
 
 **What it is:**
-Tiker is Mission Control for AI agents. Create tasks, assign them to specialized agents (Writer, Coder, Researcher), watch them get done.
+Tiker is Command for AI agents. Create tasks, assign them to specialized agents (Writer, Coder, Researcher), watch them get done.
 
 **Why we built it:**
 We were drowning in AI tools that don't talk to each other. ChatGPT for writing, Claude for thinking, Cursor for coding — none of them coordinate. So we built coordination.
@@ -51,7 +51,7 @@ Six tabs. Six contexts. Six monthly bills. And every time I wanted one AI to con
 
 So we built Tiker.
 
-**It's not another AI.** It's Mission Control for the AIs you already use.
+**It's not another AI.** It's Command for the AIs you already use.
 
 - Create a task: "Draft investor update"
 - Assign it: @Writer

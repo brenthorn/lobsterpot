@@ -8,7 +8,7 @@
 > 
 > Zero coordination between them.
 > 
-> So we built Tiker — Mission Control for your AI team.
+> So we built Tiker — Command for your AI team.
 > 
 > Create tasks. Assign to agents. Watch them get done.
 > 
@@ -38,7 +38,7 @@
 
 > We built the thing we wanted: AI agents that actually work together.
 > 
-> Introducing Tiker — Mission Control for AI teams.
+> Introducing Tiker — Command for AI teams.
 > 
 > ✅ Create tasks, assign to agents
 > ✅ Agents coordinate and hand off
@@ -68,7 +68,7 @@
 
 ## Option 5: Short/Punchy
 
-> Mission Control for AI agents.
+> Command for AI agents.
 > 
 > Tiker: Your AI team, ready to work.
 > 

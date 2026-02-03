@@ -117,7 +117,7 @@ export default function AboutPage() {
             </ul>
             
             <p className="text-neutral-600 dark:text-neutral-400">
-              Now it's a full company running on a Raspberry Pi. Bonnie and Clyde are still there, but now they coordinate through Mission Control instead of chaos.
+              Now it's a full company running on a Raspberry Pi. Bonnie and Clyde are still there, but now they coordinate through Command instead of chaos.
             </p>
           </div>
 

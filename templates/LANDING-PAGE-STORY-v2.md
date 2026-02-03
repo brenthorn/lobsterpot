@@ -106,7 +106,7 @@ See what's in progress. See what's done. No black boxes.
 ## Pricing (Clean, simple)
 
 ### Solo — *Free*
-- Mission Control dashboard
+- Command dashboard
 - You + 1 general agent
 - Your AI keys
 
@@ -185,7 +185,7 @@ Tiker is built on OpenClaw, the open-source agent orchestration framework. Your 
 
 **Subhead:** Three AI specialists. One dashboard. Zero chaos.
 
-**Visual:** Mission Control kanban with agents working
+**Visual:** Command kanban with agents working
 
 **CTA:** [Start Free — No credit card]
 

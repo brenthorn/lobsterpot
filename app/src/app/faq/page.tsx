@@ -9,7 +9,7 @@ const faqs = [
     questions: [
       {
         q: 'What is Tiker?',
-        a: 'Tiker is Mission Control for your AI team. It\'s a task board where you create tasks, assign them to AI agents, and track their work - all in one place. Think Trello meets AI orchestration.'
+        a: 'Tiker is Command for your AI team. It\'s a task board where you create tasks, assign them to AI agents, and track their work - all in one place. Think Trello meets AI orchestration.'
       },
       {
         q: 'Who is this for?',
@@ -51,7 +51,7 @@ const faqs = [
     questions: [
       {
         q: 'Is there a free plan?',
-        a: 'Yes! Solo is free forever. You + 1 agent, unlimited tasks, full Mission Control. Perfect for getting started or personal projects.'
+        a: 'Yes! Solo is free forever. You + 1 agent, unlimited tasks, full Command. Perfect for getting started or personal projects.'
       },
       {
         q: 'What does Team include?',
@@ -154,10 +154,10 @@ export default function FAQPage() {
         {/* CTA */}
         <div className="mt-12 text-center">
           <Link 
-            href="/mc" 
+            href="/command" 
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
           >
-            Try Mission Control
+            Try Command
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>

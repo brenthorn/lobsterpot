@@ -1,4 +1,4 @@
-// Mission Control API client
+// Command API client
 import { createClient } from '@/lib/supabase'
 
 export type AgentStatus = 'idle' | 'active' | 'blocked'

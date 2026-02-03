@@ -1,8 +1,8 @@
-# Mission Control Setup Instructions
+# Command Setup Instructions
 
 ## Step 1: Apply Database Schema
 
-The Mission Control tables need to be created in Supabase.
+The Command tables need to be created in Supabase.
 
 **Option A: Copy and Paste (Easiest)**
 
@@ -55,7 +55,7 @@ Navigate to: **https://tiker.com/bonnieclyde**
 ```bash
 cd ~/botnet/development/clawstack
 git add .
-git commit -m "Add Mission Control dashboard"
+git commit -m "Add Command dashboard"
 git push origin main
 ```
 
