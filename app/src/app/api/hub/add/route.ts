@@ -204,16 +204,27 @@ export async function POST(request: Request) {
         .eq('id', patternId)
     }
 
+    // Get user's first agent (orchestrator) to assign the task
+    const { data: userAgents } = await adminClient
+      .from('mc_agents')
+      .select('id, name')
+      .eq('account_id', account.id)
+      .order('created_at', { ascending: true })
+      .limit(1)
+    
+    const defaultAgentId = userAgents?.[0]?.id
+    const assignedAgentIds = defaultAgentId ? [defaultAgentId] : []
+
     // Create task with encrypted fields
     const { data: task, error: taskError } = await adminClient
       .from('mc_tasks')
       .insert({
         title: encrypt(title),
         description: encrypt(description),
-        assigned_agent_ids: [],
+        assigned_agent_ids: assignedAgentIds,
         tags: [itemType === 'agent' ? 'setup' : 'review', 'hub-import'],
         priority: 'normal',
-        status: 'inbox',
+        status: assignedAgentIds.length > 0 ? 'assigned' : 'inbox',
         account_id: account.id,
       })
       .select()

@@ -104,7 +104,7 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
               {task.description && (
                 <div>
                   <div 
-                    className={`text-gray-600 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}
+                    className={`text-gray-600 ${!descriptionExpanded ? 'line-clamp-3' : 'max-h-[40vh] overflow-y-auto'}`}
                   >
                     <SimpleMarkdown content={task.description} />
                   </div>
