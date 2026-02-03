@@ -1,6 +1,56 @@
 import { createAdminClient, createServerSupabaseClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { createHash } from 'crypto'
+import { encrypt } from '@/lib/crypto'
+
+/**
+ * Rate limiting prevents bot spam attacks. Manual approval during seed stage ensures quality. Scale removes friction.
+ * 
+ * Rate Limiting: Max 3 pattern submissions per account per day
+ * - Tracks submissions by account_id with daily reset
+ * - Returns 429 if limit exceeded
+ * 
+ * Manual Approval: All patterns start as 'pending_review'
+ * - Creates Command task for admin review
+ * - Only becomes 'validated' after admin approval
+ * - Rejected patterns stay 'rejected'
+ */
+
+// In-memory rate limit store: account_id -> { count: number, date: string }
+const rateLimitStore = new Map<string, { count: number; date: string }>()
+
+const MAX_PATTERNS_PER_DAY = 3
+
+// Check rate limit for account
+function checkRateLimit(accountId: string): { allowed: boolean; remaining: number; resetDate: string } {
+  const today = new Date().toISOString().split('T')[0]
+  const record = rateLimitStore.get(accountId)
+  
+  // Reset if it's a new day
+  if (!record || record.date !== today) {
+    rateLimitStore.set(accountId, { count: 0, date: today })
+    return { allowed: true, remaining: MAX_PATTERNS_PER_DAY, resetDate: today }
+  }
+  
+  const remaining = Math.max(0, MAX_PATTERNS_PER_DAY - record.count)
+  return { 
+    allowed: record.count < MAX_PATTERNS_PER_DAY,
+    remaining,
+    resetDate: today
+  }
+}
+
+// Increment rate limit counter
+function incrementRateLimit(accountId: string): void {
+  const today = new Date().toISOString().split('T')[0]
+  const record = rateLimitStore.get(accountId)
+  
+  if (!record || record.date !== today) {
+    rateLimitStore.set(accountId, { count: 1, date: today })
+  } else {
+    record.count += 1
+  }
+}
 
 // Verify API key and return bot
 async function authenticateAgent(request: Request) {
@@ -118,6 +168,8 @@ export async function GET(request: Request) {
 }
 
 // POST /api/patterns - Submit a pattern (requires auth)
+// Rate limited: Max 3 patterns per account per day
+// Creates pending pattern + Command task for admin review
 export async function POST(request: Request) {
   // Try session auth first (web UI), then API key auth (agent)
   const sessionAuth = await authenticateSession(request)
@@ -182,12 +234,24 @@ export async function POST(request: Request) {
       }, { status: 403 })
     }
     
-    // Session auth is free during bootstrap (no token check)
+    // Session auth is free (no token check)
   } else {
     return NextResponse.json(
       { error: 'Authentication required. Sign in or pass API key in Authorization header.' },
       { status: 401 }
     )
+  }
+  
+  // Rate limiting check: Max 3 patterns per account per day
+  // Rate limiting prevents bot spam attacks during seed stage
+  const rateLimit = checkRateLimit(accountId)
+  if (!rateLimit.allowed) {
+    return NextResponse.json({
+      error: 'Rate limit exceeded - max 3 patterns per day',
+      limit: MAX_PATTERNS_PER_DAY,
+      remaining: 0,
+      resetDate: rateLimit.resetDate,
+    }, { status: 429 })
   }
 
   try {
@@ -228,14 +292,8 @@ export async function POST(request: Request) {
       }, { status: 409 })
     }
 
-    // Check bootstrap mode
-    const { count: trustedAgentCount } = await adminClient
-      .from('bots')
-      .select('*', { count: 'exact', head: true })
-      .lte('trust_tier', 2)
-
-    const bootstrapMode = (trustedAgentCount || 0) < 10
-
+    // Manual approval workflow: All patterns start as 'pending_review'
+    // Manual approval during seed stage ensures quality. Scale removes friction.
     // Create pattern
     const content = `# ${title}\n\n## Problem\n${problem}\n\n## Solution\n${solution}`
     
@@ -251,8 +309,8 @@ export async function POST(request: Request) {
       edge_cases: edge_cases || null,
       author_bot_id: authorBotId,
       author_account_id: accountId,
-      status: bootstrapMode ? 'validated' : 'review',
-      validated_at: bootstrapMode ? new Date().toISOString() : null,
+      status: 'pending_review',
+      validated_at: null,
     }
     
     const { data: pattern, error: insertError } = await adminClient
@@ -266,6 +324,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to create pattern' }, { status: 500 })
     }
 
+    // Increment rate limit counter on successful submission
+    incrementRateLimit(accountId)
+    const newRateLimit = checkRateLimit(accountId)
+
     // Token handling differs by auth type
     if (isApiKeyAuth) {
       // Deduct tokens for API key auth
@@ -278,21 +340,77 @@ export async function POST(request: Request) {
         p_ref_id: pattern.id,
         p_description: `Submitted pattern: ${title}`,
       })
-
-      // If auto-validated (bootstrap), grant tokens
-      if (bootstrapMode) {
-        await adminClient.rpc('record_token_transaction', {
-          p_account_id: accountId,
-          p_bot_id: authorBotId,
-          p_amount: 25,
-          p_type: 'pattern_validated',
-          p_ref_type: 'pattern',
-          p_ref_id: pattern.id,
-          p_description: `Pattern validated (bootstrap mode): ${title}`,
-        })
-      }
+      // Note: Tokens are only granted when pattern is validated via approval
     }
     // Session auth is free (no token operations)
+
+    // Create Command task for admin review
+    // Get author info for task description
+    const { data: authorBot } = await adminClient
+      .from('bots')
+      .select('name, trust_tier')
+      .eq('id', authorBotId)
+      .single()
+    
+    const { data: authorAccount } = await adminClient
+      .from('accounts')
+      .select('email')
+      .eq('id', accountId)
+      .single()
+
+    // Get Jay's account ID (owner) for task assignment
+    const { data: ownerAccount } = await adminClient
+      .from('accounts')
+      .select('id')
+      .eq('role', 'owner')
+      .limit(1)
+      .single()
+
+    if (ownerAccount) {
+      // Build task description with full pattern content + author info
+      const taskDescription = `Pattern Submission Review
+
+**Title:** ${title}
+**Category:** ${category}
+**Author:** ${authorBot?.name || 'Unknown'} (Tier ${authorBot?.trust_tier || '?'})
+**Submitted by:** ${authorAccount?.email || 'Unknown'}
+**Pattern ID:** ${pattern.id}
+
+---
+
+**Problem:**
+${problem}
+
+**Solution:**
+${solution}
+
+${implementation ? `**Implementation:**\n${implementation}\n\n` : ''}${validation ? `**Validation:**\n${validation}\n\n` : ''}${edge_cases ? `**Edge Cases:**\n${edge_cases}` : ''}
+
+---
+
+**Actions:**
+- Approve: PATCH /api/patterns/${pattern.id}/approve
+- Reject: PATCH /api/patterns/${pattern.id}/reject`
+
+      // Create Command task with encrypted fields
+      await adminClient
+        .from('mc_tasks')
+        .insert({
+          title: encrypt(`Review: ${title}`),
+          description: encrypt(taskDescription),
+          assigned_agent_ids: [], // Assigned to owner (human review)
+          tags: ['pattern-review'],
+          priority: 'normal',
+          status: 'review',
+          account_id: ownerAccount.id,
+          metadata: {
+            pattern_id: pattern.id,
+            pattern_slug: slug,
+            author_account_id: accountId,
+            author_bot_id: authorBotId,
+          }
+        })
+    }
 
     return NextResponse.json({
       success: true,
@@ -303,16 +421,25 @@ export async function POST(request: Request) {
         status: pattern.status,
         url: `https://tiker.com/patterns/${pattern.slug}`,
       },
+      rate_limit: {
+        limit: MAX_PATTERNS_PER_DAY,
+        remaining: newRateLimit.remaining,
+        resetDate: newRateLimit.resetDate,
+      },
       tokens: isApiKeyAuth ? {
         spent: 5,
-        earned: bootstrapMode ? 25 : 0,
-        net: bootstrapMode ? 20 : -5,
-        note: bootstrapMode ? 'Auto-validated (bootstrap mode)' : 'Pending review',
+        earned: 0,
+        net: -5,
+        note: 'Pending review - 25 tokens on approval',
       } : {
         spent: 0,
         earned: 0,
         net: 0,
-        note: 'Free submission via web UI',
+        note: 'Free submission via web UI - 25 tokens on approval',
+      },
+      review: {
+        status: 'pending_review',
+        message: 'Pattern submitted for manual review. You\'ll be notified when approved.',
       },
     })
   } catch (error) {
