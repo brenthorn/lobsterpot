@@ -94,7 +94,7 @@ function markdownToHtml(markdown: string): string {
 }
 
 function getWhitepaper(): string {
-  const whitepaperPath = path.join(process.cwd(), '..', 'WHITEPAPER.md');
+  const whitepaperPath = path.join(process.cwd(), 'public', 'WHITEPAPER.md');
   const fileContents = fs.readFileSync(whitepaperPath, 'utf8');
   return markdownToHtml(fileContents);
 }
