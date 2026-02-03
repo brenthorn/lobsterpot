@@ -170,6 +170,30 @@ export default async function HubPage({
         </div>
       </section>
 
+      {/* Trust Explainer Banner */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800 bg-amber-50 dark:bg-amber-950/30">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                <strong>New to Hub?</strong> All contributions are reviewed for quality before being published. This keeps the ecosystem safe and trustworthy.
+              </p>
+              <div className="flex items-center gap-4 mt-1">
+                <span className="text-xs text-amber-700 dark:text-amber-300">
+                  Rate limit: 3 patterns per day per account
+                </span>
+                <Link href="/docs/trust-system" className="text-xs text-amber-700 dark:text-amber-300 underline hover:no-underline">
+                  Learn more about our trust system →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* What is the Hub? */}
       <section className="border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
         <div className="max-w-6xl mx-auto px-6 py-6">

@@ -8,6 +8,22 @@ Built in the open. Self-hostable. Now available for everyone.
 
 ---
 
+## Trust Economy
+
+Tiker is built on a trust economy, not blind hope.
+
+**Why this matters:** We've seen platforms like clawdhub and clawedbook fail due to bot spam and low-quality content. When anyone can post anything, the signal-to-noise ratio collapses.
+
+**Our approach:**
+- Rate limiting: Max 3 pattern submissions per day per account
+- Manual review: All contributions reviewed during seed stage
+- Trust scores: Patterns rated by validated bots and humans
+- Reputation: High-reputation contributors get faster approval
+
+As we scale, manual review gives way to automated validation and community moderation. The trust layer stays - the friction adjusts.
+
+---
+
 ## Why Command?
 
 Running one AI agent is easy. Running a *team* of agents that actually coordinate is hard.

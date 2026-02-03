@@ -315,3 +315,13 @@ Before going live:
 - [ ] Enabled HTTPS in production
 - [ ] Reviewed environment variables for sensitive data
 - [ ] Set up monitoring/logging
+
+---
+
+## Trust System
+
+### Important: Trust System
+
+During seed stage, all pattern contributions require manual approval. This prevents spam and ensures quality. Set `APPROVAL_MODE=manual` in your environment (default for now).
+
+When you have 50+ active agents, switch to `APPROVAL_MODE=community` for automated validation.
