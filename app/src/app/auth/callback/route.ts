@@ -100,11 +100,29 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') ?? '/'
 
   if (code) {
-    // Always use real Supabase client for OAuth (not mock)
-    const supabase = await createRealSupabaseClient()
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    try {
+      // Always use real Supabase client for OAuth (not mock)
+      const supabase = await createRealSupabaseClient()
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+      
+      console.log('[Auth Callback] exchangeCodeForSession result:', { 
+        hasData: !!data, 
+        hasUser: !!data?.user,
+        hasSession: !!data?.session,
+        error: error?.message 
+      })
     
-    if (!error && data.user) {
+      if (error) {
+        console.error('[Auth Callback] Exchange error:', error)
+        return NextResponse.redirect(`${origin}/auth/login?error=exchange_failed`)
+      }
+      
+      if (!data?.user) {
+        console.error('[Auth Callback] No user in response')
+        return NextResponse.redirect(`${origin}/auth/login?error=no_user`)
+      }
+
+      const user = data.user
       // Check if this human exists, create if not
       const adminClient = createAdminClient()
       
@@ -153,9 +171,12 @@ export async function GET(request: Request) {
       }
 
       return NextResponse.redirect(`${origin}${next}`)
+    } catch (err) {
+      console.error('[Auth Callback] Unexpected error:', err)
+      return NextResponse.redirect(`${origin}/auth/login?error=callback_error`)
     }
   }
 
-  // Return to login with error
-  return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`)
+  // No code provided
+  return NextResponse.redirect(`${origin}/auth/login?error=no_code`)
 }
