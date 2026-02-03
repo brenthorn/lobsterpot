@@ -49,7 +49,7 @@ export default function CreateTaskModal({ agents, onClose, onSuccess }: CreateTa
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" onClick={onClose} style={{ zIndex: 10000 }}>
       <div 
         className="bg-white rounded-lg shadow-xl max-w-2xl w-full"
         onClick={e => e.stopPropagation()}
