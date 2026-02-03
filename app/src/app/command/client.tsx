@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Agent, Task, Activity, TaskStatus, getAgents, getTasks, getActivities, updateTaskStatus } from '@/lib/mission-control'
+import { Agent, Task, Activity, TaskStatus, getAgents, getTasks, getActivities, updateTaskStatus, deleteTask, getTaskComments } from '@/lib/mission-control'
 import AgentCard from '@/components/AgentCard'
 import KanbanColumn from '@/components/KanbanColumn'
 import ActivityFeed from '@/components/ActivityFeed'
@@ -9,6 +9,7 @@ import TaskDetailModal from '@/components/TaskDetailModal'
 import CreateTaskModal from '@/components/CreateTaskModal'
 import TwoFactorVerifyModal from '@/components/TwoFactorVerifyModal'
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal'
+import DeleteConfirmModal from '@/components/DeleteConfirmModal'
 import { use2FA } from '@/hooks/use2FA'
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay, DragStartEvent } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
@@ -32,6 +33,7 @@ export default function MissionControlClient() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [hideDone, setHideDone] = useState(true) // Hide completed by default
+  const [deleteModal, setDeleteModal] = useState<{ task: Task; commentCount: number } | null>(null)
   
   // 2FA for write access
   const { 
@@ -191,6 +193,66 @@ export default function MissionControlClient() {
       console.error('✗ Failed to update task:', error)
       alert(`Failed to update task: ${error}`)
       loadData() // Reload on error to revert
+    }
+  }
+
+  // Mark task as done (quick action)
+  function handleMarkDone(taskId: string) {
+    const task = tasks.find(t => t.id === taskId)
+    if (!task) return
+    
+    if (requires2FA && !hasWriteAccess) {
+      withWriteAccess(async () => {
+        await performTaskUpdate(taskId, 'done', task.title)
+      })
+    } else {
+      performTaskUpdate(taskId, 'done', task.title)
+    }
+  }
+
+  // Initiate delete flow (shows confirmation modal)
+  async function handleDeleteClick(taskId: string) {
+    const task = tasks.find(t => t.id === taskId)
+    if (!task) return
+    
+    // Get comment count for the warning
+    try {
+      const comments = await getTaskComments(taskId)
+      setDeleteModal({ task, commentCount: comments.length })
+    } catch {
+      // If we can't get comments, show modal anyway
+      setDeleteModal({ task, commentCount: 0 })
+    }
+  }
+
+  // Actually delete the task
+  async function handleDeleteConfirm() {
+    if (!deleteModal) return
+    
+    const { task } = deleteModal
+    
+    const doDelete = async () => {
+      try {
+        await deleteTask(task.id)
+        setDeleteModal(null)
+        // Remove from local state
+        setTasks(prev => prev.filter(t => t.id !== task.id))
+      } catch (error: any) {
+        console.error('Failed to delete task:', error)
+        if (error.message?.includes('2FA')) {
+          alert('2FA Required: Please verify 2FA to delete tasks.')
+        } else {
+          alert('Failed to delete task: ' + error.message)
+        }
+        throw error
+      }
+    }
+    
+    if (requires2FA && !hasWriteAccess) {
+      setDeleteModal(null) // Close first to avoid stacking modals
+      withWriteAccess(doDelete)
+    } else {
+      await doDelete()
     }
   }
 
@@ -428,6 +490,8 @@ export default function MissionControlClient() {
                   tasks={filteredTasks.filter(t => t.status === column.status)}
                   agents={agents}
                   onTaskClick={setSelectedTask}
+                  onMarkDone={handleMarkDone}
+                  onDelete={handleDeleteClick}
                 />
               ))}
             </div>
@@ -464,6 +528,8 @@ export default function MissionControlClient() {
           task={selectedTask}
           agents={agents}
           onClose={() => setSelectedTask(null)}
+          onMarkDone={handleMarkDone}
+          onDelete={handleDeleteClick}
         />
       )}
 
@@ -489,6 +555,16 @@ export default function MissionControlClient() {
         <TwoFactorSetupModal
           onComplete={onSetupComplete}
           onCancel={onSetupCancel}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal && (
+        <DeleteConfirmModal
+          taskTitle={deleteModal.task.title}
+          commentCount={deleteModal.commentCount}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setDeleteModal(null)}
         />
       )}
     </div>

@@ -10,9 +10,11 @@ interface TaskDetailModalProps {
   task: Task
   agents: Agent[]
   onClose: () => void
+  onDelete?: (taskId: string) => void
+  onMarkDone?: (taskId: string) => void
 }
 
-export default function TaskDetailModal({ task, agents, onClose }: TaskDetailModalProps) {
+export default function TaskDetailModal({ task, agents, onClose, onDelete, onMarkDone }: TaskDetailModalProps) {
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [newComment, setNewComment] = useState('')
@@ -150,26 +152,62 @@ export default function TaskDetailModal({ task, agents, onClose }: TaskDetailMod
               )}
             </div>
 
-            <button
-              onClick={copyForChat}
-              className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-sm font-medium transition-colors flex items-center gap-2"
-            >
-              {copied ? (
-                <>
-                  <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-center gap-2">
+              {/* Mark Done button - only show if not done */}
+              {task.status !== 'done' && onMarkDone && (
+                <button
+                  onClick={() => {
+                    onMarkDone(task.id)
+                    onClose()
+                  }}
+                  className="px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-sm font-medium transition-colors flex items-center gap-2"
+                  title="Mark as done"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-green-600">Copied!</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  <span>Copy for Chat</span>
-                </>
+                  <span>Done</span>
+                </button>
               )}
-            </button>
+              
+              <button
+                onClick={copyForChat}
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-sm font-medium transition-colors flex items-center gap-2"
+              >
+                {copied ? (
+                  <>
+                    <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-green-600">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+
+              {/* Delete button */}
+              {onDelete && (
+                <button
+                  onClick={() => {
+                    onDelete(task.id)
+                    onClose()
+                  }}
+                  className="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-sm font-medium transition-colors flex items-center gap-2"
+                  title="Delete task permanently"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span>Delete</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {task.tags.length > 0 && (

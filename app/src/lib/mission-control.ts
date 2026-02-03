@@ -163,6 +163,18 @@ export async function createComment(taskId: string, content: string, agentId?: s
   return response.json()
 }
 
+// Delete a task
+export async function deleteTask(taskId: string): Promise<void> {
+  const response = await fetch(`/api/command/tasks/${taskId}`, {
+    method: 'DELETE',
+    credentials: 'include', // Required for 2FA cookie
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to delete task')
+  }
+}
+
 // Create a default agent for new users
 export async function createDefaultAgent(name: string, emoji: string, role: string) {
   const supabase = createClient()

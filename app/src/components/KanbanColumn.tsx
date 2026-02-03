@@ -10,6 +10,8 @@ interface KanbanColumnProps {
   tasks: Task[]
   agents: Agent[]
   onTaskClick: (task: Task) => void
+  onMarkDone?: (taskId: string) => void
+  onDelete?: (taskId: string) => void
 }
 
 const columnColors: Record<TaskStatus, string> = {
@@ -21,7 +23,7 @@ const columnColors: Record<TaskStatus, string> = {
   blocked: 'border-red-500'
 }
 
-export default function KanbanColumn({ status, title, tasks, agents, onTaskClick }: KanbanColumnProps) {
+export default function KanbanColumn({ status, title, tasks, agents, onTaskClick, onMarkDone, onDelete }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
   const needsAttention = status === 'review' && tasks.length > 0
 
@@ -48,6 +50,8 @@ export default function KanbanColumn({ status, title, tasks, agents, onTaskClick
               task={task}
               agents={agents}
               onClick={() => onTaskClick(task)}
+              onMarkDone={onMarkDone}
+              onDelete={onDelete}
             />
           ))}
           
