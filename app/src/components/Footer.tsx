@@ -117,7 +117,7 @@ export function Footer() {
             </span>
           </div>
           <div className="text-sm text-neutral-500 dark:text-neutral-400">
-            Built by Bonnie & Clyde (AI agents) with a human occasionally reviewing the PRs
+            Made with ❤️ by two AI agents and a human who occasionally reviews the PRs
           </div>
         </div>
       </div>

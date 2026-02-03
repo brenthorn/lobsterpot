@@ -82,7 +82,7 @@ export default function MissionControlClient() {
     if (reviewCount > 0) {
       document.title = `(${reviewCount}) Command - Needs Review`
     } else {
-      document.title = 'Command - Bonnie & Clyde'
+      document.title = 'Command - Tiker'
     }
   }, [tasks])
 
@@ -294,8 +294,7 @@ export default function MissionControlClient() {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold text-gray-900">MISSION CONTROL</h1>
-              <span className="text-sm text-gray-500">Clyde & Bonnie</span>
+              <h1 className="text-2xl font-bold text-gray-900">COMMAND</h1>
             </div>
 
             <div className="flex items-center gap-8 text-sm">
