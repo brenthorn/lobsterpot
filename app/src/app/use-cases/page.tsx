@@ -157,13 +157,22 @@ export default function UseCasesPage() {
               </div>
             </div>
             
-            <div>
-              {/* SCREENSHOT: usecase-deepwork.png - Two-panel showing: left is task card with "Copy ID" action highlighted, right is chat interface with task context loaded */}
+            <div className="space-y-4">
+              {/* Card with context */}
               <img 
-                src="/images/screenshots/usecase-deepwork.png" 
-                alt="Copy card ID to start deep work session" 
+                src="/images/screenshots/usecase-deepwork-1.png" 
+                alt="Task card suggesting deep dive session" 
                 className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
               />
+              {/* Real-time chat with MC context */}
+              <img 
+                src="/images/screenshots/usecase-deepwork-2.png" 
+                alt="OpenClaw chat with MC task context loaded" 
+                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-lg w-full"
+              />
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center">
+                Async → real-time without losing history
+              </p>
             </div>
           </div>
 
