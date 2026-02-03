@@ -1,6 +1,6 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
-import { authenticator } from 'otplib'
+import { generateSecret, generateURI } from 'otplib'
 import QRCode from 'qrcode'
 import crypto from 'crypto'
 
@@ -14,14 +14,14 @@ export async function POST(request: Request) {
     }
 
     // Generate TOTP secret
-    const secret = authenticator.generateSecret()
+    const secret = generateSecret()
     
     // Generate QR code URL for authenticator apps
-    const otpauth = authenticator.keyuri(
-      session.user.email || 'user',
-      'Tiker',
-      secret
-    )
+    const otpauth = generateURI({
+      issuer: 'Tiker',
+      label: session.user.email || 'user',
+      secret,
+    })
     
     // Generate QR code as data URL
     const qrCodeDataUrl = await QRCode.toDataURL(otpauth)

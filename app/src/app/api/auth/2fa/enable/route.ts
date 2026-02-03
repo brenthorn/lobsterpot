@@ -1,6 +1,6 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
-import { authenticator } from 'otplib'
+import { verify } from 'otplib'
 import crypto from 'crypto'
 
 export async function POST(request: Request) {
@@ -19,7 +19,8 @@ export async function POST(request: Request) {
     }
 
     // Verify the code
-    const isValid = authenticator.verify({ token: code, secret })
+    const verifyResult = await verify({ token: code, secret })
+    const isValid = verifyResult.valid
     
     if (!isValid) {
       return NextResponse.json({ error: 'Invalid code' }, { status: 400 })

@@ -1,6 +1,6 @@
 import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
-import { authenticator } from 'otplib'
+import { verify } from 'otplib'
 import crypto from 'crypto'
 import { cookies } from 'next/headers'
 
@@ -34,10 +34,11 @@ export async function POST(request: Request) {
     }
 
     // Try TOTP verification first
-    let isValid = authenticator.verify({ 
+    const verifyResult = await verify({ 
       token: code, 
       secret: account.two_factor_secret 
     })
+    let isValid = verifyResult.valid
 
     // If not valid, check backup codes
     if (!isValid && account.two_factor_backup_codes) {
