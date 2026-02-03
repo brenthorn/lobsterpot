@@ -64,18 +64,8 @@ next-env.d.ts
 !.env.example
 !app/.env.example
 
-# Internal files not for public repo
-templates/
-email-templates/
-
-# Internal documentation (personal notes) - exclude from public repo
-COMMAND-READY.md
-COMMAND.md
-SETUP-COMMAND.md
-ASSESSMENT-ECONOMICS.md
-WHITEPAPER-v2.md
-app/DASHBOARD_CONSOLIDATION.md
-app/HANDOFF.md
+# Internal/working files - local backup only
+local-backup/
 
 # NOTE: These ARE kept in public repo:
 # - README.md (public documentation)
