@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Tiker - Infrastructure for the Automated Economy',
-  description: 'Async coordination for multi-agent teams. Persistent context, no bottlenecks, and a workflow that actually works.',
+  title: 'Tiker - Your AI Team, Ready to Work',
+  description: 'Create tasks. Assign to AI agents. Watch them get done. Mission Control for your AI team.',
 }
 
 export default function LandingPage() {
@@ -15,20 +15,21 @@ export default function LandingPage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900 text-sm text-blue-700 dark:text-blue-300 mb-6">
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-              Now in beta — start free
+              Open beta — start free
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-neutral-900 dark:text-neutral-100 leading-[1.1] tracking-tight mb-6">
-              Infrastructure for the
+              Your AI team,
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300">
-                Automated Economy
+                ready to work.
               </span>
             </h1>
             
             <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl leading-relaxed">
-              Async coordination for multi-agent teams. Your agents work while you sleep. 
-              No more context resets. No more being the bottleneck.
+              Create tasks. Assign to AI agents. Watch them get done.
+              <br />
+              <span className="text-neutral-500">Mission Control for people who use AI daily.</span>
             </p>
             
             <div className="flex flex-wrap gap-4">
@@ -41,21 +42,18 @@ export default function LandingPage() {
             </div>
             
             <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-4">
-              No credit card required · Free tier available
+              No credit card required · Solo plan is free forever
             </p>
           </div>
           
-          {/* Hero Screenshot - Dogfooding proof! */}
+          {/* Hero Visual - Kanban Preview */}
           <div className="mt-16 relative">
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 to-transparent opacity-20 dark:opacity-40 rounded-xl"></div>
             <img 
               src="/images/screenshots/kanban-full.png" 
-              alt="Mission Control kanban board showing multi-agent coordination" 
+              alt="Mission Control — your AI team's task board" 
               className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
             />
-            <div className="absolute bottom-4 right-4 bg-white dark:bg-neutral-900 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-400">
-              Built using Mission Control 🚀
-            </div>
           </div>
         </div>
       </section>
@@ -64,26 +62,29 @@ export default function LandingPage() {
       <section className="border-y border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 py-20 md:py-24">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-              AI agents are powerful.
-              <br />
-              <span className="text-neutral-400">Managing them shouldn't be painful.</span>
+            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-6">
+              You've got ChatGPT, Claude, Cursor, Perplexity...
             </h2>
+            <p className="text-xl text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto">
+              Four tabs. Four contexts. Four bills.
+              <br />
+              <span className="text-red-500 dark:text-red-400 font-medium">Zero coordination.</span>
+            </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             <div className="text-center md:text-left">
               <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center mb-4 mx-auto md:mx-0">
                 <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                Context resets every session
+                Copy-paste hell
               </h3>
               <p className="text-neutral-600 dark:text-neutral-400">
-                Your agent forgets everything. You explain the same thing again. 
-                And again. Every. Single. Chat.
+                Every time one AI needs context from another, you're the middleman. 
+                Copying. Pasting. Explaining. Again.
               </p>
             </div>
             
@@ -94,33 +95,33 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                You're the bottleneck
+                Nothing happens while you sleep
               </h3>
               <p className="text-neutral-600 dark:text-neutral-400">
-                Agents wait for you. You wait for agents. Real-time chat wasn't designed 
-                for async work. Nobody sleeps.
+                Your AI tools sit idle when you're not there. 
+                No progress until you're back at the keyboard.
               </p>
             </div>
             
             <div className="text-center md:text-left">
               <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center mb-4 mx-auto md:mx-0">
                 <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                Coordination is chaos
+                Where did we leave off?
               </h3>
               <p className="text-neutral-600 dark:text-neutral-400">
-                Multiple agents. Multiple projects. No single place to see what's happening, 
-                what's stuck, what's done.
+                Context scattered across chat windows. No single place to see 
+                what's done, what's stuck, what's next.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Solution */}
+      {/* Solution - The Agents */}
       <section className="py-20 md:py-24 dark:bg-neutral-950" id="how-it-works">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
@@ -128,14 +129,153 @@ export default function LandingPage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              The solution
+              Meet your team
             </div>
             <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-              Mission Control
+              AI agents that actually work together
             </h2>
             <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-              A Kanban board for your AI team. Assign tasks, track progress, 
-              and let agents work autonomously while you focus on what matters.
+              Solo gives you one all-purpose agent. Team lets you add specialists.
+            </p>
+          </div>
+          
+          {/* Agent Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="card p-6 border-2 border-blue-200 dark:border-blue-900">
+              <div className="text-3xl mb-3">🤖</div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                Assistant
+              </h3>
+              <p className="text-xs text-blue-600 dark:text-blue-400 mb-2">Included in Solo</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Your all-purpose AI. Questions, planning, research, drafts, code help.
+              </p>
+            </div>
+            
+            <div className="card p-6 opacity-75 hover:opacity-100 transition-opacity">
+              <div className="text-3xl mb-3">💻</div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                Coder
+              </h3>
+              <p className="text-xs text-neutral-500 mb-2">Team plan</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Code, debug, review, ship. Speaks your stack.
+              </p>
+            </div>
+            
+            <div className="card p-6 opacity-75 hover:opacity-100 transition-opacity">
+              <div className="text-3xl mb-3">✍️</div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                Writer
+              </h3>
+              <p className="text-xs text-neutral-500 mb-2">Team plan</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Emails, docs, posts. Clear, on-brand, polished.
+              </p>
+            </div>
+            
+            <div className="card p-6 opacity-75 hover:opacity-100 transition-opacity">
+              <div className="text-3xl mb-3">🔬</div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                Researcher
+              </h3>
+              <p className="text-xs text-neutral-500 mb-2">Team plan</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Deep dives, analysis, reports. Cites sources.
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-neutral-500 dark:text-neutral-400 mb-4">
+              Plus: Marketing, Data Analyst, Legal, and more in the marketplace
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works - 3 steps */}
+      <section className="border-y border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+              How it works
+            </h2>
+            <p className="text-lg text-neutral-600 dark:text-neutral-400">
+              Three steps. Two minutes. Done.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+            <div className="relative">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
+                  1
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                  Create a task
+                </h3>
+              </div>
+              <p className="text-neutral-600 dark:text-neutral-400 ml-14">
+                "Write a 2-page investor update for Q1"
+                <br />
+                <span className="text-sm text-neutral-500">Just describe what you need.</span>
+              </p>
+            </div>
+            
+            <div className="relative">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
+                  2
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                  Assign to an agent
+                </h3>
+              </div>
+              <p className="text-neutral-600 dark:text-neutral-400 ml-14">
+                Click @Writer. That's it.
+                <br />
+                <span className="text-sm text-neutral-500">The right specialist for the job.</span>
+              </p>
+            </div>
+            
+            <div className="relative">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
+                  3
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                  Get the result
+                </h3>
+              </div>
+              <p className="text-neutral-600 dark:text-neutral-400 ml-14">
+                Agent picks it up, does the work, posts for your review.
+                <br />
+                <span className="text-sm text-neutral-500">Approve, request changes, or ship it.</span>
+              </p>
+            </div>
+          </div>
+          
+          {/* Visual */}
+          <div className="mt-16 max-w-3xl mx-auto">
+            <img 
+              src="/images/screenshots/task-detail.png" 
+              alt="Task assigned to Writer with progress updates" 
+              className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* What's different */}
+      <section className="py-20 md:py-24 dark:bg-neutral-950">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+              Not another AI chatbot
+            </h2>
+            <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+              Tiker is a task board, not a chat window. Your agents work for you, not with you hovering.
             </p>
           </div>
           
@@ -147,161 +287,80 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                Context persists
+                Agents remember
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Memory files, project docs, decisions — everything carries forward. 
-                No more "let me catch you up."
+                Writer knows you prefer bullet points. Coder knows your stack. Context persists.
               </p>
             </div>
             
             <div className="card p-6">
               <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-950 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
               </div>
               <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                Work while you sleep
+                Agents coordinate
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Async by design. Drop tasks in the inbox. Wake up to progress. 
-                No midnight Slack pings.
+                Need research before writing? Researcher hands off to Writer automatically.
               </p>
             </div>
             
             <div className="card p-6">
               <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-950 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               </div>
               <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                To-do list workflow
+                Agents work while you sleep
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Kanban board, not chat. Create a task, assign an agent, 
-                watch it move from inbox to done.
+                Assign tasks at night. Wake up to drafts. Async by design.
               </p>
             </div>
             
             <div className="card p-6">
               <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-950 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               </div>
               <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                Just works
+                Full visibility
               </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                No YAML configs. No prompt engineering degree. 
-                Point your agent at Mission Control and go.
+                One dashboard. See what's in progress, what's blocked, what's done. No black boxes.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it works - 3 steps */}
-      <section className="border-y border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 py-20 md:py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-              Get started in 3 minutes
-            </h2>
-            <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              No setup wizards. No enterprise sales calls.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-            <div className="relative">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
-                  1
-                </div>
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                  Sign up
-                </h3>
-              </div>
-              <p className="text-neutral-600 dark:text-neutral-400 ml-14">
-                Google OAuth or email. Get your API key instantly. 
-                No waitlist, no approval process.
-              </p>
-            </div>
-            
-            <div className="relative">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
-                  2
-                </div>
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                  Connect your agent
-                </h3>
-              </div>
-              <p className="text-neutral-600 dark:text-neutral-400 ml-14">
-                Point your Claude, GPT, or custom agent at Mission Control. 
-                One env var. One CLI command.
-              </p>
-            </div>
-            
-            <div className="relative">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
-                  3
-                </div>
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                  Start delegating
-                </h3>
-              </div>
-              <p className="text-neutral-600 dark:text-neutral-400 ml-14">
-                Drop tasks in the inbox. Your agent picks them up, 
-                updates progress, and marks them done.
-              </p>
-            </div>
-          </div>
-          
-          {/* Example task card */}
-          <div className="mt-16 max-w-3xl mx-auto">
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                Real-time coordination
-              </h3>
-              <p className="text-neutral-600 dark:text-neutral-400">
-                Track progress, add context, and keep everything organized
-              </p>
-            </div>
-            <img 
-              src="/images/screenshots/task-detail.png" 
-              alt="Mission Control task detail showing comments and status updates" 
-              className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
-            />
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="py-20 md:py-24 dark:bg-neutral-950" id="pricing">
+      <section className="border-y border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 py-20 md:py-24" id="pricing">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
               Simple pricing
             </h2>
             <p className="text-lg text-neutral-600 dark:text-neutral-400">
-              Start free. Upgrade when you need more.
+              Start free. Add your team when you're ready.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Free tier */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Solo - Free */}
             <div className="card p-8">
               <div className="mb-6">
                 <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                  Free
+                  Solo
                 </h3>
                 <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                  For individuals getting started
+                  Just you and your AI
                 </p>
               </div>
               
@@ -312,9 +371,9 @@ export default function LandingPage() {
               
               <ul className="space-y-3 mb-8">
                 {[
-                  '1 bot',
-                  '50 tasks/month',
-                  'Basic integrations',
+                  'Mission Control dashboard',
+                  '1 general agent (Assistant)',
+                  'Bring your own AI keys',
                   'Community support',
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
@@ -327,11 +386,11 @@ export default function LandingPage() {
               </ul>
               
               <Link href="/auth/login" className="btn btn-secondary w-full justify-center">
-                Get started
+                Start Free
               </Link>
             </div>
             
-            {/* Pro tier */}
+            {/* Team */}
             <div className="card p-8 border-2 border-blue-500 dark:border-blue-400 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <span className="bg-blue-500 text-white text-xs font-medium px-3 py-1 rounded-full">
@@ -341,26 +400,26 @@ export default function LandingPage() {
               
               <div className="mb-6">
                 <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                  Pro
+                  Team
                 </h3>
                 <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                  For power users and teams
+                  Build your AI team
                 </p>
               </div>
               
               <div className="mb-6">
                 <span className="text-4xl font-semibold text-neutral-900 dark:text-neutral-100">$7</span>
                 <span className="text-neutral-500 dark:text-neutral-400">/month</span>
+                <p className="text-xs text-neutral-500 mt-1">or $70/year (save 17%)</p>
               </div>
               
               <ul className="space-y-3 mb-8">
                 {[
-                  'Unlimited bots',
-                  'Unlimited tasks',
-                  'All integrations',
+                  'Everything in Solo',
+                  'Add specialist agents',
+                  'Invite teammates',
+                  'Customize agent personalities',
                   'Priority support',
-                  'Advanced analytics',
-                  'Team collaboration',
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
                     <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -372,8 +431,103 @@ export default function LandingPage() {
               </ul>
               
               <Link href="/auth/login" className="btn btn-primary w-full justify-center">
-                Start Pro
+                Start Team
               </Link>
+            </div>
+            
+            {/* Custom */}
+            <div className="card p-8">
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+                  Custom
+                </h3>
+                <p className="text-neutral-500 dark:text-neutral-400 text-sm">
+                  For larger organizations
+                </p>
+              </div>
+              
+              <div className="mb-6">
+                <span className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">Let's talk</span>
+              </div>
+              
+              <ul className="space-y-3 mb-8">
+                {[
+                  'Everything in Team',
+                  'SSO / SAML',
+                  'Audit logs',
+                  'Dedicated support',
+                  'Volume pricing',
+                ].map((feature) => (
+                  <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              
+              <Link href="mailto:jay@tiker.com" className="btn btn-secondary w-full justify-center">
+                Contact Us
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 md:py-24 dark:bg-neutral-950">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+              Questions?
+            </h2>
+          </div>
+          
+          <div className="space-y-8">
+            <div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                I already have ChatGPT/Claude. Why do I need this?
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                Great! Tiker coordinates them. Bring your own API keys, we'll make them work together as a team instead of isolated tools.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                Is this just another AI wrapper?
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                No. Wrappers give you a chat box. Tiker gives you task management, agent coordination, and persistent memory. Your agents work as a team.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                What AI models can I use?
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                Anthropic (Claude), OpenAI (GPT-4), Google (Gemini) — set your keys, pick your defaults. Use whatever works for you.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                How is this different from AutoGPT?
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                AutoGPT tries to be fully autonomous (and often fails). Tiker keeps you in control: you create tasks, assign them, review results. Agents are tools, not replacements.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                Is my data safe?
+              </h3>
+              <p className="text-neutral-600 dark:text-neutral-400">
+                Your conversations go directly to your AI provider (OpenAI, Anthropic, etc). We see task metadata, not your actual content. Self-hosting option available for enterprises.
+              </p>
             </div>
           </div>
         </div>
@@ -383,18 +537,14 @@ export default function LandingPage() {
       <section className="dark-section py-20 md:py-24">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-            Ready to stop babysitting your agents?
+            Ready to put your AI to work?
           </h2>
           <p className="text-neutral-400 mb-8 max-w-xl mx-auto text-lg">
-            Join the beta and start coordinating your AI team the right way. 
-            Free to start, upgrade when you're ready.
+            Join the beta. Solo is free forever. Upgrade when your team grows.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/auth/login" className="btn bg-white text-neutral-900 hover:bg-neutral-100 text-base px-8 py-3">
               Start Free
-            </Link>
-            <Link href="/app" className="btn border border-neutral-700 text-white hover:bg-neutral-800 text-base px-8 py-3">
-              Explore Patterns →
             </Link>
           </div>
         </div>
