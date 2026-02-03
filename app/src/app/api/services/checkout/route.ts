@@ -19,10 +19,12 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { service_type, amount_cents, notes } = body as {
+    const { service_type, amount_cents, notes, price_id, variant } = body as {
       service_type: string
       amount_cents?: number
       notes?: string
+      price_id?: string  // Direct Stripe price ID
+      variant?: string   // Variant selection (e.g., '128gb' or '256gb')
     }
 
     // Validate service type
@@ -32,6 +34,17 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid service type' },
         { status: 400 }
       )
+    }
+    
+    // Determine the correct Stripe price ID
+    // Priority: 1) Passed price_id, 2) Variant price, 3) Service default
+    let stripePriceId = price_id
+    if (!stripePriceId && variant && service.variants) {
+      const selectedVariant = service.variants.find(v => v.id === variant)
+      stripePriceId = selectedVariant?.stripePriceId
+    }
+    if (!stripePriceId) {
+      stripePriceId = service.stripePriceId
     }
 
     // Get account from database
@@ -49,36 +62,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Handle quote requests (no immediate payment)
-    if (service.ctaType === 'quote') {
-      // Create a service purchase record with pending status
-      const { data: purchase, error: purchaseError } = await adminClient
-        .from('service_purchases')
-        .insert({
-          account_id: account.id,
-          service_type: service_type,
-          amount_cents: amount_cents || service.pricing.amount,
-          payment_status: 'quote_requested',
-          fulfillment_status: 'pending',
-          fulfillment_notes: notes || `Quote requested for ${service.name}`,
-        })
-        .select()
-        .single()
-
-      if (purchaseError) {
-        console.error('Failed to create quote request:', purchaseError)
-        return NextResponse.json(
-          { error: 'Failed to submit quote request' },
-          { status: 500 }
-        )
-      }
-
-      // TODO: Send notification email to admin
-      
+    // Handle contact/inquiry requests (no immediate payment)
+    if (service.ctaType === 'contact') {
+      // For contact/inquiry, redirect to the contact form section
+      // The actual inquiry handling is done via /api/services/inquiry
       return NextResponse.json({
         success: true,
-        message: 'Quote request submitted! We\'ll be in touch within 24 hours.',
-        purchase_id: purchase.id,
+        message: 'Please use the contact form for custom work inquiries.',
+        redirect: '/services#contact-form',
       })
     }
 
@@ -107,11 +98,10 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
     // Determine checkout mode and pricing
-    const isRecurring = service.pricing.type === 'recurring'
+    const isRecurring = service.pricing.type === 'recurring' || service.pricing.type === 'one_time_with_recurring'
     const priceAmount = amount_cents || service.pricing.amount
 
-    // Check if we have a pre-configured Stripe price ID
-    const stripePriceId = service.stripePriceId
+    // stripePriceId was already determined above from price_id, variant, or service default
 
     let session: Stripe.Checkout.Session
 
