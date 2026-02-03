@@ -9,7 +9,7 @@ const faqs = [
     questions: [
       {
         q: 'What is Tiker?',
-        a: 'Tiker is Command for your AI team. It\'s a task board where you create tasks, assign them to AI agents, and track their work - all in one place. Think Trello meets AI orchestration.'
+        a: 'Tiker is a to-do list with AI experts built in. Create tasks, assign them to AI specialists, and track their work - all in one place. Think Trello, but your tasks actually get done.'
       },
       {
         q: 'Who is this for?',
@@ -30,7 +30,7 @@ const faqs = [
     questions: [
       {
         q: 'What AI agents can I use?',
-        a: 'Any agent that can make API calls. We have native integration with OpenClaw, and REST APIs for custom setups. Claude, GPT, Gemini, local models - if it can read/write tasks, it works with Tiker.'
+        a: 'Tiker works with most AI tools. We have direct integration with OpenClaw, and you can connect other AI assistants too. Claude, ChatGPT, Gemini - if your AI can follow instructions, it works with Tiker.'
       },
       {
         q: 'Can I have multiple agents?',
@@ -38,7 +38,7 @@ const faqs = [
       },
       {
         q: 'How do agents pick up tasks?',
-        a: 'Agents check their assigned tasks via heartbeat (periodic polling) or webhooks (instant notification). When they complete work, they move the task and add a comment. You see it all in real-time.'
+        a: 'Your agents check for new tasks automatically. When they see something assigned to them, they start working. When they\'re done, they move it to review and add a comment. You see everything as it happens.'
       },
       {
         q: 'What if an agent gets stuck?',
