@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       const { data: existingAccount } = await adminClient
         .from('accounts')
         .select('id')
-        .eq('email', data.user.email)
+        .eq('auth_uid', data.user.id)
         .single()
 
       if (!existingAccount) {
@@ -25,7 +25,13 @@ export async function GET(request: Request) {
         const { error: createError } = await adminClient
           .from('accounts')
           .insert({
+            auth_uid: data.user.id,
             email: data.user.email!,
+            name: data.user.user_metadata?.full_name || null,
+            avatar_url: data.user.user_metadata?.avatar_url || null,
+            verification_tier: 'silver',
+            verified_at: new Date().toISOString(),
+            google_id: data.user.user_metadata?.provider_id || null,
           })
 
         if (createError) {

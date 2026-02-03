@@ -20,7 +20,7 @@ export default async function StartPage() {
   const { data: existingAccount } = await adminClient
     .from('accounts')
     .select('id')
-    .eq('email', session.user.email)
+    .eq('auth_uid', session.user.id)
     .single()
 
   if (!existingAccount) {
@@ -28,7 +28,12 @@ export default async function StartPage() {
     const { data: newAccount, error: createError } = await adminClient
       .from('accounts')
       .insert({
+        auth_uid: session.user.id,
         email: session.user.email!,
+        name: session.user.user_metadata?.full_name || null,
+        avatar_url: session.user.user_metadata?.avatar_url || null,
+        verification_tier: 'silver',
+        verified_at: new Date().toISOString(),
       })
       .select('id')
       .single()
