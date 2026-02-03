@@ -4,6 +4,73 @@ import { useState } from 'react'
 import Link from 'next/link'
 import AddAgentModal, { HubAgent } from '@/components/AddAgentModal'
 
+interface AddToCommandButtonProps {
+  patternId: string
+  patternTitle: string
+  onSuccess: (message: string) => void
+}
+
+function AddToCommandButton({ patternId, patternTitle, onSuccess }: AddToCommandButtonProps) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isAdded, setIsAdded] = useState(false)
+
+  async function handleAdd() {
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/hub/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'pattern',
+          id: patternId,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to add pattern')
+      }
+
+      const result = await response.json()
+      setIsAdded(true)
+      onSuccess(result.message || `"${patternTitle}" added to your Command inbox`)
+    } catch (error) {
+      console.error('Error adding pattern:', error)
+      onSuccess(error instanceof Error ? error.message : 'Failed to add pattern')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleAdd}
+      disabled={isLoading || isAdded}
+      className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition ${
+        isAdded
+          ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300'
+          : isLoading
+          ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400 cursor-not-allowed'
+          : 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300'
+      }`}
+    >
+      {isLoading ? (
+        <span className="flex items-center justify-center gap-2">
+          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+          Adding...
+        </span>
+      ) : isAdded ? (
+        'Added!'
+      ) : (
+        'Add to Command'
+      )}
+    </button>
+  )
+}
+
 interface HubItem {
   id: string
   name?: string
@@ -244,11 +311,14 @@ export default function HubContent({
                 Add to Team
               </button>
             ) : (
-              <button
-                className="w-full py-2 px-4 rounded-lg text-sm font-medium transition bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300"
-              >
-                Add to Command
-              </button>
+              <AddToCommandButton 
+                patternId={item.id} 
+                patternTitle={item.title || 'Pattern'}
+                onSuccess={(message) => {
+                  setSuccessMessage(message)
+                  setTimeout(() => setSuccessMessage(null), 3000)
+                }}
+              />
             )}
           </div>
         ))}
