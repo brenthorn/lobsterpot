@@ -17,6 +17,7 @@ export function use2FA() {
     loading: true,
   })
   const [showVerifyModal, setShowVerifyModal] = useState(false)
+  const [showSetupModal, setShowSetupModal] = useState(false)
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null)
 
   const checkWriteAccess = useCallback(async () => {
@@ -44,8 +45,9 @@ export function use2FA() {
       // Has write access, execute action
       await action()
     } else if (currentStatus.needs2FASetup) {
-      // Needs to set up 2FA first - redirect to settings
-      window.location.href = '/dashboard?tab=settings'
+      // Needs to set up 2FA first - show setup modal with explanation
+      setPendingAction(() => action)
+      setShowSetupModal(true)
     } else if (currentStatus.requires2FA) {
       // Has 2FA but needs to verify
       setPendingAction(() => action)
@@ -71,12 +73,30 @@ export function use2FA() {
     setPendingAction(null)
   }, [])
 
+  const onSetupComplete = useCallback(async () => {
+    setShowSetupModal(false)
+    await checkWriteAccess()
+    
+    // After setup, they still need to verify
+    if (pendingAction) {
+      setShowVerifyModal(true)
+    }
+  }, [pendingAction, checkWriteAccess])
+
+  const onSetupCancel = useCallback(() => {
+    setShowSetupModal(false)
+    setPendingAction(null)
+  }, [])
+
   return {
     ...status,
     checkWriteAccess,
     withWriteAccess,
     showVerifyModal,
+    showSetupModal,
     onVerifySuccess,
     onVerifyCancel,
+    onSetupComplete,
+    onSetupCancel,
   }
 }

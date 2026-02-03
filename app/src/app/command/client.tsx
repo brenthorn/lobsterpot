@@ -8,6 +8,7 @@ import ActivityFeed from '@/components/ActivityFeed'
 import TaskDetailModal from '@/components/TaskDetailModal'
 import CreateTaskModal from '@/components/CreateTaskModal'
 import TwoFactorVerifyModal from '@/components/TwoFactorVerifyModal'
+import TwoFactorSetupModal from '@/components/TwoFactorSetupModal'
 import { use2FA } from '@/hooks/use2FA'
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay, DragStartEvent } from '@dnd-kit/core'
 import { createClient } from '@/lib/supabase'
@@ -39,8 +40,11 @@ export default function MissionControlClient() {
     needs2FASetup,
     withWriteAccess,
     showVerifyModal,
+    showSetupModal,
     onVerifySuccess,
     onVerifyCancel,
+    onSetupComplete,
+    onSetupCancel,
     checkWriteAccess,
     loading: twoFALoading 
   } = use2FA()
@@ -477,6 +481,14 @@ export default function MissionControlClient() {
         <TwoFactorVerifyModal
           onSuccess={onVerifySuccess}
           onCancel={onVerifyCancel}
+        />
+      )}
+
+      {/* 2FA Setup Modal */}
+      {showSetupModal && (
+        <TwoFactorSetupModal
+          onComplete={onSetupComplete}
+          onCancel={onSetupCancel}
         />
       )}
     </div>

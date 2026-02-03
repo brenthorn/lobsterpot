@@ -17,35 +17,32 @@ export default async function StartPage() {
 
   // Ensure account exists (fallback for users who signed up before fix)
   const adminClient = createAdminClient()
-  const { data: existingAccount } = await adminClient
+  const { data: account } = await adminClient
     .from('accounts')
-    .select('id')
+    .select('id, name, tier, tier_expires_at')
     .eq('auth_uid', session.user.id)
     .single()
 
-  if (!existingAccount) {
-    console.log('[Start] Creating account for:', session.user.email)
-    const { data: newAccount, error: createError } = await adminClient
-      .from('accounts')
-      .insert({
-        auth_uid: session.user.id,
-        email: session.user.email!,
-        name: session.user.user_metadata?.full_name || null,
-        avatar_url: session.user.user_metadata?.avatar_url || null,
-        verification_tier: 'silver',
-        verified_at: new Date().toISOString(),
-      })
-      .select('id')
-      .single()
-    
-    if (createError) {
-      console.error('[Start] Failed to create account:', createError)
-    } else {
-      console.log('[Start] Account created:', newAccount?.id)
-    }
+  if (!account) {
+    console.log('[Start] No account found, redirecting to auth callback to create one')
+    redirect('/auth/callback?code=setup')
   }
+
+  // Fetch the user's default bot (created in auth callback)
+  const { data: bot } = await adminClient
+    .from('bots')
+    .select('*')
+    .eq('account_id', account.id)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .single()
 
   const userName = session.user.user_metadata?.full_name?.split(' ')[0] || 'there'
 
-  return <StartPageClient userName={userName} />
+  return <StartPageClient 
+    userName={userName} 
+    initialBot={bot}
+    accountTier={account.tier}
+    trialExpiresAt={account.tier_expires_at}
+  />
 }
