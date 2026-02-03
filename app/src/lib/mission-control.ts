@@ -140,6 +140,7 @@ export async function createTask(task: {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(task),
+    credentials: 'include', // Required for 2FA cookie
   })
   if (!response.ok) {
     const error = await response.json()
@@ -153,6 +154,7 @@ export async function createComment(taskId: string, content: string, agentId?: s
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ taskId, content, agentId }),
+    credentials: 'include', // Required for 2FA cookie
   })
   if (!response.ok) {
     const error = await response.json()
