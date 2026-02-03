@@ -14,49 +14,25 @@ export async function GET(request: Request) {
       // Check if this human exists, create if not
       const adminClient = createAdminClient()
       
-      const { data: existingHuman } = await adminClient
+      const { data: existingAccount } = await adminClient
         .from('accounts')
-        .select('id, verification_tier')
-        .eq('email', data.user.email)
+        .select('id')
+        .eq('user_id', data.user.id)
         .single()
 
-      if (!existingHuman) {
-        // Create new human with Silver verification (Google OAuth)
-        const { data: newHuman, error: createError } = await adminClient
+      if (!existingAccount) {
+        // Create new account
+        const { error: createError } = await adminClient
           .from('accounts')
           .insert({
-            user_id: data.user.id,  // Required: link to auth.users
-            email: data.user.email,
-            name: data.user.user_metadata?.full_name || null,
-            avatar_url: data.user.user_metadata?.avatar_url || null,
-            verification_tier: 'silver',
-            verified_at: new Date().toISOString(),
-            google_id: data.user.user_metadata?.provider_id || data.user.id,
+            user_id: data.user.id,
+            email: data.user.email!,
           })
-          .select()
-          .single()
 
         if (createError) {
-          console.error('Error creating human:', createError)
-        } else if (newHuman) {
-          // Grant Silver verification tokens (50)
-          // Check if we're in genesis period (< 10,000 agents total)
-          const { count } = await adminClient
-            .from('bots')
-            .select('*', { count: 'exact', head: true })
-          
-          const genesisMultiplier = (count || 0) < 10000 ? 3 : 1
-          const tokenGrant = 50 * genesisMultiplier
-
-          await adminClient.rpc('record_token_transaction', {
-            p_account_id: newHuman.id,
-            p_agent_id: null,
-            p_amount: tokenGrant,
-            p_type: 'verification_silver',
-            p_description: genesisMultiplier > 1 
-              ? `Silver verification + ${genesisMultiplier}x genesis bonus`
-              : 'Silver verification (Google OAuth)'
-          })
+          console.error('[Auth Callback] Error creating account:', createError)
+        } else {
+          console.log('[Auth Callback] Account created for:', data.user.id)
         }
 
         // New user - redirect to onboarding

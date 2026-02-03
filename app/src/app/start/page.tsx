@@ -25,20 +25,23 @@ export default async function StartPage() {
 
   if (!existingAccount) {
     console.log('[Start] Creating account for user:', session.user.id)
-    const { error: createError } = await adminClient
+    const { data: newAccount, error: createError } = await adminClient
       .from('accounts')
       .insert({
         user_id: session.user.id,
-        email: session.user.email,
-        name: session.user.user_metadata?.full_name || null,
-        avatar_url: session.user.user_metadata?.avatar_url || null,
-        verification_tier: 'silver',
-        verified_at: new Date().toISOString(),
-        google_id: session.user.user_metadata?.provider_id || session.user.id,
+        email: session.user.email!,
       })
+      .select('id')
+      .single()
     
     if (createError) {
       console.error('[Start] Failed to create account:', createError)
+      // If it's a duplicate key error, account might already exist
+      if (createError.code === '23505') {
+        console.log('[Start] Account already exists (race condition), continuing...')
+      }
+    } else {
+      console.log('[Start] Account created:', newAccount?.id)
     }
   }
 
