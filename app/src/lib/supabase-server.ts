@@ -83,6 +83,35 @@ function createLocalMockClient() {
   } as any
 }
 
+/**
+ * Create a REAL Supabase client (never mock)
+ * Use this for OAuth callbacks that must use Supabase Auth
+ */
+export async function createRealSupabaseClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet: CookieToSet[]) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {
+            // Called from Server Component - ignore
+          }
+        },
+      },
+    }
+  )
+}
+
 // Admin client with service role (use sparingly, server-side only)
 export function createAdminClient() {
   return createClient(

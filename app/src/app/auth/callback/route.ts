@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createServerSupabaseClient, createAdminClient, createRealSupabaseClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { encrypt } from '@/lib/crypto'
 import crypto from 'crypto'
@@ -100,7 +100,8 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') ?? '/'
 
   if (code) {
-    const supabase = await createServerSupabaseClient()
+    // Always use real Supabase client for OAuth (not mock)
+    const supabase = await createRealSupabaseClient()
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error && data.user) {
