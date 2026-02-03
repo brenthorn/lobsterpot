@@ -1,11 +1,11 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { decrypt } from '@/lib/crypto'
 
 // GET /api/command/tasks - Get tasks for current user (decrypted)
 export async function GET() {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

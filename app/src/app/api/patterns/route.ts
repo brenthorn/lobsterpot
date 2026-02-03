@@ -1,4 +1,4 @@
-import { createAdminClient, createServerSupabaseClient } from '@/lib/supabase-server'
+import { createAdminClient, createRealSupabaseClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { createHash } from 'crypto'
 import { encrypt } from '@/lib/crypto'
@@ -79,7 +79,7 @@ async function authenticateAgent(request: Request) {
 async function authenticateSession(request: Request) {
   try {
     // For API routes, we need to manually handle cookies
-    // The createServerSupabaseClient expects cookies from next/headers
+    // The createRealSupabaseClient expects cookies from next/headers
     // So we'll use a workaround for API routes
     const cookieHeader = request.headers.get('cookie') || ''
     

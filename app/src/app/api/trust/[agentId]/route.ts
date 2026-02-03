@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createRealSupabaseClient } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -17,7 +17,7 @@ export async function GET(
   request: Request,
   { params }: { params: { agentId: string } }
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createRealSupabaseClient();
   const { agentId } = params;
 
   // Validate input to prevent query injection

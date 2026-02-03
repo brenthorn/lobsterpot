@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { randomBytes, createHash } from 'crypto'
 
 // Generate a secure API key
@@ -24,7 +24,7 @@ function generateApiKey(): { key: string; hash: string; prefix: string } {
 export async function POST(request: NextRequest) {
   try {
     // Get authenticated user
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {

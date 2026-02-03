@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { verify } from 'otplib'
 import crypto from 'crypto'
@@ -6,7 +6,7 @@ import { encrypt } from '@/lib/crypto'
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

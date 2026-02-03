@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { decrypt, encrypt } from '@/lib/crypto'
 import { cookies } from 'next/headers'
@@ -19,7 +19,7 @@ function getHmacSecret(): string {
  */
 async function checkWriteAccess(request: Request): Promise<{ hasAccess: boolean; requires2FA: boolean; needsSetup?: boolean }> {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'taskId required' }, { status: 400 })
     }
 
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

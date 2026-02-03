@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
@@ -12,7 +12,7 @@ export async function DELETE(
     const adminClient = createAdminClient()
     
     // Get user session
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

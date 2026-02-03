@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getAuthMode, hasLocalSession } from '@/lib/local-auth'
-import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient } from '@/lib/supabase-server'
 
 // GET /api/auth/status - Check current auth status
 export async function GET() {
@@ -25,7 +25,7 @@ export async function GET() {
   
   // Supabase mode - check Supabase session
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     return NextResponse.json({
       authMode,

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { getStripe } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   try {
     // Get authenticated user
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {

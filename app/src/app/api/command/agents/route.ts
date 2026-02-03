@@ -1,10 +1,10 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 
 // GET /api/command/agents - Get agents for current user
 export async function GET() {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

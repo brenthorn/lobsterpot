@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { decrypt } from '@/lib/crypto'
 
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
 
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { encrypt } from '@/lib/crypto'
 
@@ -38,7 +38,7 @@ const AGENT_TEMPLATES: Record<string, {
 // POST /api/hub/add - Add an agent or pattern to the user's Command
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {

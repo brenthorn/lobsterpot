@@ -1,10 +1,10 @@
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createRealSupabaseClient } from '@/lib/supabase-server';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createRealSupabaseClient();
 
   try {
     // Get all agents with their stats

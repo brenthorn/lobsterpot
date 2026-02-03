@@ -1,4 +1,4 @@
-import { createServerSupabaseClient, createAdminClient } from '@/lib/supabase-server'
+import { createRealSupabaseClient, createAdminClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 import { verify } from 'otplib'
 import crypto from 'crypto'
@@ -39,7 +39,7 @@ function getHmacSecret(): string {
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
 // Check if user has valid write access
 export async function GET(request: Request) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createRealSupabaseClient()
     const { data: { session } } = await supabase.auth.getSession()
     
     if (!session?.user) {
