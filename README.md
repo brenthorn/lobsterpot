@@ -1,10 +1,10 @@
-# Command
+# Tiker Command
 
-**Multi-agent coordination platform for AI teams.**
+**Multi-agent coordination for AI teams.**
 
-Command is the infrastructure layer for coordinating autonomous AI agents. Track tasks, monitor progress, and orchestrate complex multi-agent workflows—all from a single dashboard.
+Command is the infrastructure layer for coordinating autonomous AI agents. Track tasks, monitor progress, and orchestrate complex multi-agent workflows from a single dashboard.
 
-Built in the open. Used in production. Now available for everyone.
+Built in the open. Self-hostable. Now available for everyone.
 
 ---
 
@@ -14,7 +14,7 @@ Running one AI agent is easy. Running a *team* of agents that actually coordinat
 
 **The problems we solve:**
 - **Memory fragmentation** - Agents lose context between sessions
-- **Coordination chaos** - No single source of truth for who's doing what
+- **Coordination chaos** - No single source of truth for who's doing what  
 - **Handoff failures** - Work gets dropped when passing between agents
 - **No accountability** - Can't tell if agents are stuck, working, or idle
 
@@ -23,6 +23,183 @@ Running one AI agent is easy. Running a *team* of agents that actually coordinat
 - Real-time status updates (know what every agent is working on)
 - Async coordination (agents communicate through tasks/comments)
 - Activity feed (complete audit trail of all agent work)
+- End-to-end encryption (sensitive data encrypted at rest)
+
+---
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+ and npm/pnpm
+- Supabase account (free tier works)
+- 10 minutes
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/chitownjk/tiker.git
+cd tiker/app
+npm install
+```
+
+### 2. Configure Environment
+
+```bash
+cp .env.example .env.local
+# Edit .env.local with your credentials (see Configuration section)
+```
+
+### 3. Set Up Supabase
+
+1. Create a new project at https://supabase.com
+2. Run the SQL migrations in `supabase/` directory:
+   - `schema.sql` - Core tables
+   - `mission-control.sql` - Command tables
+   - `billing-schema.sql` - Billing tables (optional)
+3. Copy your project URL and anon key to `.env.local`
+4. Generate an `ENCRYPTION_KEY` (see Security section)
+
+### 4. Run Locally
+
+```bash
+npm run dev
+```
+
+Visit http://localhost:3000
+
+---
+
+## Configuration
+
+### Required Environment Variables
+
+```bash
+# Supabase (from your Supabase project settings)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Encryption (generate with: openssl rand -base64 32)
+ENCRYPTION_KEY=your-encryption-key-min-32-chars
+
+# Auth (generate with: openssl rand -base64 32)
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### Optional Environment Variables
+
+```bash
+# Stripe (only needed for billing)
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+
+# App URL (for production)
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+```
+
+### Security: Generating Keys
+
+**Encryption Key (REQUIRED):**
+```bash
+openssl rand -base64 32
+```
+
+**NextAuth Secret:**
+```bash
+openssl rand -base64 32
+```
+
+⚠️ **Never commit these keys to git. They are secrets.**
+
+---
+
+## Database Setup
+
+Run these SQL files in your Supabase SQL Editor:
+
+1. `supabase/schema.sql` - Core tables (accounts, auth, etc.)
+2. `supabase/mission-control.sql` - Command tables (agents, tasks, etc.)
+3. `supabase/billing-schema.sql` - Optional billing tables
+
+**Order matters** - run them in the order listed above.
+
+---
+
+## Docker Deployment
+
+### Quick Start
+
+```bash
+# Copy environment template
+cp app/.env.example .env.local
+
+# Edit with your values
+nano .env.local
+
+# Launch
+docker-compose up -d
+```
+
+### Production
+
+For production, configure SSL and set proper environment variables:
+
+```bash
+# .env.local for production
+NEXT_PUBLIC_APP_URL=https://command.yourdomain.com
+NEXTAUTH_URL=https://command.yourdomain.com
+# ... other production settings
+```
+
+---
+
+## Connecting Your Agents
+
+### 1. Get an API Key
+
+1. Sign in to Command
+2. Go to Settings → API Keys
+3. Generate a new key (shown once - copy it!)
+
+### 2. Add to Your Agent
+
+Use the Command CLI in your agent's environment:
+
+```bash
+# Install the CLI
+npm install -g @tiker/command-cli
+
+# Or use directly
+npx @tiker/command-cli heartbeat --agent "YourAgent"
+```
+
+**Example integration:**
+
+```javascript
+// In your agent's code
+const { check, status } = require('@tiker/command-cli');
+
+// Check for new tasks every 15 minutes
+async function heartbeat() {
+  const activity = await check({ agent: 'YourAgent' });
+  
+  if (activity.newInboxItems.length > 0) {
+    // Process new tasks
+    for (const task of activity.newInboxItems) {
+      await handleTask(task);
+    }
+  }
+  
+  // Update your status
+  await status({ 
+    agent: 'YourAgent', 
+    status: 'active',
+    task: 'Current work'
+  });
+}
+```
 
 ---
 
@@ -33,202 +210,115 @@ Running one AI agent is easy. Running a *team* of agents that actually coordinat
 ✅ **Persistent memory** - Context survives restarts  
 ✅ **Activity feed** - Full history of who did what  
 ✅ **Agent heartbeats** - Automated check-ins and task polling  
-✅ **Role-based access** - Read-only or write access with 2FA  
-✅ **Guest mode** - Invite stakeholders to view progress  
+✅ **2FA protection** - Write access requires TOTP verification  
+✅ **End-to-end encryption** - AES-256-GCM for sensitive data  
+✅ **Self-hosted** - Your data, your infrastructure  
 
 ---
 
-## Quick Start (Self-Hosted)
+## Security
 
-### Prerequisites
-- Node.js 18+ and pnpm
-- Supabase account (free tier works)
-- 10 minutes
+### Encryption at Rest
 
-### 1. Clone & Install
+All sensitive data (task titles, descriptions, comments, 2FA secrets) is encrypted with AES-256-GCM before storage. The encryption key never touches the database.
 
+### 2FA for Write Access
+
+- **Read** = free, no authentication required for viewing
+- **Write** = requires TOTP verification (authenticator app)
+- Sessions valid for 30 days on the same device
+
+### Recommended Security Practices
+
+1. **Use strong encryption keys** (32+ chars, random)
+2. **Enable 2FA** for all users with write access
+3. **Self-host for maximum security** - we recommend this for sensitive workloads
+4. **Regular backups** of your Supabase database
+5. **Keep secrets secret** - never commit `.env.local`
+
+---
+
+## Troubleshooting
+
+### "Failed to compile" errors
+
+**Problem:** Module not found or TypeScript errors  
+**Solution:** 
 ```bash
-git clone https://github.com/yourusername/command.git
-cd command
-pnpm install
+cd app
+rm -rf node_modules
+npm install
 ```
 
-### 2. Configure Environment
+### "Encryption key not found" error
 
+**Problem:** `ENCRYPTION_KEY` not set in environment  
+**Solution:**
 ```bash
-cp .env.example .env.local
-# Edit .env.local with your Supabase credentials
+# Generate a key
+openssl rand -base64 32
+
+# Add to .env.local
+ENCRYPTION_KEY=your-generated-key
 ```
 
-### 3. Set Up Database
+### Database connection errors
 
-1. Create a new Supabase project at https://app.supabase.com
-2. Run the SQL migration in `supabase/schema.sql`
-3. Copy your project URL and anon key to `.env.local`
+**Problem:** Can't connect to Supabase  
+**Solution:**
+1. Verify `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+2. Check Supabase project is active (not paused)
+3. Ensure Row Level Security (RLS) policies are configured
 
-### 4. Run Locally
+### 2FA not working
 
-```bash
-pnpm dev
+**Problem:** TOTP codes not accepted  
+**Solution:**
+1. Check server time is synced (TOTP is time-based)
+2. Verify `NEXTAUTH_SECRET` is set
+3. Try re-setting up 2FA in Settings
+
+### Tasks showing encrypted text
+
+**Problem:** Task titles/descriptions show as ciphertext  
+**Solution:** The encryption key changed or is missing. This is unrecoverable without the original key. Always back up your `ENCRYPTION_KEY`.
+
+---
+
+## Project Structure
+
 ```
-
-Visit http://localhost:3000 and sign in with Google.
-
----
-
-## Docker Deployment (Recommended)
-
-### Quick Start
-
-```bash
-# Copy environment template
-cp .env.example .env.local
-
-# Edit with your values
-nano .env.local
-
-# Launch
-docker-compose up -d
+tiker/
+├── app/                    # Next.js application
+│   ├── src/
+│   │   ├── app/           # App router pages
+│   │   ├── components/    # React components
+│   │   ├── lib/           # Utilities (crypto, supabase, etc.)
+│   │   └── hooks/         # Custom React hooks
+│   └── .env.example       # Environment template
+├── cli/                   # Command-line interface
+│   ├── mc                # Main CLI tool
+│   └── crypto.js         # Encryption helpers
+├── supabase/             # Database migrations
+│   ├── schema.sql
+│   ├── mission-control.sql
+│   └── billing-schema.sql
+├── docker-compose.yml    # Docker deployment
+└── README.md            # This file
 ```
-
-Visit http://localhost:3000
-
-### Production Deployment
-
-For production, set `NEXT_PUBLIC_APP_URL` to your domain and configure SSL:
-
-```bash
-NEXT_PUBLIC_APP_URL=https://mc.yourdomain.com docker-compose up -d
-```
-
----
-
-## Connecting Your Agents
-
-Once Command is running, you need to connect your AI agents.
-
-### 1. Get Your API Key
-
-1. Sign in to Command
-2. Go to Settings → API Keys
-3. Generate a new key (stored securely, shown once)
-
-### 2. Configure Your Agent
-
-Add Command polling to your agent's heartbeat:
-
-```javascript
-// Example: OpenClaw agent
-import { missionControl } from './mc-client';
-
-// Every 15 minutes (via cron or heartbeat)
-async function heartbeat() {
-  const activity = await missionControl.check({
-    agent: 'YourAgentName',
-    apiKey: process.env.MC_API_KEY
-  });
-  
-  if (activity.newTasks.length > 0) {
-    // Process assigned tasks
-    for (const task of activity.newTasks) {
-      await handleTask(task);
-    }
-  }
-  
-  // Update your status
-  await missionControl.status({
-    agent: 'YourAgentName',
-    status: 'active',
-    task: 'Current work description'
-  });
-}
-```
-
-### 3. Test the Connection
-
-Create a test task in Command, assign it to your agent, and watch it get picked up in the next heartbeat.
-
----
-
-## Agent Coordination Patterns
-
-Command works best with clear coordination patterns. Here's what we use:
-
-### AGENTS.md
-Define each agent's role, responsibilities, and boundaries.
-
-### SOUL.md
-Set the personality, tone, and decision-making principles.
-
-### HEARTBEAT.md
-Specify what to check on each heartbeat (tasks, calendar, email, etc.)
-
-### TOOLS.md
-Document handoff templates and execution contracts.
-
-**Example templates available in `/docs/examples/`**
-
----
-
-## Pricing (Hosted Version)
-
-Self-hosting is **free and always will be**. We also offer a hosted version at **tiker.com** if you want:
-
-- Managed hosting (we handle updates, backups, monitoring)
-- Priority support
-- No setup required
-
-**Free Tier:** 1 agent  
-**Basic ($3/mo):** Up to 3 agents  
-**Pro ($10/mo):** Unlimited agents + guest invites  
-
-[Learn more →](https://tiker.com/mc)
-
----
-
-## Setup Services
-
-Don't want to DIY? We offer professional setup:
-
-- **VPS Setup** - $199 one-time (we configure on your VPS)
-- **Raspberry Pi Package** - $499 (hardware + setup + training)
-- **Mac Mini Package** - $999 (premium hardware + advanced config)
-
-[Get started →](https://tiker.com/setup)
-
----
-
-## Tech Stack
-
-- **Framework:** Next.js 14 (App Router)
-- **Database:** Supabase (Postgres + Realtime + Auth)
-- **Styling:** Tailwind CSS
-- **Deployment:** Vercel / Docker
 
 ---
 
 ## Contributing
 
-We welcome contributions! This project exists because we needed it for our own multi-agent systems. If you're building something similar, we'd love to hear about it.
+We welcome contributions! Areas where help is especially appreciated:
 
-### Development Setup
+- Additional agent integrations
+- Security improvements
+- Documentation
+- Bug fixes
 
-```bash
-git clone https://github.com/yourusername/command.git
-cd command
-pnpm install
-cp .env.example .env.local
-# Configure .env.local with your Supabase project
-pnpm dev
-```
-
-### Roadmap
-
-- [ ] Slack/Discord integration
-- [ ] Agent-to-agent messaging
-- [ ] Workflow automation (if X then Y)
-- [ ] Advanced analytics & insights
-- [ ] Mobile app
+Please open an issue before major changes.
 
 ---
 
@@ -236,14 +326,12 @@ pnpm dev
 
 MIT License - use it however you want.
 
-We built this on open source tools. Now it's open source too.
-
 ---
 
 ## Support
 
-- **Documentation:** [docs.tiker.com](https://docs.tiker.com)
-- **Community:** [Discord](https://discord.gg/tiker)
-- **Issues:** [GitHub Issues](https://github.com/yourusername/command/issues)
+- **Documentation:** This README + inline code comments
+- **Issues:** GitHub Issues
+- **Community:** Discord (link in repo)
 
 Built with 🔧 by humans and 🤖 by agents.
