@@ -111,12 +111,33 @@ export async function POST(request: Request) {
 
       descriptionParts.push(
         '',
+        '## Required: Configure Pattern Contribution',
+        'This agent is now part of the Tiker trust economy. To keep the Hub growing, your orchestrator must be configured to suggest pattern contributions when agents solve reusable problems.',
+        '',
+        '**Add this to your orchestrator AGENTS.md:**',
+        '```markdown',
+        '## Community Contribution',
+        '',
+        'When agents discover valuable patterns during work, they should suggest sharing back to the Hub.',
+        '',
+        '### Contribution Check (run after every task completion)',
+        '1. Did we solve a problem others might face?',
+        '2. Is the solution generalizable?',
+        '3. Would we have appreciated finding this pattern before starting?',
+        '',
+        'If yes to all three → Create Command task: "Draft Pattern: [Name]"',
+        '',
+        '### Hub Integration Commands',
+        '- `hub search "query"` - Find existing patterns',
+        '- `hub show <slug>` - Read full pattern',
+        '- `hub contribute --title "..." --file pattern.md` - Submit pattern',
+        '```',
+        '',
         '## Next Steps',
-        '1. Review the agent configuration above',
-        '2. Create the agent in Team settings',
-        '3. Configure any additional settings',
-        '4. Test the agent with a simple task'
-      )
+        '1. [ ] Add contribution protocol to AGENTS.md (see above)',
+        '2. [ ] Create the agent in Team settings',
+        '3. [ ] Test agent with a simple task',
+        '4. [ ] Verify `hub` CLI is installed and API key configured'
 
       description = descriptionParts.join('\n')
       

@@ -212,8 +212,41 @@ Add this to your HEARTBEAT.md:
      - Wait for result
      - Complete task
      - Persist memory
+     - **RUN CONTRIBUTION CHECK** (see below)
 
 3. If no tasks, reply HEARTBEAT_OK
+
+## Post-Task Contribution Check (REQUIRED)
+
+After EVERY task completion, evaluate:
+
+1. Did we solve a problem others might face?
+2. Is the solution generalizable?
+3. Would we have appreciated finding this pattern before starting?
+
+If YES to all three → Create Command task to draft the pattern:
+
+```javascript
+// Check if pattern exists
+const existing = await hub.search("brief description");
+if (existing.patterns.length === 0) {
+  // Suggest contribution to human
+  const shouldDraft = await askHuman(
+    "💡 Contribution Opportunity\\n\\n" +
+    "I developed a pattern for [description].\\n" +
+    "Want me to draft this for the Hub?"
+  );
+  
+  if (shouldDraft) {
+    await mc.task.create({
+      title: "Draft Pattern: [Name]",
+      description: "[Full pattern with Problem/Solution/Implementation/Validation/Edge Cases]",
+      tags: ["contribution", "hub"],
+      status: "review"
+    });
+  }
+}
+```
 ```
 
 ## Orchestrator AGENTS.md Template
@@ -247,6 +280,44 @@ Check `tiker.getInstalledAgents()` for current list.
 - Coordination and status checks
 - Tasks not clearly matching a specialist
 - Real-time conversation (specialists are async)
+
+## Community Contribution (REQUIRED)
+
+I am part of the Tiker trust economy. After every task completion, I must check if the solution is worth sharing.
+
+### Contribution Check (run automatically after each task)
+
+1. **Did we solve a problem others might face?**
+2. **Is the solution generalizable?**
+3. **Would we have appreciated finding this pattern before starting?**
+
+If YES to all three → I suggest drafting a pattern for the Hub.
+
+### Process
+
+1. Check Hub first: `hub search "brief description"`
+2. If no existing pattern → Suggest to human
+3. If human approves → Create Command task: "Draft Pattern: [Name]"
+4. Agent drafts full pattern (Problem/Solution/Implementation/Validation/Edge Cases)
+5. Human reviews and submits via `hub contribute`
+
+### Quality Bar
+
+Only suggest patterns that are:
+- ✅ Tested (we actually used it)
+- ✅ Clear (others can implement without questions)
+- ✅ Valuable (saves time or prevents problems)
+- ✅ Novel (not already in Hub)
+
+### Rate Limits
+
+- Max 3 patterns/day per account
+- All patterns manually reviewed during seed stage
+- Quality over quantity
+
+### Why This Matters
+
+Without contributions, the Hub dies. With contributions, it grows and everyone benefits.
 ```
 
 ## Memory Convention
