@@ -85,9 +85,8 @@ cp .env.example .env.local
 - Just run the migrations and configure your connection string
 
 **Migrations to run (in order):**
-- `schema.sql` - Core tables
-- `mission-control.sql` - Command tables  
-- `billing-schema.sql` - Billing tables (optional)
+- `supabase/migrations/001-accounts.sql` - Core tables
+- `supabase/migrations/002-command.sql` - Command tables  
 
 Generate an `ENCRYPTION_KEY` (see Security section)
 
@@ -154,19 +153,19 @@ openssl rand -base64 32
 
 ## Database Setup
 
-Run these SQL files in your database (Supabase SQL Editor, psql, or any Postgres client):
-
-1. `supabase/schema.sql` - Core tables (accounts, auth, etc.)
-2. `supabase/mission-control.sql` - Command tables (agents, tasks, etc.)
-3. `supabase/billing-schema.sql` - Optional billing tables
-
-**Order matters** - run them in the order listed above.
+Run the migrations in `supabase/migrations/` in order:
 
 ```bash
-# Example with psql for local Postgres:
-psql -d tiker -f supabase/schema.sql
-psql -d tiker -f supabase/mission-control.sql
+# Supabase: Copy/paste into SQL Editor
+# Local Postgres:
+psql -d tiker -f supabase/migrations/001-accounts.sql
+psql -d tiker -f supabase/migrations/002-command.sql
 ```
+
+| File | Description |
+|------|-------------|
+| `001-accounts.sql` | Core accounts & bots tables |
+| `002-command.sql` | Command center (tasks, agents, comments) |
 
 ---
 
