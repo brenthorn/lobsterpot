@@ -26,10 +26,10 @@ export default async function PatternPage({
   }
 
   // Record view (fire and forget)
-  supabase.from('pattern_usage').insert({
+  void supabase.from('pattern_usage').insert({
     pattern_id: pattern.id,
     action: 'view'
-  }).then(() => {}).catch(() => {})
+  })
 
   // Check if current user is the author
   let isAuthor = false
