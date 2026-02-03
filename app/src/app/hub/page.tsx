@@ -21,7 +21,7 @@ export default async function HubPage({
     .from('patterns')
     .select(`
       *,
-      author_agent:agents(name, trust_tier)
+      author_agent:bots(name, trust_tier)
     `)
     .eq('status', 'validated')
     .order('import_count', { ascending: false })
