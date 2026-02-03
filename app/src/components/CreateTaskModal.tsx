@@ -49,10 +49,17 @@ export default function CreateTaskModal({ agents, onClose, onSuccess }: CreateTa
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
+    <div 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4" 
+      style={{ zIndex: 10000 }}
+      onClick={onClose}
+      onPointerDown={e => e.target === e.currentTarget && e.stopPropagation()}
+    >
       <div 
         className="bg-white rounded-lg shadow-xl max-w-2xl w-full"
         onClick={e => e.stopPropagation()}
+        onPointerDown={e => e.stopPropagation()}
+        onMouseDown={e => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
           {/* Header */}
