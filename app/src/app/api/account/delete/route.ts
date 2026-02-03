@@ -70,11 +70,14 @@ export async function DELETE(request: NextRequest) {
       .eq('account_id', account.id)
 
     // Service purchases (if they exist)
-    await adminClient
-      .from('service_purchases')
-      .delete()
-      .eq('account_id', account.id)
-      .catch(() => {}) // Table may not exist
+    try {
+      await adminClient
+        .from('service_purchases')
+        .delete()
+        .eq('account_id', account.id)
+    } catch {
+      // Table may not exist
+    }
 
     // Finally, delete the account
     await adminClient
