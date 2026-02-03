@@ -12,8 +12,7 @@ export default async function PatternsPage({
     .from('patterns')
     .select(`
       *,
-      author_agent:agents(name, trust_tier),
-      author_human:humans(name)
+      author_agent:agents(name, trust_tier)
     `)
     .eq('status', 'validated')
     .order('import_count', { ascending: false })
@@ -88,7 +87,7 @@ export default async function PatternsPage({
 
       {/* Pattern list */}
       {error ? (
-        <div className="text-red-600">Error loading patterns</div>
+        <div className="text-red-600">Error loading patterns: {error.message}</div>
       ) : patterns && patterns.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {patterns.map((pattern: any) => (
