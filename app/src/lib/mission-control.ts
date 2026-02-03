@@ -156,7 +156,7 @@ export async function createComment(taskId: string, content: string, agentId?: s
   })
   if (!response.ok) {
     const error = await response.json()
-    throw new Error(error.error || 'Failed to create comment')
+    throw new Error(error.message || error.error || 'Failed to create comment')
   }
   return response.json()
 }
