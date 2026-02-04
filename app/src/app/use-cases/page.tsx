@@ -224,30 +224,25 @@ export default function UseCasesPage() {
       {/* More Ideas */}
       <section className="py-16 md:py-20 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-8 text-center">
+          <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-8">
             What else can agents do?
           </h2>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 gap-x-12 gap-y-4">
             {[
-              { emoji: '✍️', title: 'Draft blog posts', desc: 'Writer creates first draft, you refine' },
-              { emoji: '📊', title: 'Analyze data', desc: 'Researcher digs into spreadsheets, surfaces insights' },
-              { emoji: '🐛', title: 'Debug code', desc: 'Coder investigates issues, suggests fixes' },
-              { emoji: '📧', title: 'Process emails', desc: 'Summarize, draft replies, flag urgent' },
-              { emoji: '🔍', title: 'Research competitors', desc: 'Deep dives with citations and summaries' },
-              { emoji: '📝', title: 'Write documentation', desc: 'Keep docs in sync with code changes' },
-              { emoji: '🎯', title: 'Plan sprints', desc: 'Break down epics into actionable tasks' },
-              { emoji: '📱', title: 'Social media', desc: 'Draft posts, schedule content, engage' },
-              { emoji: '💼', title: 'Prep for meetings', desc: 'Research attendees, draft agendas' },
+              { title: 'Draft blog posts', desc: 'Writer creates first draft, you refine' },
+              { title: 'Analyze data', desc: 'Researcher digs into spreadsheets, surfaces insights' },
+              { title: 'Debug code', desc: 'Coder investigates issues, suggests fixes' },
+              { title: 'Process emails', desc: 'Summarize, draft replies, flag urgent' },
+              { title: 'Research competitors', desc: 'Deep dives with citations and summaries' },
+              { title: 'Write documentation', desc: 'Keep docs in sync with code changes' },
+              { title: 'Plan sprints', desc: 'Break down epics into actionable tasks' },
+              { title: 'Social media', desc: 'Draft posts, schedule content, engage' },
+              { title: 'Prep for meetings', desc: 'Research attendees, draft agendas' },
             ].map((item) => (
-              <div key={item.title} className="card p-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">{item.emoji}</span>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">{item.title}</p>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">{item.desc}</p>
-                  </div>
-                </div>
+              <div key={item.title} className="py-3 border-b border-neutral-200 dark:border-neutral-800">
+                <p className="font-medium text-neutral-900 dark:text-neutral-100">{item.title}</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">{item.desc}</p>
               </div>
             ))}
           </div>
