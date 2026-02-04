@@ -30,15 +30,22 @@ async function checkWriteAccess(request: Request): Promise<{ hasAccess: boolean;
     })
     
     if (!session?.user) {
+      console.log('[Tasks/Create] No session/user found - returning unauthorized')
       return { hasAccess: false, requires2FA: false }
     }
 
     const adminClient = createAdminClient()
-    const { data: account } = await adminClient
+    const { data: account, error: accountError } = await adminClient
       .from('accounts')
       .select('two_factor_enabled')
       .eq('auth_uid', session.user.id)
       .single()
+
+    console.log('[Tasks/Create] Account lookup:', {
+      hasAccount: !!account,
+      two_factor_enabled: account?.two_factor_enabled,
+      accountError: accountError?.message
+    })
 
     if (!account?.two_factor_enabled) {
       return { hasAccess: false, requires2FA: true, needsSetup: true }
@@ -78,9 +85,11 @@ async function checkWriteAccess(request: Request): Promise<{ hasAccess: boolean;
 // POST /api/command/tasks/create - Create a new task (encrypts sensitive fields)
 // REQUIRES 2FA - This is a write operation
 export async function POST(request: Request) {
+  console.log('[Tasks/Create] POST called')
   try {
     // Check 2FA for write access
     const writeAccess = await checkWriteAccess(request)
+    console.log('[Tasks/Create] writeAccess result:', writeAccess)
     if (!writeAccess.hasAccess) {
       if (writeAccess.needsSetup) {
         return NextResponse.json({ 
