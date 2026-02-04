@@ -20,7 +20,14 @@ function getHmacSecret(): string {
 async function checkWriteAccess(request: Request): Promise<{ hasAccess: boolean; requires2FA: boolean; needsSetup?: boolean }> {
   try {
     const supabase = await createRealSupabaseClient()
-    const { data: { session } } = await supabase.auth.getSession()
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    
+    console.log('[Tasks/Create] checkWriteAccess session check:', {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userId: session?.user?.id,
+      sessionError: sessionError?.message
+    })
     
     if (!session?.user) {
       return { hasAccess: false, requires2FA: false }
