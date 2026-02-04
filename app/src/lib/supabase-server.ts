@@ -89,6 +89,10 @@ function createLocalMockClient() {
  */
 export async function createRealSupabaseClient() {
   const cookieStore = await cookies()
+  const allCookies = cookieStore.getAll()
+  
+  // Log cookie names (not values for security)
+  console.log('[Supabase] createRealSupabaseClient cookies:', allCookies.map(c => c.name))
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -96,7 +100,7 @@ export async function createRealSupabaseClient() {
     {
       cookies: {
         getAll() {
-          return cookieStore.getAll()
+          return allCookies
         },
         setAll(cookiesToSet: CookieToSet[]) {
           try {
