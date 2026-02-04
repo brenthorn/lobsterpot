@@ -136,7 +136,7 @@ export function NavBar() {
                         onMouseLeave={() => setServicesOpen(false)}
                       >
                         <div className="px-4 pb-3 border-b border-neutral-100 dark:border-neutral-800 mb-3">
-                          <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">AI Services</p>
+                          <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Setup Services</p>
                         </div>
                         <div className="px-2">
                           <Link 
@@ -151,7 +151,7 @@ export function NavBar() {
                             </div>
                             <div>
                               <p className="font-medium text-neutral-900 dark:text-neutral-100">Browse All Services</p>
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400">Ready-to-deploy AI agents</p>
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400">Get Tiker running in a day</p>
                             </div>
                           </Link>
                           
@@ -160,28 +160,36 @@ export function NavBar() {
                           </div>
                           
                           <Link 
-                            href="/services?category=data-analysis" 
+                            href="/services#remote-setup" 
                             className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                             onClick={() => setServicesOpen(false)}
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-                            Data Analysis
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                            Remote Install ($99)
                           </Link>
                           <Link 
-                            href="/services?category=content" 
-                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                            onClick={() => setServicesOpen(false)}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            Content Creation
-                          </Link>
-                          <Link 
-                            href="/services?category=research" 
+                            href="/services#pi-kit" 
                             className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                             onClick={() => setServicesOpen(false)}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                            Research
+                            Pi 5 Kit ($299)
+                          </Link>
+                          <Link 
+                            href="/services#mac-mini" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+                            Mac Mini M4 ($999)
+                          </Link>
+                          <Link 
+                            href="/services#custom" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                            Custom Builds
                           </Link>
                         </div>
                       </div>
@@ -216,7 +224,7 @@ export function NavBar() {
                         onMouseLeave={() => setServicesOpen(false)}
                       >
                         <div className="px-4 pb-3 border-b border-neutral-100 dark:border-neutral-800 mb-3">
-                          <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">AI Services</p>
+                          <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Setup Services</p>
                         </div>
                         <div className="px-2">
                           <Link 
@@ -231,7 +239,7 @@ export function NavBar() {
                             </div>
                             <div>
                               <p className="font-medium text-neutral-900 dark:text-neutral-100">Browse All Services</p>
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400">Ready-to-deploy AI agents for your team</p>
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400">Get Tiker running in a day</p>
                             </div>
                           </Link>
                           
@@ -240,28 +248,36 @@ export function NavBar() {
                           </div>
                           
                           <Link 
-                            href="/services?category=data-analysis" 
+                            href="/services#remote-setup" 
                             className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                             onClick={() => setServicesOpen(false)}
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-                            Data Analysis
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                            Remote Install ($99)
                           </Link>
                           <Link 
-                            href="/services?category=content" 
-                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                            onClick={() => setServicesOpen(false)}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            Content Creation
-                          </Link>
-                          <Link 
-                            href="/services?category=research" 
+                            href="/services#pi-kit" 
                             className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                             onClick={() => setServicesOpen(false)}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                            Research
+                            Pi 5 Kit ($299)
+                          </Link>
+                          <Link 
+                            href="/services#mac-mini" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+                            Mac Mini M4 ($999)
+                          </Link>
+                          <Link 
+                            href="/services#custom" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                            Custom Builds
                           </Link>
                         </div>
                         
@@ -271,7 +287,7 @@ export function NavBar() {
                             className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors"
                             onClick={() => setServicesOpen(false)}
                           >
-                            Browse Services
+                            View All Options
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
