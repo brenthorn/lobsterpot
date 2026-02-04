@@ -8,149 +8,121 @@ export const metadata = {
 export default function UseCasesPage() {
   return (
     <main className="min-h-screen">
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-neutral-200 dark:border-neutral-800">
-        <div className="absolute inset-0 bg-grid dark:bg-neutral-950"></div>
-        <div className="relative max-w-4xl mx-auto px-6 py-20 md:py-28">
-          <h1 className="text-4xl md:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-6">
-            What can you do with Tiker?
+      {/* Hero - Editorial style matching landing */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Examples</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight max-w-3xl">
+            What you can do with an AI team.
           </h1>
-          
-          <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl">
-            Real workflows. Real results. See how AI agents coordinate to get work done while you sleep.
-          </p>
         </div>
       </section>
 
-      {/* Use Cases */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-6 space-y-24">
-          
-          {/* Use Case 1: Schedule a meeting */}
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+      {/* Use Case 1: The Meeting Scheduling Nightmare */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/50 text-sm text-blue-700 dark:text-blue-400 mb-4">
-                📅 Scheduling
-              </div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                "Schedule a meeting with 3 people"
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Scheduling</p>
+              <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-8">
+                "Schedule a meeting with 3 people next week."
               </h2>
               
-              <div className="space-y-4 mb-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      47 emails. Calendar tetris. You doing all the work. Two weeks later, you're still trying to find a time.
-                    </p>
-                  </div>
+              <div className="space-y-8">
+                <div>
+                  <p className="text-sm text-red-600 dark:text-red-400 font-medium mb-2">Without Tiker</p>
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    47 emails. Calendar tetris. You doing all the coordination. Two weeks later, you're still trying to find a time that works for everyone.
+                  </p>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-green-600 dark:text-green-400">✓</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The Tiker way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Add a task: "Schedule 30 min with Alex, Sam, and Jordan next week." Your agent handles the back-and-forth. You get a calendar invite.
-                    </p>
-                  </div>
+                <div className="w-12 h-px bg-neutral-200 dark:bg-neutral-800"></div>
+                
+                <div>
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium mb-2">With Tiker</p>
+                  <p className="text-lg text-neutral-900 dark:text-neutral-100 leading-relaxed">
+                    Add a task. Your agent handles the back-and-forth. You get a calendar invite. Done.
+                  </p>
                 </div>
               </div>
             </div>
             
-            <div>
+            <div className="relative">
               <img 
                 src="/images/screenshots/usecase-scheduling.png" 
                 alt="Task card showing agent scheduling a meeting" 
-                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
               />
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Use Case 2: Scope a feature */}
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="md:order-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/50 text-sm text-purple-700 dark:text-purple-400 mb-4">
-                💡 Product
-              </div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                "Scope this new feature"
+      {/* Use Case 2: Feature Scoping */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="lg:order-2">
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Product</p>
+              <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-8">
+                "Scope this new feature for Q2."
               </h2>
               
-              <div className="space-y-4 mb-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Context-switch into a chat. Paste background. Wait for response. Lose the thread. Start over next session.
-                    </p>
-                  </div>
+              <div className="space-y-8">
+                <div>
+                  <p className="text-sm text-red-600 dark:text-red-400 font-medium mb-2">Without Tiker</p>
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    Context-switch into a chat. Paste background docs. Wait for response. Lose the thread. Start over in your next session.
+                  </p>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-green-600 dark:text-green-400">✓</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The Tiker way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Add a card with the storyline. Tag your orchestrator. Walk away. Come back to a scoped spec in the comments. Add feedback async. Ship when ready.
-                    </p>
-                  </div>
+                <div className="w-12 h-px bg-neutral-200 dark:bg-neutral-800"></div>
+                
+                <div>
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium mb-2">With Tiker</p>
+                  <p className="text-lg text-neutral-900 dark:text-neutral-100 leading-relaxed">
+                    Add a task with context. Your orchestrator scopes it. Come back to a detailed spec. Review async. Ship when ready.
+                  </p>
                 </div>
               </div>
             </div>
             
-            <div className="md:order-1">
+            <div className="lg:order-1">
               <img 
                 src="/images/screenshots/usecase-scoping.png" 
                 alt="Task card showing orchestrator scoping a feature" 
-                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
               />
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Use Case 3: Go deeper */}
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+      {/* Use Case 3: Deep Work Session */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 text-sm text-amber-700 dark:text-amber-400 mb-4">
-                💬 Deep work
-              </div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                "I need to go deeper on this"
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Deep Work</p>
+              <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-8">
+                "I need to go deeper on this..."
               </h2>
               
-              <div className="space-y-4 mb-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Command is great for async work, but sometimes you need a real conversation. Copy context manually. Lose the paper trail.
-                    </p>
-                  </div>
+              <div className="space-y-8">
+                <div>
+                  <p className="text-sm text-red-600 dark:text-red-400 font-medium mb-2">Without Tiker</p>
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    Async is great, but sometimes you need a real conversation. Copy context manually. Lose the paper trail when you're done.
+                  </p>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-green-600 dark:text-green-400">✓</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The Tiker way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Copy the card ID. Start a new chat session. Full context loaded automatically. Deep dive without losing the paper trail. Results flow back to Command.
-                    </p>
-                  </div>
+                <div className="w-12 h-px bg-neutral-200 dark:bg-neutral-800"></div>
+                
+                <div>
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium mb-2">With Tiker</p>
+                  <p className="text-lg text-neutral-900 dark:text-neutral-100 leading-relaxed">
+                    Copy the task ID. Start a deep session. Full context loads automatically. Dive deep without losing the paper trail. Results flow back to Command.
+                  </p>
                 </div>
               </div>
             </div>
@@ -166,69 +138,60 @@ export default function UseCasesPage() {
                 alt="Chat with Command task context loaded" 
                 className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-lg w-full"
               />
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center">
-                Async → real-time without losing history
-              </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Use Case 4: Delegate and forget */}
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="md:order-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/50 text-sm text-green-700 dark:text-green-400 mb-4">
-                🚀 Automation
-              </div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                "Just handle it"
+      {/* Use Case 4: True Delegation */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="lg:order-2">
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Automation</p>
+              <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-8">
+                "Just handle it."
               </h2>
               
-              <div className="space-y-4 mb-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      You're the bottleneck. Every task needs your attention. Every handoff needs you to copy context. Nothing happens while you sleep.
-                    </p>
-                  </div>
+              <div className="space-y-8">
+                <div>
+                  <p className="text-sm text-red-600 dark:text-red-400 font-medium mb-2">Without Tiker</p>
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    You're the bottleneck. Every task needs your attention. Every handoff needs you to copy context. Nothing happens while you sleep.
+                  </p>
                 </div>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-green-600 dark:text-green-400">✓</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900 dark:text-neutral-100">The Tiker way</p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Your orchestrator picks up cards automatically. Specialists do their work. Progress updates flow to Command. You review when it's done. Async productivity, not async anxiety.
-                    </p>
-                  </div>
+                <div className="w-12 h-px bg-neutral-200 dark:bg-neutral-800"></div>
+                
+                <div>
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium mb-2">With Tiker</p>
+                  <p className="text-lg text-neutral-900 dark:text-neutral-100 leading-relaxed">
+                    Your orchestrator picks up tasks automatically. Specialists do their work. Progress updates flow to Command. You review when it's done.
+                  </p>
                 </div>
               </div>
             </div>
             
-            <div className="md:order-1">
+            <div className="lg:order-1">
               <img 
                 src="/images/screenshots/usecase-delegation.png" 
                 alt="Command board with multiple agents working autonomously" 
-                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
+                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
               />
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* More Ideas */}
-      <section className="py-16 md:py-20 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-8">
+      {/* What Else Section */}
+      <section className="border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">More ideas</p>
+          <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-12">
             What else can agents do?
           </h2>
           
-          <div className="grid sm:grid-cols-2 gap-x-12 gap-y-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
             {[
               { title: 'Draft blog posts', desc: 'Writer creates first draft, you refine' },
               { title: 'Analyze data', desc: 'Researcher digs into spreadsheets, surfaces insights' },
@@ -240,7 +203,7 @@ export default function UseCasesPage() {
               { title: 'Social media', desc: 'Draft posts, schedule content, engage' },
               { title: 'Prep for meetings', desc: 'Research attendees, draft agendas' },
             ].map((item) => (
-              <div key={item.title} className="py-3 border-b border-neutral-200 dark:border-neutral-800">
+              <div key={item.title} className="py-4 border-b border-neutral-200 dark:border-neutral-800">
                 <p className="font-medium text-neutral-900 dark:text-neutral-100">{item.title}</p>
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">{item.desc}</p>
               </div>
@@ -249,22 +212,30 @@ export default function UseCasesPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 md:py-20 border-t border-neutral-200 dark:border-neutral-800">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-            Ready to stop babysitting your AI?
-          </h2>
-          <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
-            Start free. Add agents as you need them.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/auth/login" className="btn btn-primary text-base px-6 py-3">
-              Start your AI team
-            </Link>
-            <Link href="/hub" className="btn btn-secondary text-base px-6 py-3">
-              Browse Agents
-            </Link>
+      {/* Final CTA - Editorial style matching landing */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-6">
+              Ready to stop babysitting?
+            </h2>
+            <p className="text-lg text-neutral-500 dark:text-neutral-400 mb-8">
+              Start your AI team today. Solo is free forever — no credit card required.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link 
+                href="/auth/login" 
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-100 transition"
+              >
+                Start your AI team
+              </Link>
+              <Link 
+                href="/hub" 
+                className="inline-flex items-center justify-center px-6 py-4 text-base font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
+              >
+                Browse Agents
+              </Link>
+            </div>
           </div>
         </div>
       </section>

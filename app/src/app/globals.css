@@ -235,6 +235,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Focus states */
 input:focus, textarea:focus, select:focus, button:focus {
   outline: none;
@@ -245,4 +257,58 @@ input:focus, textarea:focus, select:focus, button:focus {
 /* Selection */
 ::selection {
   background: #dbeafe;
+}
+
+/* Active button feedback */
+button:active, a:active {
+  transform: scale(0.98);
+}
+
+/* Link underline animation helper */
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Image hover zoom (subtle) */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img {
+  transition: transform 0.5s ease;
+}
+
+.img-zoom:hover img {
+  transform: scale(1.02);
+}
+
+/* Section entrance animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.6s ease-out forwards;
 }

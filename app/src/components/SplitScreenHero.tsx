@@ -1,16 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function SplitScreenHero() {
   const [showAfter, setShowAfter] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <section className="relative min-h-[90vh] flex flex-col justify-center border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 w-full">
         {/* Top: Bold Statement */}
-        <div className="max-w-4xl mb-16 md:mb-24">
+        <div className={`max-w-4xl mb-16 md:mb-24 transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold text-neutral-900 dark:text-neutral-100 leading-[0.95] tracking-tight mb-8">
             Stop babysitting
             <br />
@@ -24,7 +29,7 @@ export function SplitScreenHero() {
           <div className="flex flex-wrap items-center gap-4">
             <Link 
               href="/auth/login" 
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-100 transition"
+              className="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-all active:scale-95"
             >
               Start your AI team
             </Link>
@@ -35,20 +40,24 @@ export function SplitScreenHero() {
         </div>
 
         {/* Bottom: Interactive Before/After */}
-        <div className="relative">
+        <div className={`relative transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           {/* Toggle */}
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={() => setShowAfter(false)}
-              className={`text-sm font-medium transition ${!showAfter ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600'}`}
+              className={`text-sm font-medium transition-colors relative ${!showAfter ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600'}`}
+              aria-pressed={!showAfter}
             >
               Without Tiker
+              {!showAfter && <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-neutral-900 dark:bg-neutral-100"></span>}
             </button>
             <button
               onClick={() => setShowAfter(true)}
-              className={`text-sm font-medium transition ${showAfter ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600'}`}
+              className={`text-sm font-medium transition-colors relative ${showAfter ? 'text-neutral-900 dark:text-neutral-100' : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600'}`}
+              aria-pressed={showAfter}
             >
               With Tiker
+              {showAfter && <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-neutral-900 dark:bg-neutral-100"></span>}
             </button>
             <div className="flex-1 h-px bg-neutral-200 dark:bg-neutral-800"></div>
           </div>
@@ -57,7 +66,8 @@ export function SplitScreenHero() {
           <div className="relative rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 aspect-[21/9] md:aspect-[21/8]">
             {/* Before Image */}
             <div 
-              className={`absolute inset-0 transition-opacity duration-500 ${showAfter ? 'opacity-0' : 'opacity-100'}`}
+              className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${showAfter ? 'opacity-0' : 'opacity-100'}`}
+              aria-hidden={showAfter}
             >
               <img 
                 src="/images/screenshots/chaos-before.jpg" 
@@ -73,7 +83,8 @@ export function SplitScreenHero() {
 
             {/* After Image */}
             <div 
-              className={`absolute inset-0 transition-opacity duration-500 ${showAfter ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${showAfter ? 'opacity-100' : 'opacity-0'}`}
+              aria-hidden={!showAfter}
             >
               <img 
                 src="/images/screenshots/mc-hero.png" 
