@@ -259,6 +259,42 @@ input:focus, textarea:focus, select:focus, button:focus {
   background: #dbeafe;
 }
 
+/* Custom scrollbar for kanban and other scrollable areas */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #d4d4d4 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #d4d4d4;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #a3a3a3;
+}
+
+.dark .scrollbar-thin {
+  scrollbar-color: #404040 transparent;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #404040;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #525252;
+}
+
 /* Active button feedback */
 button:active, a:active {
   transform: scale(0.98);

@@ -28,7 +28,7 @@ export default function KanbanColumn({ status, title, tasks, agents, onTaskClick
   const needsAttention = status === 'review' && tasks.length > 0
 
   return (
-    <div className="flex-1 min-w-[280px]">
+    <div className="flex-1 min-w-[260px] w-[260px] sm:min-w-[280px] sm:w-[280px]">
       <div className={`border-t-4 ${columnColors[status]} ${needsAttention ? 'ring-2 ring-orange-400 shadow-lg' : ''} bg-white rounded-lg p-4`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`font-semibold uppercase text-sm tracking-wide ${needsAttention ? 'text-orange-600' : 'text-gray-900'}`}>

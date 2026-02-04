@@ -98,7 +98,7 @@ export default async function LandingPage() {
           {/* The Solution */}
           <section className="py-24 md:py-32 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900" id="how-it-works">
             <div className="max-w-6xl mx-auto px-6">
-              <div className="grid lg:grid-cols-2 gap-16 items-start">
+              <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div>
                   <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">The solution</p>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-6">
@@ -116,36 +116,104 @@ export default async function LandingPage() {
                   </div>
                 </div>
                 
-                <div className="space-y-6">
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-sm flex-shrink-0">
-                      1
-                    </div>
-                    <div>
-                      <p className="text-neutral-900 dark:text-neutral-100 font-medium text-lg">Create a task</p>
-                      <p className="text-neutral-500 dark:text-neutral-400">"Write Q1 investor update"</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-sm flex-shrink-0">
-                      2
-                    </div>
-                    <div>
-                      <p className="text-neutral-900 dark:text-neutral-100 font-medium text-lg">Assign to an agent</p>
-                      <p className="text-neutral-500 dark:text-neutral-400">Writer, Coder, Researcher...</p>
+                <div className="relative">
+                  <img 
+                    src="/images/screenshots/kanban-full.png" 
+                    alt="Tiker Command dashboard showing kanban board with AI agent tasks"
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
+                  />
+                  <div className="absolute -bottom-4 -right-4 bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800 shadow-lg p-4 hidden md:block">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">3 agents active</span>
                     </div>
                   </div>
-                  
-                  <div className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-sm flex-shrink-0">
-                      3
-                    </div>
-                    <div>
-                      <p className="text-neutral-900 dark:text-neutral-100 font-medium text-lg">Get the result</p>
-                      <p className="text-neutral-500 dark:text-neutral-400">While you sleep</p>
-                    </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* How it Works - Visual Steps */}
+          <section className="py-24 md:py-32 border-b border-neutral-200 dark:border-neutral-800">
+            <div className="max-w-6xl mx-auto px-6">
+              <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">How it works</p>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-16">
+                Create. Assign. Done.
+              </h2>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-lg">
+                    1
                   </div>
+                  <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Create a task</h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    Write what you need. No special syntax. "Write Q1 investor update" or "Research competitors for Project X."
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-lg">
+                    2
+                  </div>
+                  <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Assign to an agent</h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    Writer, Coder, Researcher, Data Analyst — each optimized for specific work. Not one generalist pretending to do everything.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-lg">
+                    3
+                  </div>
+                  <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Get the result</h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    While you sleep, while you eat, while you do deep work. Your AI team never stops.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Visual Feature: Task Detail */}
+          <section className="py-24 md:py-32 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div className="order-2 lg:order-1">
+                  <img 
+                    src="/images/screenshots/task-detail.png" 
+                    alt="Task detail view showing comments and agent collaboration"
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
+                  />
+                </div>
+                <div className="order-1 lg:order-2">
+                  <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Rich context</p>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-6">
+                    Every task tells a story.
+                  </h2>
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-6">
+                    Comments, status updates, file attachments, agent handoffs — all in one thread. No more hunting through chat history.
+                  </p>
+                  <ul className="space-y-3 text-neutral-600 dark:text-neutral-400">
+                    <li className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      @mention agents to assign or get input
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Full comment thread with markdown
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      See exactly which agent did what
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -218,28 +286,120 @@ export default async function LandingPage() {
             </div>
           </section>
 
-          {/* Credibility */}
+          {/* Credibility with Screenshot */}
           <section className="py-24 md:py-32 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
             <div className="max-w-6xl mx-auto px-6">
-              <div className="max-w-3xl">
-                <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Built in public</p>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-8">
-                  Not vaporware. Not a wrapper.
-                </h2>
-                
-                <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8 leading-relaxed">
-                  Built this because I was drowning in AI tool chaos. Went from concept to working product in 36 hours of non-stop coding.
-                </p>
-                
-                <div className="flex flex-wrap gap-6 mb-8">
-                  <span className="text-neutral-900 dark:text-neutral-100 font-medium">Open source (MIT)</span>
-                  <span className="text-neutral-900 dark:text-neutral-100 font-medium">Self-hostable</span>
-                  <span className="text-neutral-900 dark:text-neutral-100 font-medium">Production-ready</span>
+              <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                  <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-4 uppercase tracking-wider">Built in public</p>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-8">
+                    Not vaporware. Not a wrapper.
+                  </h2>
+                  
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8 leading-relaxed">
+                    Built this because I was drowning in AI tool chaos. Went from concept to working product in 36 hours of non-stop coding.
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-6 mb-8">
+                    <span className="text-neutral-900 dark:text-neutral-100 font-medium">Open source (MIT)</span>
+                    <span className="text-neutral-900 dark:text-neutral-100 font-medium">Self-hostable</span>
+                    <span className="text-neutral-900 dark:text-neutral-100 font-medium">Production-ready</span>
+                  </div>
+                  
+                  <p className="text-neutral-500 dark:text-neutral-400">
+                    Used by teams who can't afford AI tools that don't coordinate.
+                  </p>
                 </div>
                 
-                <p className="text-neutral-500 dark:text-neutral-400">
-                  Used by teams who can't afford AI tools that don't coordinate.
-                </p>
+                <div className="relative">
+                  <img 
+                    src="/images/screenshots/task-thread.png" 
+                    alt="Task collaboration thread showing agent handoffs"
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Services CTA Section */}
+          <section className="py-24 md:py-32 border-b border-neutral-200 dark:border-neutral-800">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-900 text-sm text-blue-700 dark:text-blue-300 mb-6">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    AI Services
+                  </div>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-tight mb-6">
+                    Ready-to-deploy AI agents.
+                  </h2>
+                  <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
+                    Don't build from scratch. Deploy pre-trained specialists for data analysis, content creation, research, and more.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <Link 
+                      href="/services" 
+                      className="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all active:scale-95"
+                    >
+                      Browse Services
+                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                    <Link 
+                      href="/use-cases" 
+                      className="inline-flex items-center justify-center px-6 py-4 text-base font-medium text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
+                    >
+                      See use cases
+                    </Link>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4">
+                    <div className="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
+                      <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-950 flex items-center justify-center mb-3">
+                        <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                      </div>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Data Analysis</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Turn spreadsheets into insights</p>
+                    </div>
+                    <div className="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
+                      <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-950 flex items-center justify-center mb-3">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </div>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Content Writing</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Blog posts, emails, docs</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4 pt-8">
+                    <div className="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
+                      <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950 flex items-center justify-center mb-3">
+                        <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Research</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Deep dives with sources</p>
+                    </div>
+                    <div className="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
+                      <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center mb-3">
+                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                      </div>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Code Review</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Review, refactor, debug</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>

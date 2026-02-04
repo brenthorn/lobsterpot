@@ -2,13 +2,15 @@
 
 import { createClient } from '@/lib/supabase'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export function NavBar() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
+  const servicesRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -44,6 +46,17 @@ export function NavBar() {
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Close services dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (servicesRef.current && !servicesRef.current.contains(event.target as Node)) {
+        setServicesOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const toggleDarkMode = () => {
@@ -99,13 +112,175 @@ export function NavBar() {
                   <Link href="/hub" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
                     Agents
                   </Link>
-                  <Link href="/services" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
-                    Services
-                  </Link>
+                  <div ref={servicesRef} className="relative">
+                    <button
+                      onClick={() => setServicesOpen(!servicesOpen)}
+                      onMouseEnter={() => setServicesOpen(true)}
+                      className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors flex items-center gap-1 font-semibold"
+                    >
+                      Services
+                      <svg 
+                        className={`w-4 h-4 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {/* Services Dropdown */}
+                    {servicesOpen && (
+                      <div 
+                        className="absolute top-full left-0 mt-2 w-80 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl py-4 z-50"
+                        onMouseLeave={() => setServicesOpen(false)}
+                      >
+                        <div className="px-4 pb-3 border-b border-neutral-100 dark:border-neutral-800 mb-3">
+                          <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">AI Services</p>
+                        </div>
+                        <div className="px-2">
+                          <Link 
+                            href="/services" 
+                            className="flex items-start gap-3 px-3 py-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+                              <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium text-neutral-900 dark:text-neutral-100">Browse All Services</p>
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400">Ready-to-deploy AI agents</p>
+                            </div>
+                          </Link>
+                          
+                          <div className="my-2 px-3">
+                            <div className="h-px bg-neutral-100 dark:bg-neutral-800"></div>
+                          </div>
+                          
+                          <Link 
+                            href="/services?category=data-analysis" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                            Data Analysis
+                          </Link>
+                          <Link 
+                            href="/services?category=content" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            Content Creation
+                          </Link>
+                          <Link 
+                            href="/services?category=research" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            Research
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </>
               ) : (
-                /* Logged OUT nav - Simplified */
+                /* Logged OUT nav - Simplified with Services prominent */
                 <>
+                  <div ref={servicesRef} className="relative">
+                    <button
+                      onClick={() => setServicesOpen(!servicesOpen)}
+                      onMouseEnter={() => setServicesOpen(true)}
+                      className="text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors flex items-center gap-1 font-semibold relative group"
+                    >
+                      Services
+                      <svg 
+                        className={`w-4 h-4 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                      <span className="absolute -bottom-5 left-0 w-full h-0.5 bg-neutral-900 dark:bg-neutral-100"></span>
+                    </button>
+                    
+                    {/* Services Dropdown */}
+                    {servicesOpen && (
+                      <div 
+                        className="absolute top-full left-0 mt-4 w-80 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl py-4 z-50"
+                        onMouseLeave={() => setServicesOpen(false)}
+                      >
+                        <div className="px-4 pb-3 border-b border-neutral-100 dark:border-neutral-800 mb-3">
+                          <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">AI Services</p>
+                        </div>
+                        <div className="px-2">
+                          <Link 
+                            href="/services" 
+                            className="flex items-start gap-3 px-3 py-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+                              <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="font-medium text-neutral-900 dark:text-neutral-100">Browse All Services</p>
+                              <p className="text-xs text-neutral-500 dark:text-neutral-400">Ready-to-deploy AI agents for your team</p>
+                            </div>
+                          </Link>
+                          
+                          <div className="my-2 px-3">
+                            <div className="h-px bg-neutral-100 dark:bg-neutral-800"></div>
+                          </div>
+                          
+                          <Link 
+                            href="/services?category=data-analysis" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                            Data Analysis
+                          </Link>
+                          <Link 
+                            href="/services?category=content" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            Content Creation
+                          </Link>
+                          <Link 
+                            href="/services?category=research" 
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            Research
+                          </Link>
+                        </div>
+                        
+                        <div className="mt-3 mx-4 pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                          <Link 
+                            href="/auth/login"
+                            className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors"
+                            onClick={() => setServicesOpen(false)}
+                          >
+                            Start with Services
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
                   <Link href="/use-cases" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors relative group">
                     Use Cases
                     <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-neutral-900 dark:bg-neutral-100 transition-all duration-300 group-hover:w-full"></span>

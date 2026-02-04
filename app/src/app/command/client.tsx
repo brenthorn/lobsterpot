@@ -471,9 +471,11 @@ export default function MissionControlClient() {
           </div>
         </div>
 
-        {/* Kanban Board - Full Width */}
-        <div>
-
+        {/* Kanban Board - Horizontal Scroll */}
+        <div className="relative">
+          {/* Scroll indicator */}
+          <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none z-10 md:hidden"></div>
+          
           <DndContext 
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -481,18 +483,19 @@ export default function MissionControlClient() {
             sensors={sensors}
             collisionDetection={closestCenter}
           >
-            <div className="flex gap-4 pb-4">
+            <div className="flex gap-4 pb-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent snap-x">
               {COLUMNS.filter(col => !hideDone || col.status !== 'done').map(column => (
-                <KanbanColumn
-                  key={column.status}
-                  status={column.status}
-                  title={column.title}
-                  tasks={filteredTasks.filter(t => t.status === column.status)}
-                  agents={agents}
-                  onTaskClick={setSelectedTask}
-                  onMarkDone={handleMarkDone}
-                  onDelete={handleDeleteClick}
-                />
+                <div key={column.status} className="snap-start">
+                  <KanbanColumn
+                    status={column.status}
+                    title={column.title}
+                    tasks={filteredTasks.filter(t => t.status === column.status)}
+                    agents={agents}
+                    onTaskClick={setSelectedTask}
+                    onMarkDone={handleMarkDone}
+                    onDelete={handleDeleteClick}
+                  />
+                </div>
               ))}
             </div>
             <DragOverlay>
