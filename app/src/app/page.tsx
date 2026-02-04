@@ -4,8 +4,8 @@ import { createRealSupabaseClient } from '@/lib/supabase-server'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Tiker - The to-do list that does itself',
-  description: 'Create tasks. Assign to AI experts. Watch them get done. Your to-do list, with a team of AI specialists.',
+  title: 'Tiker - Stop babysitting your AI tools',
+  description: 'A command center for AI agents. Task board, not chat window. Async by design.',
 }
 
 export default async function LandingPage() {
@@ -14,20 +14,19 @@ export default async function LandingPage() {
 
   return (
     <main className="min-h-screen">
-      {/* Hero - Different for logged in vs logged out */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid dark:bg-neutral-950"></div>
-        <div className="relative max-w-6xl mx-auto px-6 py-24 md:py-32 lg:py-40">
-          {user ? (
-            /* LOGGED IN HERO - Direct to MC */
+      {/* Hero - Logged in */}
+      {user ? (
+        <section className="relative overflow-hidden border-b border-neutral-200 dark:border-neutral-800">
+          <div className="absolute inset-0 bg-grid dark:bg-neutral-950"></div>
+          <div className="relative max-w-6xl mx-auto px-6 py-16 md:py-24">
             <div className="max-w-4xl">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-900 text-sm text-green-700 dark:text-green-300 mb-6">
                 <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                Welcome back
+                Your AI team is active
               </div>
               
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-neutral-900 dark:text-neutral-100 leading-[1.1] tracking-tight mb-6">
-                Your AI team is ready.
+                Back to work.
               </h1>
               
               <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -79,595 +78,355 @@ export default async function LandingPage() {
                   </p>
                 </Link>
               </div>
-              
-              <p className="text-sm text-neutral-500 dark:text-neutral-500">
-                Want to go straight to Command when you log in?{' '}
-                <Link href="/settings" className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Change in Settings
-                </Link>
-              </p>
             </div>
-          ) : (
-            /* LOGGED OUT HERO - Marketing */
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900 text-sm text-blue-700 dark:text-blue-300 mb-6">
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                Open beta
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-neutral-900 dark:text-neutral-100 leading-[1.1] tracking-tight mb-6">
-                The to-do list
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300">
-                  that does itself.
-                </span>
-              </h1>
-              
-              <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl leading-relaxed">
-                Create tasks. Assign to AI experts. Watch them get done.
-                <br />
-                <span className="text-neutral-500">No babysitting. No copy-pasting. Just results.</span>
-              </p>
-              
-              <div className="flex flex-wrap gap-4">
-                <Link href="/auth/login" className="btn btn-primary text-base px-6 py-3">
-                  Start Free
-                </Link>
-                <Link href="#how-it-works" className="btn btn-secondary text-base px-6 py-3">
-                  See how it works
-                </Link>
-              </div>
-              
-              <p className="text-sm text-neutral-500 dark:text-neutral-500 mt-4">
-                No credit card required. Solo plan is free forever.
-              </p>
-            </div>
-          )}
-          
-          {/* Hero Visual - Only show for logged out */}
-          {!user && (
-            <div className="mt-16 relative">
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 to-transparent opacity-20 dark:opacity-40 rounded-xl"></div>
-              {/* SCREENSHOT: mc-hero.png - Full MC board with 5-6 tasks, multiple columns, agent avatars visible */}
-              <img 
-                src="/images/screenshots/mc-hero.png" 
-                alt="Command - your AI team's task board" 
-                className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
-              />
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Rest of landing page - only show for logged out users */}
-      {!user && (
+          </div>
+        </section>
+      ) : (
         <>
-          {/* Problem Statement */}
-          <section className="border-y border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 py-20 md:py-24">
-            <div className="max-w-6xl mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-6">
-                  You've got ChatGPT, Claude, Cursor, Perplexity...
-                </h2>
-                <p className="text-xl text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto">
-                  Four tabs. Four contexts. Four bills.
+          {/* Hero - Logged out */}
+          <section className="relative overflow-hidden border-b border-neutral-200 dark:border-neutral-800">
+            <div className="absolute inset-0 bg-grid dark:bg-neutral-950"></div>
+            <div className="relative max-w-6xl mx-auto px-6 py-20 md:py-32 lg:py-40">
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900 text-sm text-blue-700 dark:text-blue-300 mb-6">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                  Open source • Self-hosted option
+                </div>
+                
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-neutral-900 dark:text-neutral-100 leading-[1.1] tracking-tight mb-6">
+                  Stop babysitting
                   <br />
-                  <span className="text-red-500 dark:text-red-400 font-medium">Zero coordination.</span>
+                  <span className="text-neutral-400 dark:text-neutral-500">your AI tools.</span>
+                </h1>
+                
+                <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl leading-relaxed">
+                  Your AI tools don't talk to each other. They only work when YOU work. 
+                  Every handoff requires manual copy-paste. Nothing happens overnight.
                 </p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-                <div className="text-center md:text-left">
-                  <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center mb-4 mx-auto md:mx-0">
-                    <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Copy-paste hell
-                  </h3>
-                  <p className="text-neutral-600 dark:text-neutral-400">
-                    Every time one AI needs context from another, you're the middleman. 
-                    Copying. Pasting. Explaining. Again.
-                  </p>
-                </div>
                 
-                <div className="text-center md:text-left">
-                  <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center mb-4 mx-auto md:mx-0">
-                    <svg className="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Nothing happens while you sleep
-                  </h3>
-                  <p className="text-neutral-600 dark:text-neutral-400">
-                    Your AI tools sit idle when you're not there. 
-                    No progress until you're back at the keyboard.
-                  </p>
-                </div>
-                
-                <div className="text-center md:text-left">
-                  <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center mb-4 mx-auto md:mx-0">
-                    <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Where did we leave off?
-                  </h3>
-                  <p className="text-neutral-600 dark:text-neutral-400">
-                    Context scattered across chat windows. No single place to see 
-                    what's done, what's stuck, what's next.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Solution - The Agents */}
-          <section className="py-20 md:py-24 dark:bg-neutral-950" id="how-it-works">
-            <div className="max-w-6xl mx-auto px-6">
-              <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/50 text-sm text-green-700 dark:text-green-400 mb-4">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Meet your team
-                </div>
-                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                  Your AI experts, ready when you are
-                </h2>
-                <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                  Start with one assistant. Add specialists as you need them.
-                </p>
-              </div>
-              
-              {/* Agent Cards */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <div className="card p-6 border-2 border-blue-200 dark:border-blue-900">
-                  <div className="text-3xl mb-3">🤖</div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                    Assistant
-                  </h3>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 mb-2">Included in Solo</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Your all-purpose AI. Questions, planning, research, drafts, code help.
-                  </p>
-                </div>
-                
-                <div className="card p-6 opacity-75 hover:opacity-100 transition-opacity">
-                  <div className="text-3xl mb-3">💻</div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                    Coder
-                  </h3>
-                  <p className="text-xs text-neutral-500 mb-2">Team plan</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Code, debug, review, ship. Speaks your stack.
-                  </p>
-                </div>
-                
-                <div className="card p-6 opacity-75 hover:opacity-100 transition-opacity">
-                  <div className="text-3xl mb-3">✍️</div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                    Writer
-                  </h3>
-                  <p className="text-xs text-neutral-500 mb-2">Team plan</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Emails, docs, posts. Clear, on-brand, polished.
-                  </p>
-                </div>
-                
-                <div className="card p-6 opacity-75 hover:opacity-100 transition-opacity">
-                  <div className="text-3xl mb-3">🔬</div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                    Researcher
-                  </h3>
-                  <p className="text-xs text-neutral-500 mb-2">Team plan</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Deep dives, analysis, reports. Cites sources.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <p className="text-neutral-500 dark:text-neutral-400 mb-4">
-                  Plus: Marketing, Data Analyst, Legal, and more in the Agent Hub
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* How it works - 3 steps */}
-          <section className="border-y border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 py-20 md:py-24">
-            <div className="max-w-6xl mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                  How it works
-                </h2>
-                <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                  Three steps. Two minutes. Done.
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
-                      1
-                    </div>
-                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                      Create a task
-                    </h3>
-                  </div>
-                  <p className="text-neutral-600 dark:text-neutral-400 ml-14">
-                    "Write a 2-page investor update for Q1"
-                    <br />
-                    <span className="text-sm text-neutral-500">Just describe what you need.</span>
-                  </p>
-                </div>
-                
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
-                      2
-                    </div>
-                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                      Assign to an agent
-                    </h3>
-                  </div>
-                  <p className="text-neutral-600 dark:text-neutral-400 ml-14">
-                    Click @Writer. That's it.
-                    <br />
-                    <span className="text-sm text-neutral-500">The right specialist for the job.</span>
-                  </p>
-                </div>
-                
-                <div className="relative">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold">
-                      3
-                    </div>
-                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                      Get the result
-                    </h3>
-                  </div>
-                  <p className="text-neutral-600 dark:text-neutral-400 ml-14">
-                    Agent picks it up, does the work, posts for your review.
-                    <br />
-                    <span className="text-sm text-neutral-500">Approve, request changes, or ship it.</span>
-                  </p>
-                </div>
-              </div>
-              
-              {/* Visual */}
-              <div className="mt-16 max-w-3xl mx-auto">
-                {/* SCREENSHOT: task-thread.png - Task card expanded showing agent comments/updates */}
-                <img 
-                  src="/images/screenshots/task-thread.png" 
-                  alt="Task assigned to Writer with progress updates" 
-                  className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* What's different */}
-          <section className="py-20 md:py-24 dark:bg-neutral-950">
-            <div className="max-w-6xl mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                  This isn't another chatbot
-                </h2>
-                <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
-                  It's a task board. You assign work. Your AI experts do it. You review the results.
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="card p-6">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    They remember your preferences
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Writer knows you like bullet points. Coder knows your style. No re-explaining.
-                  </p>
-                </div>
-                
-                <div className="card p-6">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-950 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    They talk to each other
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Need research before writing? Researcher hands off to Writer. You're not the middleman.
-                  </p>
-                </div>
-                
-                <div className="card p-6">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-950 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    They work while you sleep
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    Assign tasks at night. Wake up to finished drafts. No hovering required.
-                  </p>
-                </div>
-                
-                <div className="card p-6">
-                  <div className="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-950 flex items-center justify-center mb-4">
-                    <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-                    Full visibility
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                    One dashboard. See what's in progress, what's blocked, what's done. No black boxes.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Trust / Security Teaser */}
-          <section className="border-y border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 py-20 md:py-24">
-            <div className="max-w-6xl mx-auto px-6">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/50 text-sm text-green-700 dark:text-green-400 mb-4">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    Built for trust
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                    Security is the product, not an afterthought
-                  </h2>
-                  <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-6">
-                    AI agents with real access need real accountability. We separate read and write at a fundamental level. Write actions require authenticator verification. Every action is logged.
-                  </p>
-                  <ul className="space-y-3 mb-6">
-                    <li className="flex items-center gap-3 text-neutral-700 dark:text-neutral-300">
-                      <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      2FA required for all write operations
-                    </li>
-                    <li className="flex items-center gap-3 text-neutral-700 dark:text-neutral-300">
-                      <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Full audit logs for every action
-                    </li>
-                    <li className="flex items-center gap-3 text-neutral-700 dark:text-neutral-300">
-                      <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      AES-256 encryption at rest
-                    </li>
-                    <li className="flex items-center gap-3 text-neutral-700 dark:text-neutral-300">
-                      <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Self-host option for maximum control
-                    </li>
-                  </ul>
-                  <Link href="/security" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-                    Read our security approach →
+                <div className="flex flex-wrap gap-4 mb-4">
+                  <Link href="/auth/login" className="btn btn-primary text-base px-8 py-3">
+                    Start your AI team
+                  </Link>
+                  <Link href="#how-it-works" className="btn btn-secondary text-base px-6 py-3">
+                    See how it works
                   </Link>
                 </div>
+                
+                <p className="text-sm text-neutral-500 dark:text-neutral-500">
+                  Solo plan is free forever. No credit card required.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* The Problem - Brutal clarity */}
+          <section className="py-20 md:py-28 border-b border-neutral-200 dark:border-neutral-800">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="max-w-2xl">
+                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-8">
+                  The problem is brutal.
+                </h2>
+                
+                <div className="space-y-4 text-lg text-neutral-600 dark:text-neutral-400">
+                  <p className="flex items-start gap-3">
+                    <span className="text-red-500 font-mono">×</span>
+                    Your AI tools don't talk to each other
+                  </p>
+                  <p className="flex items-start gap-3">
+                    <span className="text-red-500 font-mono">×</span>
+                    They only work when YOU work
+                  </p>
+                  <p className="flex items-start gap-3">
+                    <span className="text-red-500 font-mono">×</span>
+                    Every handoff requires manual copy-paste
+                  </p>
+                  <p className="flex items-start gap-3">
+                    <span className="text-red-500 font-mono">×</span>
+                    Context dies between sessions
+                  </p>
+                  <p className="flex items-start gap-3">
+                    <span className="text-red-500 font-mono">×</span>
+                    Nothing happens overnight
+                  </p>
+                </div>
+                
+                <p className="mt-8 text-xl text-neutral-900 dark:text-neutral-100 font-medium">
+                  You're not scaling AI. You're babysitting it.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* The Solution */}
+          <section className="py-20 md:py-28 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900" id="how-it-works">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div>
-                  {/* SCREENSHOT: security-2fa.png - 2FA verification modal or settings page */}
+                  <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-6">
+                    A command center for AI agents.
+                  </h2>
+                  
+                  <p className="text-xl text-neutral-600 dark:text-neutral-400 mb-8">
+                    Think: <span className="text-neutral-900 dark:text-neutral-100 font-medium">Task board, not chat window.</span>
+                  </p>
+                  
+                  <div className="space-y-6">
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-sm flex-shrink-0">
+                        1
+                      </div>
+                      <div>
+                        <p className="text-neutral-900 dark:text-neutral-100 font-medium">Create a task</p>
+                        <p className="text-neutral-500 dark:text-neutral-400 text-sm">"Write Q1 investor update"</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-sm flex-shrink-0">
+                        2
+                      </div>
+                      <div>
+                        <p className="text-neutral-900 dark:text-neutral-100 font-medium">Assign to an agent</p>
+                        <p className="text-neutral-500 dark:text-neutral-400 text-sm">Writer, Coder, Researcher...</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-semibold text-sm flex-shrink-0">
+                        3
+                      </div>
+                      <div>
+                        <p className="text-neutral-900 dark:text-neutral-100 font-medium">Agent executes and delivers</p>
+                        <p className="text-neutral-500 dark:text-neutral-400 text-sm">While you sleep</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-900 text-sm text-green-700 dark:text-green-300">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Async by design. Built for people who use AI daily.
+                  </div>
+                </div>
+                
+                <div>
                   <img 
-                    src="/images/screenshots/security-2fa.png" 
-                    alt="2FA verification for write access" 
-                    className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
+                    src="/images/screenshots/mc-hero.png" 
+                    alt="Command dashboard showing AI agents coordinating tasks" 
+                    className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full"
                   />
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Pricing */}
-          <section className="py-20 md:py-24 dark:bg-neutral-950" id="pricing">
+          {/* What makes it different */}
+          <section className="py-20 md:py-28 border-b border-neutral-200 dark:border-neutral-800">
             <div className="max-w-6xl mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-                  Simple pricing
-                </h2>
-                <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                  Start free. Add your team when you're ready.
-                </p>
-              </div>
+              <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-12">
+                What makes it different.
+              </h2>
               
-              <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {/* Solo - Free */}
-                <div className="card p-8">
-                  <div className="mb-6">
-                    <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                      Solo
-                    </h3>
-                    <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                      Just you and your AI
-                    </p>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <span className="text-4xl font-semibold text-neutral-900 dark:text-neutral-100">$0</span>
-                    <span className="text-neutral-500 dark:text-neutral-400">/month</span>
-                  </div>
-                  
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Command dashboard',
-                      '1 general agent (Assistant)',
-                      'Works with your AI accounts',
-                      'Community support',
-                    ].map((feature) => (
-                      <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Link href="/auth/login" className="btn btn-secondary w-full justify-center">
-                    Start Free
-                  </Link>
+              <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                    Specialist agents
+                  </h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    Coder, Writer, Researcher, Data Analyst — each optimized for specific work. Not one generalist pretending to do everything.
+                  </p>
                 </div>
                 
-                {/* Team */}
-                <div className="card p-8 border-2 border-blue-500 dark:border-blue-400 relative">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-blue-500 text-white text-xs font-medium px-3 py-1 rounded-full">
-                      Most popular
-                    </span>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                      Team
-                    </h3>
-                    <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                      Build your AI team
-                    </p>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <span className="text-4xl font-semibold text-neutral-900 dark:text-neutral-100">$7</span>
-                    <span className="text-neutral-500 dark:text-neutral-400">/month</span>
-                    <p className="text-xs text-neutral-500 mt-1">or $70/year (save 17%)</p>
-                  </div>
-                  
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Everything in Solo',
-                      'Add specialist agents',
-                      'Invite teammates',
-                      'Customize agent personalities',
-                      'Priority support',
-                    ].map((feature) => (
-                      <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Link href="/auth/login" className="btn btn-primary w-full justify-center">
-                    Start Team
-                  </Link>
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                    Agents remember
+                  </h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    Your context and preferences persist. Writer knows you hate buzzwords. Coder knows your naming conventions. No re-explaining.
+                  </p>
                 </div>
                 
-                {/* Custom */}
-                <div className="card p-8">
-                  <div className="mb-6">
-                    <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                      Custom
-                    </h3>
-                    <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                      For larger organizations
-                    </p>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <span className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">Let's talk</span>
-                  </div>
-                  
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Everything in Team',
-                      'SSO / SAML',
-                      'Audit logs API',
-                      'Dedicated support',
-                      'Volume pricing',
-                    ].map((feature) => (
-                      <li key={feature} className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Link href="mailto:jay@tiker.com" className="btn btn-secondary w-full justify-center">
-                    Contact Us
-                  </Link>
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                    Auto-coordination
+                  </h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    Researcher finishes data gathering → hands off to Writer automatically. You're not the middleman anymore.
+                  </p>
                 </div>
-              </div>
-              
-              {/* Self-Hosted Option */}
-              <div className="mt-12 max-w-2xl mx-auto">
-                <div className="card p-8 border-2 border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/50">
-                  <div className="flex flex-col md:flex-row md:items-center gap-6">
-                    <div className="flex-shrink-0">
-                      <div className="w-14 h-14 rounded-xl bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center">
-                        <svg className="w-7 h-7 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="flex-grow">
-                      <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-                        Self-Hosted
-                      </h3>
-                      <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-3">
-                        Run Tiker on your own infrastructure. Full control, full privacy. 
-                        The repo goes public today (Feb 3) - we're just finishing up testing.
-                      </p>
-                      <div className="flex flex-wrap gap-3">
-                        <Link href="/docs/self-hosted" className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">
-                          Self-hosted setup guide →
-                        </Link>
-                        <span className="text-neutral-400 dark:text-neutral-600">|</span>
-                        <Link href="https://github.com/chitownjk/tiker" className="text-neutral-600 dark:text-neutral-400 text-sm font-medium hover:underline flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                          </svg>
-                          GitHub
-                        </Link>
-                      </div>
-                    </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                    Add new agents and skills
+                  </h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    Browse the Hub for agents that optimize your specific workflow. Tag specialists in tasks. Build your dream team.
+                  </p>
+                </div>
+                
+                <div className="md:col-span-2">
+                  <div className="card p-6 border-l-4 border-l-blue-500">
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      Full audit trail
+                    </h3>
+                    <p className="text-neutral-600 dark:text-neutral-400">
+                      Every action logged. Every handoff tracked. Complete visibility into what your AI team is doing — and when.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
+          {/* Credibility */}
+          <section className="py-20 md:py-28 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-6">
+                  Not vaporware. Not a wrapper.
+                </h2>
+                
+                <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-6">
+                  Built this because I was drowning in AI tool chaos. Went from concept to working product in 36 hours of non-stop coding.
+                </p>
+                
+                <div className="flex flex-wrap gap-4 mb-8">
+                  <div className="inline-flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Open source (MIT)
+                  </div>
+                  <div className="inline-flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Self-hostable
+                  </div>
+                  <div className="inline-flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Production-ready today
+                  </div>
+                </div>
+                
+                <p className="text-neutral-600 dark:text-neutral-400">
+                  Used by teams who can't afford AI tools that don't coordinate.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Pricing - Simplified */}
+          <section className="py-20 md:py-28 border-b border-neutral-200 dark:border-neutral-800" id="pricing">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="max-w-3xl mb-12">
+                <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+                  Simple pricing.
+                </h2>
+                <p className="text-lg text-neutral-600 dark:text-neutral-400">
+                  Start free. Add specialists when you need them.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6 max-w-4xl">
+                {/* Solo */}
+                <div className="card p-6">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Solo</h3>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">Just getting started</p>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">$0</span>
+                    <span className="text-neutral-500 dark:text-neutral-400">/month</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 text-sm text-neutral-600 dark:text-neutral-400">
+                    <li>1 general-purpose agent</li>
+                    <li>Command dashboard</li>
+                    <li>Community support</li>
+                  </ul>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-500">Free forever</p>
+                </div>
+                
+                {/* Team */}
+                <div className="card p-6 border-2 border-blue-500 dark:border-blue-400 relative">
+                  <div className="absolute -top-3 left-4">
+                    <span className="bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded">
+                      Most popular
+                    </span>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Team</h3>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">Build your AI team</p>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-3xl font-semibold text-neutral-900 dark:text-neutral-100">$7</span>
+                    <span className="text-neutral-500 dark:text-neutral-400">/month</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 text-sm text-neutral-600 dark:text-neutral-400">
+                    <li>All specialist agents</li>
+                    <li>Invite collaborators</li>
+                    <li>Priority support</li>
+                  </ul>
+                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                    First 3 months FREE this week
+                  </p>
+                </div>
+                
+                {/* Self-hosted */}
+                <div className="card p-6">
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Self-hosted</h3>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">Full control</p>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Free</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 text-sm text-neutral-600 dark:text-neutral-400">
+                    <li>Run on your infrastructure</li>
+                    <li>Full data control</li>
+                    <li>OSS on GitHub</li>
+                  </ul>
+                  <a 
+                    href="https://github.com/chitownjk/tiker" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    View on GitHub →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Final CTA */}
-          <section className="dark-section py-20 md:py-24">
+          <section className="py-20 md:py-28">
             <div className="max-w-6xl mx-auto px-6 text-center">
-              <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-                Ready to get things done?
+              <h2 className="text-3xl md:text-4xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+                Ready to stop babysitting?
               </h2>
-              <p className="text-neutral-400 mb-8 max-w-xl mx-auto text-lg">
-                Start free. Add more AI experts when you need them. Upgrade whenever.
+              <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8 max-w-xl mx-auto">
+                Start your AI team today. Solo is free forever — no credit card required.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link href="/auth/login" className="btn bg-white text-neutral-900 hover:bg-neutral-100 text-base px-8 py-3">
-                  Start Free
+                <Link href="/auth/login" className="btn btn-primary text-base px-8 py-3">
+                  Start your AI team
                 </Link>
+                <a 
+                  href="https://github.com/chitownjk/tiker" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary text-base px-6 py-3"
+                >
+                  View on GitHub
+                </a>
               </div>
             </div>
           </section>

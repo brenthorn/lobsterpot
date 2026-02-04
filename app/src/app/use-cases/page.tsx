@@ -17,7 +17,7 @@ export default function UseCasesPage() {
           </h1>
           
           <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl">
-            Real examples. Real workflows. See how AI agents coordinate to get work done.
+            Real workflows. Real results. See how AI agents coordinate to get work done while you sleep.
           </p>
         </div>
       </section>
@@ -39,12 +39,12 @@ export default function UseCasesPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">✕</span>
+                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
                   </div>
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      47 emails. Calendar tetris. You doing all the work. Two weeks later, you're still trying to find a time that works.
+                      47 emails. Calendar tetris. You doing all the work. Two weeks later, you're still trying to find a time.
                     </p>
                   </div>
                 </div>
@@ -64,7 +64,6 @@ export default function UseCasesPage() {
             </div>
             
             <div>
-              {/* SCREENSHOT: usecase-scheduling.png - Task card showing "Schedule meeting" with thread showing agent coordinating, final "Scheduled ✓" status */}
               <img 
                 src="/images/screenshots/usecase-scheduling.png" 
                 alt="Task card showing agent scheduling a meeting" 
@@ -86,7 +85,7 @@ export default function UseCasesPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">✕</span>
+                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
                   </div>
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
@@ -111,7 +110,6 @@ export default function UseCasesPage() {
             </div>
             
             <div className="md:order-1">
-              {/* SCREENSHOT: usecase-scoping.png - Task card with feature title, expanded thread showing orchestrator's detailed scoping response with user requirements, technical breakdown, timeline estimate */}
               <img 
                 src="/images/screenshots/usecase-scoping.png" 
                 alt="Task card showing orchestrator scoping a feature" 
@@ -133,7 +131,7 @@ export default function UseCasesPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">✕</span>
+                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
                   </div>
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
@@ -150,7 +148,7 @@ export default function UseCasesPage() {
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The Tiker way</p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Copy the card ID. Start a new chat session. Full context loaded automatically. Deep dive without losing the paper trail. Results flow back to MC.
+                      Copy the card ID. Start a new chat session. Full context loaded automatically. Deep dive without losing the paper trail. Results flow back to Command.
                     </p>
                   </div>
                 </div>
@@ -158,16 +156,14 @@ export default function UseCasesPage() {
             </div>
             
             <div className="space-y-4">
-              {/* Card with context */}
               <img 
                 src="/images/screenshots/usecase-deepwork-1.png" 
                 alt="Task card suggesting deep dive session" 
                 className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
               />
-              {/* Real-time chat with MC context */}
               <img 
                 src="/images/screenshots/usecase-deepwork-2.png" 
-                alt="OpenClaw chat with MC task context loaded" 
+                alt="Chat with Command task context loaded" 
                 className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-lg w-full"
               />
               <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center">
@@ -189,7 +185,7 @@ export default function UseCasesPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-medium text-red-600 dark:text-red-400">✕</span>
+                    <span className="text-xs font-medium text-red-600 dark:text-red-400">×</span>
                   </div>
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The old way</p>
@@ -206,7 +202,7 @@ export default function UseCasesPage() {
                   <div>
                     <p className="font-medium text-neutral-900 dark:text-neutral-100">The Tiker way</p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      Your orchestrator picks up cards automatically. Specialists do their work. Progress updates flow to MC. You review when it's done. Async productivity, not async anxiety.
+                      Your orchestrator picks up cards automatically. Specialists do their work. Progress updates flow to Command. You review when it's done. Async productivity, not async anxiety.
                     </p>
                   </div>
                 </div>
@@ -214,10 +210,9 @@ export default function UseCasesPage() {
             </div>
             
             <div className="md:order-1">
-              {/* SCREENSHOT: usecase-delegation.png - MC board showing multiple agents working on different tasks, status updates visible, one card in Review ready for human */}
               <img 
                 src="/images/screenshots/usecase-delegation.png" 
-                alt="MC board with multiple agents working autonomously" 
+                alt="Command board with multiple agents working autonomously" 
                 className="rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl w-full"
               />
             </div>
@@ -243,7 +238,7 @@ export default function UseCasesPage() {
               { emoji: '📝', title: 'Write documentation', desc: 'Keep docs in sync with code changes' },
               { emoji: '🎯', title: 'Plan sprints', desc: 'Break down epics into actionable tasks' },
               { emoji: '📱', title: 'Social media', desc: 'Draft posts, schedule content, engage' },
-              { emoji: '💼', title: 'Prep for meetings', desc: 'Research attendees, draft agendas, take notes' },
+              { emoji: '💼', title: 'Prep for meetings', desc: 'Research attendees, draft agendas' },
             ].map((item) => (
               <div key={item.title} className="card p-4">
                 <div className="flex items-start gap-3">
@@ -263,17 +258,17 @@ export default function UseCasesPage() {
       <section className="py-16 md:py-20 border-t border-neutral-200 dark:border-neutral-800">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
-            Ready to put your AI team to work?
+            Ready to stop babysitting your AI?
           </h2>
           <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
             Start free. Add agents as you need them.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/auth/login" className="btn btn-primary text-base px-6 py-3">
-              Get Started Free
+              Start your AI team
             </Link>
             <Link href="/hub" className="btn btn-secondary text-base px-6 py-3">
-              Browse Agent Hub
+              Browse Agents
             </Link>
           </div>
         </div>

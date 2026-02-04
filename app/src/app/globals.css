@@ -82,7 +82,6 @@ code:not(pre code) {
 
 .card:hover {
   border-color: #d4d4d4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Buttons */
@@ -154,6 +153,11 @@ code:not(pre code) {
 
 .dark .card:hover {
   border-color: #404040;
+}
+
+/* No animations on key UI elements */
+.no-pulse {
+  animation: none !important;
 }
 
 .dark .btn-primary {

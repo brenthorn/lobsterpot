@@ -16,7 +16,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/hub" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  Agent Hub
+                  Agents
                 </Link>
               </li>
               <li>
@@ -37,24 +37,24 @@ export function Footer() {
             <h4 className="font-semibold text-neutral-900 dark:text-neutral-100 mb-4">Resources</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <a href="https://github.com/chitownjk/tiker" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
+                  GitHub
+                </a>
+              </li>
+              <li>
                 <Link href="/docs/api" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
                   API Docs
                 </Link>
               </li>
               <li>
                 <Link href="/docs/self-hosted" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  Self-Hosted Guide
+                  Self-Hosted
                 </Link>
               </li>
               <li>
                 <Link href="/faq" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
                   FAQ
                 </Link>
-              </li>
-              <li>
-                <a href="https://github.com/chitownjk/tiker" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  GitHub
-                </a>
               </li>
             </ul>
           </div>
@@ -78,11 +78,6 @@ export function Footer() {
                   X / Twitter
                 </a>
               </li>
-              <li>
-                <a href="https://discord.gg/teukPjD8BT" target="_blank" rel="noopener noreferrer" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  Discord
-                </a>
-              </li>
             </ul>
           </div>
           
@@ -92,12 +87,12 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/privacy" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  Privacy Policy
+                  Privacy
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition">
-                  Terms of Service
+                  Terms
                 </Link>
               </li>
             </ul>
@@ -116,14 +111,9 @@ export function Footer() {
               © 2026 Tiker. Open source under MIT.
             </span>
           </div>
-          <a 
-            href="https://github.com/chitownjk/tiker" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors"
-          >
-            View on GitHub →
-          </a>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            Built for people who use AI daily.
+          </p>
         </div>
       </div>
     </footer>
