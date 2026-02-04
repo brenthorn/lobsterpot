@@ -267,11 +267,11 @@ export function NavBar() {
                         
                         <div className="mt-3 mx-4 pt-3 border-t border-neutral-100 dark:border-neutral-800">
                           <Link 
-                            href="/auth/login"
+                            href="/services"
                             className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors"
                             onClick={() => setServicesOpen(false)}
                           >
-                            Start with Services
+                            Browse Services
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
