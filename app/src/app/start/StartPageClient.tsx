@@ -206,7 +206,7 @@ function AgentCustomizationModal({ isOpen, bot, onClose, onSave }: AgentCustomiz
 interface OnboardingStepProps {
   userName: string
   accountTier: string
-  trialExpiresAt: string | null
+  trialExpiresAt?: string | null
   onComplete: () => void
 }
 
@@ -291,7 +291,7 @@ interface StartPageClientProps {
   userName: string
   initialBot: any
   accountTier: string
-  trialExpiresAt: string | null
+  trialExpiresAt?: string | null
 }
 
 export default function StartPageClient({ userName, initialBot, accountTier, trialExpiresAt }: StartPageClientProps) {

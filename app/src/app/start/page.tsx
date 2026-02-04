@@ -21,7 +21,7 @@ export default async function StartPage() {
   const adminClient = createAdminClient()
   const { data: account } = await adminClient
     .from('accounts')
-    .select('id, name, tier, tier_expires_at')
+    .select('id, name, tier')
     .eq('auth_uid', session.user.id)
     .single()
 
@@ -45,6 +45,5 @@ export default async function StartPage() {
     userName={userName} 
     initialBot={bot}
     accountTier={account.tier}
-    trialExpiresAt={account.tier_expires_at}
   />
 }
