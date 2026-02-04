@@ -114,14 +114,23 @@ export async function createRealSupabaseClient() {
 
 // Admin client with service role (use sparingly, server-side only)
 export function createAdminClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  // Support both env var names (old: SUPABASE_SECRET_KEY, new: SUPABASE_SERVICE_ROLE_KEY)
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY
+  
+  if (!url || !key) {
+    console.error('[Supabase] Missing env vars:', { 
+      hasUrl: !!url, 
+      hasServiceRoleKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      hasSecretKey: !!process.env.SUPABASE_SECRET_KEY
+    })
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY (or SUPABASE_SECRET_KEY) environment variable')
+  }
+  
+  return createClient(url, key, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
     }
-  )
+  })
 }
